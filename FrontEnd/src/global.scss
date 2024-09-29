@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color1: #54B8A1;
+  --color2: #548EB8;
+  --color3: #54AEB8;
+  --color4: #54B87F;
+  --color5: #546FB8;
+  --color6: #5C5D5F;
+  --color7: #CCCED2;
+  --color8: #D6C804;
+  --color9: #C80404;
+}
+
+[data-theme='light'] {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+[data-theme='dark'] {
+  --color1: #3A7E6F;
+  --color2: #3A627E;
+  --color3: #3A777E;
+  --color4: #3A7E56;
+  --color5: #3A4C7E;
+  --color6: #5C5C5E;
+  --color7: #CCCED2;
+  --color8: #9A9003;
+  --color9: #8D0303;
+}
