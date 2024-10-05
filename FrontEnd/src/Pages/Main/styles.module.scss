@@ -1,0 +1,406 @@
+.pageContainer {
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.95);
+    box-shadow: 4px 4px 70px rgba(0, 0, 0, 0.25);
+    input {
+      box-sizing: border-box;
+      padding: 20px;
+      
+      width: 391px;
+      height: 45px;
+  
+      border: 1px solid var(--Input-Tasks);
+      border-radius: 10px;
+    }
+  
+    ::placeholder {
+      color: rgba(0, 0, 0, 0.7);
+    }
+  
+    select {
+      box-sizing: border-box;
+      padding: 10px;
+      
+      width: 240px;
+      height: 45px;
+  
+      background: var(--White);
+      border: 1px solid var(--Input-Tasks);
+      border-radius: 10px;
+    }
+  }
+  
+  
+  .daysContainer {
+    
+    width: 1750px;
+    height: 33px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  
+    div {
+      cursor: pointer;
+    }
+  
+    .Monday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Monday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 157.93px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+    .Tuesday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Tuesday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 151.3px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+  
+    .Wednesday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Wednesday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 187.94px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+  
+    .Thursday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Thursday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 129.39px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+  
+    .Friday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Friday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 110.61px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+  
+    .Saturday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Saturday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 127.3px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+  
+    .Sunday {
+      width: 240px;
+      height: 33px;
+  
+      background: var(--Sunday);
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      border-radius: 9px 9px 0px 0px;
+  
+      h2 {
+        display: flex;
+        text-align: start;
+        margin: 6px;
+        width: 122.09px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+  
+        color: var(--Black);
+      }
+    }
+    .active {
+      width: 290px;
+      filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+        drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+      h2 {
+        width: 157.93px;
+        height: 20px;
+  
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+        color: rgba(0, 0, 0, 0.9);
+      }
+    }
+  }
+  
+  .time {
+    width: 85px;
+    height: 75px;
+    background: var(--White);
+    box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+    border-radius: 10px;
+  
+    p {
+      width: 85px;
+      height: 75px;
+      margin-top: 25px;
+      font-weight: 800;
+      font-size: 17px;
+      line-height: 20px;
+      text-align: center;
+      vertical-align: middle;
+      color: var(--Timer);
+    }
+  }
+  
+  .hourCont {
+    box-sizing: border-box;
+    
+    width: 85px;
+    height: 85px;
+  
+    border-bottom: 1px solid var(--Conter);
+    border-radius: 10px;
+  
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+    z-index: 0;
+  
+    p {
+      width: 85px;
+      height: 20px;
+  
+      font-weight: 600;
+      font-size: 17px;
+      line-height: 20px;
+      text-align: center;
+  
+      color: var(--Black);
+    }
+  }
+  
+  .tasksContainer {
+    
+    display: grid;
+    width: 98%;
+    height: 600px;
+    overflow: scroll;
+    grid-auto-rows: 94px;
+  
+    li {
+      list-style: none;
+      height: 90px;
+    }
+  
+    .HT {
+      width: 614px;
+      height: 85px;
+  
+      .bgT {
+        filter: drop-shadow(0px 4px 24px rgba(168, 168, 168, 0.25));
+      }
+  
+      .taskCont {
+        display: table;
+        width: 512px;
+        background: linear-gradient(
+          112.83deg,
+          rgba(228, 240, 248, 0.42) 0%,
+          rgba(255, 255, 255, 0.336) 110.84%
+        );
+        border: 1px solid var(--White);
+        box-shadow: 0px 2px 5.5px rgba(0, 0, 0, 0.02);
+        backdrop-filter: blur(10.5px);
+  
+        border-radius: 15px;
+        .color {
+          width: 14px;
+          height: 85px;
+          border-radius: 15px 0px 0px 15px;
+        }
+  
+        p {
+          
+          width: 442px;
+          height: 60px;
+
+  
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 20px;
+  
+          color: #333333;
+        }
+  
+        button {
+
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding: 10px 12px;
+          gap: 4px;
+          width: 57px;
+          height: 25px;
+          background: var(--BTN-DAYS);
+          border-radius: 4px;
+          border: none;
+        }
+      }
+    }
+  
+    .Monday {
+      .hourCont {
+        background: var(--Monday);
+      }
+      .color {
+        background: var(--Monday);
+      }
+    }
+  
+    .Tuesday {
+      .hourCont {
+        background: var(--Tuesday);
+      }
+      .color {
+        background: var(--Tuesday);
+      }
+    }
+  
+    .Wednesday {
+      .hourCont {
+        background: var(--Wednesday);
+      }
+      .color {
+        background: var(--Wednesday);
+      }
+    }
+  
+    .Thursday {
+      .hourCont {
+        background: var(--Thursday);
+      }
+      .color {
+        background: var(--Thursday);
+      }
+    }
+  
+    .Friday {
+      .hourCont {
+        background: var(--Friday);
+      }
+      .color {
+        background: var(--Friday);
+      }
+    }
+  
+    .Saturday {
+      .hourCont {
+        background: var(--Saturday);
+      }
+      .color {
+        background: var(--Saturday);
+      }
+    }
+  
+    .Sunday {
+      .hourCont {
+        background: var(--Sunday);
+      }
+      .color {
+        background: var(--Sunday);
+      }
+    }
+  }
+
+.navContainer{
+  max-width: 50%;
+  max-height: 50%
+}
+  

@@ -1,8 +1,8 @@
-import { PiSunFill, PiMoonFill } from "react-icons/pi";
-import { useState, useEffect } from "react";
-import styles from "./styles.module.scss";
+import { createContext, useState, useEffect } from "react";
 
-const DarkModeBtn = () => {
+export const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -19,12 +19,8 @@ const DarkModeBtn = () => {
   };
 
   return (
-    <div>
-      <button onClick={toggleTheme} className={styles.DarkModeBtn}>
-        {isDarkMode ? <PiMoonFill size={24} /> : <PiSunFill size={24} />}
-      </button>
-    </div>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
 };
-
-export default DarkModeBtn;
