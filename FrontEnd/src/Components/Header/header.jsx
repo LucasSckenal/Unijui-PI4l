@@ -10,8 +10,8 @@ const Header = () => {
         <div className={styles.banner}>
             <Logo/>
             <div className={styles.innerBanner}>
-              <h1>Weekly Planner</h1>
-              <p>Use this planner to organize your daily issues.</p>
+              <h1>Dashboard</h1>
+              <p>Projeto Integrador 2 - Grupo 5</p>
               </div>
               <div className={styles.darkBtn}>
                 <DarkModeBtn />

@@ -18,6 +18,32 @@
       h1{
         margin-bottom: 10px;
       }
+
+      .avatar {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        
+
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer; 
+
+            &:hover {
+              border: 3px solid var(--TextGeneral);
+              
+            }
+        }
+    
+        input[type="file"] {
+            display: none; 
+        }
+    }
+    
       
       .btnAuth {
           width: 36.25rem;

@@ -27,11 +27,13 @@
     .darkBtn {
      button {
       background-color: var(--Bg);
-      box-shadow: 0px 0px 6px black;
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
       width: 40px;
       height: 40px;
       margin: 0;
       color: var(--TextGeneral);
+      border: 1px solid var(--TextGeneral);
+      border-radius: 20px;
      }
     
     button:hover {

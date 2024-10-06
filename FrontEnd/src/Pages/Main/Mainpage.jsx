@@ -1,37 +1,40 @@
-import styles from "./styles.module.scss";
-import { useState } from "react";
 import Header from "../../Components/Header/header.jsx";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import styles from "./styles.module.scss";
+import { useRef } from "react"
 
-//? Lembrete revisar as propriedades do js
 function Home() {
-  const [activeDay, setActiveDay] = useState("Monday");
+  const dateInputRef = useRef(null);
 
-  //? função para verificar o id da task se é igual do usuário para mostrar ("nota extra foi uma desgraça fazer isso quando dava f5 ficava limpado a array e eu demorei para notar tentei de tudo")
- 
-  //? deleta a task pelo id
-
-  // TODO: 
-  /*
-    -Vento médio
-    -Gust of wind
-    -Direção do vento
-    -Temperatura
-    -Umidade
-    -Luminosidade
-    -Raios ultra violeta
-    -Radiação solar
-    -Pressão atmosférica
-    -Temperatura interna
-    -Umidade interna
-  */
+  const handleIconClick = () => {
+    if (dateInputRef.current) {
+      dateInputRef.current.showPicker(); 
+    }
+  };
 
   return (
-    //HTML:
     <div className={styles.pageContainer}>
+      <Header />
 
-      <Header/>
-
-
+      <aside className={styles.lines}>
+        <div className={styles.calendar}>
+           <input
+        type="date"
+        className={styles.dateInput}
+        ref={dateInputRef}
+        style={{ display: 'none' }} 
+      />
+      <div onClick={handleIconClick} className={styles.calendarIcon} >
+        <FaRegCalendarAlt size={50}/>
+        <p>Calendário</p>
+      </div>
+    </div>
+    <div className={styles.divider}></div>
+        <div>
+          <h2>27</h2>
+          <p>Outubro</p>
+        </div>
+      </aside>
     </div>
   );
 }
