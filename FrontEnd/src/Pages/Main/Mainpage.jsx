@@ -42,6 +42,8 @@ function Home() {
     setShowGraphs((prev) => !prev);
   };
 
+  const avatar = localStorage.getItem("imagem");
+
   const date = selectedDate ? new Date(selectedDate + "T00:00:00") : "";
   const day = date ? date.getDate() : "";
   const month = date ? date.toLocaleString("default", { month: "long" }) : "";
