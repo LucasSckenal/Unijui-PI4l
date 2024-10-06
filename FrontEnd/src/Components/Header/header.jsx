@@ -7,7 +7,9 @@ const Header = () => {
   return (
         <header className={styles.topBar}>
         <div className={styles.banner}>
-            <Logo/>
+          <div className={styles.logoIcon}>
+              <Logo/>
+          </div>
             <div className={styles.innerBanner}>
               <h1>Dashboard</h1>
               <p>Projeto Integrador 2 - Grupo 5</p>

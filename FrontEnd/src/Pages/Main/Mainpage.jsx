@@ -8,6 +8,8 @@ function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
+  const [showReports, setShowReports] = useState(false);
+  const [showGraphs, setShowGraphs] = useState(false);
 
   const dateInputRef = useRef(null);
 
@@ -30,6 +32,14 @@ function Home() {
 
   const handleChange = (event) => {
     setSelectedSensor(event.target.value);
+  };
+
+  const toggleReports = () => {
+    setShowReports((prev) => !prev);
+  };
+
+  const toggleGraphs = () => {
+    setShowGraphs((prev) => !prev);
   };
 
   const date = selectedDate ? new Date(selectedDate + "T00:00:00") : "";
@@ -77,13 +87,21 @@ function Home() {
             </select>
           </div>
           <div className={styles.divider}></div>
-          <div className={styles.report}>
-            <p>Mostrar relatorios</p>
-            <input type="checkbox" name="" id="" />
+          <div className={styles.report} onClick={toggleReports}>
+            <p>Mostrar Relatórios</p>
+            <input
+              type="checkbox"
+              checked={showReports}
+              readOnly
+            />
           </div>
-          <div className={styles.grafics}>
-            <p>Mostrar Graficos</p>
-            <input type="checkbox" name="" id="" />
+          <div className={styles.graphs} onClick={toggleGraphs}>
+            <p>Mostrar Gráficos</p>
+            <input
+              type="checkbox"
+              checked={showGraphs}
+              readOnly
+            />
           </div>
           <div className={styles.divider}></div>
         </div>
