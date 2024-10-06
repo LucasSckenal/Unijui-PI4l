@@ -49,49 +49,7 @@
       }
   }
   
-  .Timer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-    gap: 15px;
   
-    
-    width: 12.56rem;
-    height: 61px;
-  
-    h1 {
-      width: 8.56rem;
-      height: 1.62rem;
-  
-      font-weight: 700;
-      font-size: 40px;
-      line-height: 20px;
-      margin-bottom: 0.93rem;
-      margin-left: 1.37rem;
-      display: flex;
-      align-items: center;
-      text-align: center;
-  
-      color: var(--TextGeneral);
-    }
-  
-    h2 {
-      width: 12.56rem;
-      height: 1.25rem;
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 20px;
-      margin-left: -15px;
-      display: flex;
-      align-items: center;
-      text-align: center;
-  
-      color: var(--TextGeneral);
-    }
-  }
   
   .logoutBtn {
     width: 11rem;

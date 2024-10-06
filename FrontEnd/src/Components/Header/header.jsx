@@ -1,6 +1,5 @@
 import Logo from "../../Components/Logo/logo";
 import styles from "./styles.module.scss";
-import Times from "../Time/time"
 import LogoutBtn from "../Buttons/LogoutBtn/Logout";
 import DarkModeBtn from "../Buttons/DarkModeBtn/DarkModeBtn";
 
@@ -16,9 +15,6 @@ const Header = () => {
               <div className={styles.darkBtn}>
                 <DarkModeBtn />
               </div>
-        </div>
-        <div className={styles.Timer}>
-            <Times />
         </div>
         <div className={styles.logoutBtn}>
             <LogoutBtn />

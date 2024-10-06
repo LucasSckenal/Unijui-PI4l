@@ -1,24 +1,105 @@
 .pageContainer {
   .lines {
-    height: 87vh;
+    height: 86vh;
     width: 180px;
     background: linear-gradient(var(--Bg), var(--Aside));
     box-shadow: 10px 0px 24px rgba(168, 168, 168, 0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    color: var(--TextGeneral);
+    gap: 12px;
     padding: 10px;
+    justify-content: space-between;
 
-    .calendar{
-      text-align: center;
-      color: var(--TextGeneral);
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .calendar {
+        text-align: center;
+      }
+
+      .date {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .divider {
+        width: 180px;
+        height: 1px;
+        border: 1px solid var(--TextGeneral);
+      }
+
+      .selectSensor {
+        appearance: none;
+        border: none;
+        border-bottom: 1px solid var(--TextGeneral);
+        background: transparent;
+        color: var(--TextGeneral);
+        width: 100%;
+        font-size: 16px;
+        outline: none;
+      }
+
+      .report {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        border: 1px solid var(--TextGeneral);
+        padding: 8px;
+        border-radius: 8px;
+      }
+
+      .grafics {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        border: 1px solid var(--TextGeneral);
+        padding: 8px;
+        border-radius: 8px;
+      }
     }
 
-    .divider{
-      width: 180px;
-      height: 1px;
-      border: 1px solid var(--TextGeneral);
+    .Timer {
+      justify-content: center;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0px;
+      gap: 15px;
+
+
+      width: 10.56rem;
+      height: 51px;
+
+
+      h1 {
+        width: 8.56rem;
+        height: 1.62rem;
+
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 20px;
+        margin-bottom: 0.93rem;
+        margin-left: 1.37rem;
+        display: flex;
+        align-items: center;
+        text-align: center;
+      }
+
+      h2 {
+        width: 12.56rem;
+        height: 1.25rem;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 20px;
+        margin-left: -15px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+      }
     }
   }
 }
