@@ -37,7 +37,7 @@
         h2 {
           font-size: 30px;
         }
-        
+
       }
 
       .divider {
@@ -65,33 +65,85 @@
 
       .report {
         display: flex;
-        flex-direction: row;
-        gap: 8px;
-        border: 1px solid var(--TextGeneral);
-        padding: 8px;
-        border-radius: 8px;
-        justify-content: space-around;
-        user-select: none;
+        align-items: center;
         cursor: pointer;
 
-        &:hover {
-          background: var(--DetailsBg);
+        p {
+          margin-right: 10px;
+        }
+
+        .toggleUnchecked,
+        .toggleChecked {
+          width: 39%;
+          height: 1.75rem;
+          border-radius: 15px;
+          position: relative;
+          background-color: var(--InputCheckBox);
+          transition: background-color 0.3s ease;
+          border: 1px solid var(--TextGeneral);
+          box-sizing: border-box;
+        }
+
+        .toggleChecked {
+          background-color: var(--Green);
+        }
+
+        .toggleBall {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--White);
+          position: absolute;
+          top: 50%;
+          left: 2.5px;
+          transform: translateY(-50%);
+          transition: left 0.3s ease;
+        }
+
+        .toggleChecked .toggleBall {
+          left: 21px;
         }
       }
 
       .graphs {
         display: flex;
-        flex-direction: row;
-        gap: 8px;
-        border: 1px solid var(--TextGeneral);
-        padding: 8px;
-        border-radius: 8px;
-        justify-content: space-around;
-        user-select: none;
+        align-items: center;
         cursor: pointer;
 
-        &:hover {
-          background: var(--DetailsBg);
+        p {
+          margin-right: 10px;
+        }
+
+        .toggleUnchecked,
+        .toggleChecked {
+          width: 39%;
+          height: 1.75rem;
+          border-radius: 15px;
+          position: relative;
+          background-color: var(--InputCheckBox);
+          transition: background-color 0.3s ease;
+          border: 1px solid var(--TextGeneral);
+          box-sizing: border-box;
+        }
+
+        .toggleChecked {
+          background-color: var(--Green);
+        }
+
+        .toggleBall {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--White);
+          position: absolute;
+          top: 50%;
+          left: 2.5px;
+          transform: translateY(-50%);
+          transition: left 0.3s ease;
+        }
+
+        .toggleChecked .toggleBall {
+          left: 25px;
         }
       }
     }
@@ -103,12 +155,9 @@
       text-align: center;
       padding: 0px;
       gap: 15px;
-      
-
 
       width: 11.25rem;
       height: 51px;
-
 
       h1 {
         width: 11.25rem;

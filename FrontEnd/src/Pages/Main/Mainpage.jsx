@@ -89,19 +89,23 @@ function Home() {
           <div className={styles.divider}></div>
           <div className={styles.report} onClick={toggleReports}>
             <p>Mostrar Relatórios</p>
-            <input
-              type="checkbox"
-              checked={showReports}
-              readOnly
-            />
+            <div
+              className={
+                showReports ? styles.toggleChecked : styles.toggleUnchecked
+              }
+            >
+              <div className={styles.toggleBall}></div>
+            </div>
           </div>
           <div className={styles.graphs} onClick={toggleGraphs}>
             <p>Mostrar Gráficos</p>
-            <input
-              type="checkbox"
-              checked={showGraphs}
-              readOnly
-            />
+            <div
+              className={
+                showGraphs ? styles.toggleChecked : styles.toggleUnchecked
+              }
+            >
+              <div className={styles.toggleBall}></div>
+            </div>
           </div>
           <div className={styles.divider}></div>
         </div>

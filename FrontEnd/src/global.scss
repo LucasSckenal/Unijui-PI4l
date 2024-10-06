@@ -25,6 +25,7 @@
   --DetailsBgReverse: #494949;
   --FormsBtnHover: #0056b3;
   --Aside: #d9d9d9;
+  --InputCheckBox: #cbd0d1;
 }
 
 [data-theme='light'] {
@@ -53,6 +54,7 @@
   --DetailsBgReverse: #2D2D2D;
   --FormsBtnHover: #0056b3;
   --Aside: #494949;
+  --InputCheckBox: #757575;
 }
 
 p,
@@ -70,6 +72,7 @@ h4,
 textarea {
   font-family: "Reddit Sans Condensed", sans-serif;
 }
+
 a {
   text-decoration: none;
 }
@@ -82,4 +85,3 @@ button {
 body {
   background: var(--Bg);
 }
-
