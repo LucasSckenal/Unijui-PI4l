@@ -1,0 +1,197 @@
+.pageContainer {
+  .lines {
+    height: 86vh;
+    width: 11.25rem;
+    background: linear-gradient(var(--Bg), var(--Aside));
+    box-shadow: 10px 0px 24px rgba(168, 168, 168, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--TextGeneral);
+    gap: 12px;
+    padding: 10px;
+    justify-content: space-between;
+
+    .top {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .calendar {
+        text-align: center;
+        margin-top: 10px;
+        user-select: none;
+        cursor: pointer;
+
+        &:hover {
+          background: var(--DetailsBg);
+        }
+      }
+
+      .date {
+        justify-content: center;
+        text-align: center;
+        text-transform: uppercase;
+        user-select: none;
+
+        h2 {
+          font-size: 30px;
+        }
+
+      }
+
+      .divider {
+        width: 90px;
+        height: 1px;
+        border: 1px solid var(--DetailsBg);
+        margin: 0 auto;
+      }
+
+      .selectSensor {
+        appearance: none;
+        border: none;
+        border-bottom: 1px solid var(--TextGeneral);
+        background: transparent;
+        color: var(--TextGeneral);
+        width: 100%;
+        font-size: 16px;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+          background: var(--DetailsBg);
+        }
+      }
+
+      .report {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        p {
+          margin-right: 10px;
+        }
+
+        .toggleUnchecked,
+        .toggleChecked {
+          width: 39%;
+          height: 1.75rem;
+          border-radius: 15px;
+          position: relative;
+          background-color: var(--InputCheckBox);
+          transition: background-color 0.3s ease;
+          border: 1px solid var(--TextGeneral);
+          box-sizing: border-box;
+        }
+
+        .toggleChecked {
+          background-color: var(--Green);
+        }
+
+        .toggleBall {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--White);
+          position: absolute;
+          top: 50%;
+          left: 2.5px;
+          transform: translateY(-50%);
+          transition: left 0.3s ease;
+        }
+
+        .toggleChecked .toggleBall {
+          left: 21px;
+        }
+      }
+
+      .graphs {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        p {
+          margin-right: 10px;
+        }
+
+        .toggleUnchecked,
+        .toggleChecked {
+          width: 39%;
+          height: 1.75rem;
+          border-radius: 15px;
+          position: relative;
+          background-color: var(--InputCheckBox);
+          transition: background-color 0.3s ease;
+          border: 1px solid var(--TextGeneral);
+          box-sizing: border-box;
+        }
+
+        .toggleChecked {
+          background-color: var(--Green);
+        }
+
+        .toggleBall {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--White);
+          position: absolute;
+          top: 50%;
+          left: 2.5px;
+          transform: translateY(-50%);
+          transition: left 0.3s ease;
+        }
+
+        .toggleChecked .toggleBall {
+          left: 25px;
+        }
+      }
+    }
+
+    .Timer {
+      justify-content: center;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0px;
+      gap: 15px;
+
+      width: 11.25rem;
+      height: 51px;
+
+      h1 {
+        width: 11.25rem;
+        height: 1.62rem;
+
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 20px;
+        margin-bottom: 0.93rem;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      h2 {
+        width: 11.25rem;
+        height: 1.25rem;
+        font-weight: 400;
+        font-size: 19px;
+        line-height: 20px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    input {
+      cursor: pointer;
+    }
+  }
+}
