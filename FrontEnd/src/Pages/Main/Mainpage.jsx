@@ -60,6 +60,8 @@ function Home() {
     setShowGraphs((prev) => !prev);
   };
 
+  const avatar = localStorage.getItem("imagem");
+
   const dataPizza = [
     { value: 40, color: "#FA3E3E" },
     { value: 30, color: "#0056b3" },
