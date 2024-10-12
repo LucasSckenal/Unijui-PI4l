@@ -6,7 +6,12 @@ const PieChart = ({ data, size = 200, strokeWidth = 40 }) => {
   let cumulativePercent = 0;
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={styles.pieChart}>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className={styles.pieChart}
+    >
       {data.map((item, index) => {
         const { value, color } = item;
         const percent = value / 100;

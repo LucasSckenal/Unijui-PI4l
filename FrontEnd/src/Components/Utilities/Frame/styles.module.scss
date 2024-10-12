@@ -1,0 +1,13 @@
+.FrameGraph {
+  border-radius: 8px;
+  background-color: var(--GraphsContainer);
+  padding: 10px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    color: var(--TextGeneral);
+    font-size: 18px;
+  }
+}

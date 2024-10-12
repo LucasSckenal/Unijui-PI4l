@@ -1,0 +1,99 @@
+.graphs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+
+  .graphsTop {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    .tempContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+
+      .TempGraph {
+
+        img {
+          width: 75px;
+          height: 75px;
+        }
+
+        .temp {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+
+          span {
+            font-size: 70px;
+            color: var(--TextGeneral);
+          }
+        }
+      }
+    }
+
+
+  }
+
+  .graphsBot {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    .graphPizza {
+      width: 350px;
+      background-color: var(--GraphsContainer);
+      border-radius: 8px;
+      padding: 10px;
+
+      p {
+        color: var(--TextGeneral);
+        font-size: 20px;
+      }
+    }
+
+    .graphBar {
+      width: 910px;
+      height: 320px;
+      background-color: var(--GraphsContainer);
+      border-radius: 8px;
+      padding: 10px;
+      gap: 18px;
+
+      p {
+        color: var(--TextGeneral);
+        font-size: 20px;
+        padding-bottom: 60px;
+      }
+    }
+
+    .dropDownBtns {
+      display: flex;
+      flex-direction: column;
+      min-height: 270px;
+      justify-content: space-evenly;
+      gap: 8px;
+
+      p {
+        color: var(--TextGeneral);
+        font-size: 20px;
+      }
+    }
+  }
+
+  .dropDownBtnsBot {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+}
+
+
+::-webkit-scrollbar {
+  display: none;
+}

@@ -1,10 +1,10 @@
 import styles from "./styles.module.scss";
 
 const data = [
-  { label: 'Category 1', value: 80 },
-  { label: 'Category 2', value: 50 },
-  { label: 'Category 3', value: 70 },
-  { label: 'Category 4', value: 90 },
+  { label: "Category 1", value: 80 },
+  { label: "Category 2", value: 50 },
+  { label: "Category 3", value: 70 },
+  { label: "Category 4", value: 90 },
 ];
 
 const HorizontalBarGraph = () => {
