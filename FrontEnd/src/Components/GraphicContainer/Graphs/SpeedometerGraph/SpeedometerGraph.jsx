@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-const SpeedometerGraph = () => {
-  const [value, setValue] = useState(0); // Valor inicial
+const SpeedometerGraph = ({ value = 0 }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const SpeedometerGraph = () => {
     const gradient = ctx.createConicGradient(0.75 * Math.PI, centerX, centerY);
     gradient.addColorStop(0, "green");
     gradient.addColorStop(0.5, "yellow");
-    gradient.addColorStop(1, "red");
+    gradient.addColorStop(0.75, "red");
 
     // Desenha o arco com gradiente
     ctx.beginPath();
@@ -36,7 +35,7 @@ const SpeedometerGraph = () => {
 
     // Desenha o ponteiro
     const angle = Math.PI + (value / 150) * Math.PI;
-    const pointerLength = radius;
+    const pointerLength = radius; // Mantém o comprimento do ponteiro
     const pointerX = centerX + pointerLength * Math.cos(angle);
     const pointerY = centerY + pointerLength * Math.sin(angle);
 
@@ -74,17 +73,23 @@ const SpeedometerGraph = () => {
     // Desenha a borda arredondada ao redor do valor
     ctx.beginPath();
     ctx.arc(valueX, valueY - 2, 25, 0, 2 * Math.PI); // (coordenada x, coordenada y, tamanho, resto é para manter como circulo)
-    ctx.fillStyle = "white"; //Cor do fundo
+    ctx.fillStyle = "white"; // Cor do fundo
     ctx.fill();
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black";
     ctx.stroke();
 
-    //Informações usadas para a impressão do valor:
+    // Informações usadas para a impressão do valor:
     ctx.font = "20px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.fillText(`${value}`, valueX, valueY);
+
+    // Desenha o texto "Velocidade do Vento" abaixo do valor
+    ctx.font = "16px Arial"; // Fonte do texto
+    ctx.fillStyle = "black"; // Cor do texto
+    ctx.textAlign = "center";
+    ctx.fillText("Velocidade do Vento", valueX, valueY + 40); // Aumente o valor aqui para dar mais espaço
 
     // Função para desenhar retângulos arredondados
     const drawRoundedRect = (x, y, width, height, radius, fillColor, text) => {
@@ -115,7 +120,7 @@ const SpeedometerGraph = () => {
       ctx.fillText(text, x + width / 2, y + height / 2);
     };
 
-    //Coordenadas
+    // Coordenadas
     const badCenterX = centerX + radius - 40;
     const goodCenterX = centerX - radius - 40;
     const centerCoordenate = centerY + 5;

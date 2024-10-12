@@ -1,11 +1,9 @@
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
-import PizzaGraph from "./Graphs/PizzaGraph/PizzaGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
 import temp from "../../assets/thermometer-temperature.svg";
 import styles from "./styles.module.scss";
 import Frame from "../Utilities/Frame/frame.jsx";
-import Speedometer from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 
 const GraphicContainer = ({ visibleLines }) => {
@@ -86,7 +84,7 @@ const GraphicContainer = ({ visibleLines }) => {
           width="23%"
           height="320px"
         >
-          <RadialBarCharts />
+          <RadialBarCharts value={150} />
         </Frame>
         <Frame
           isTitle={true}

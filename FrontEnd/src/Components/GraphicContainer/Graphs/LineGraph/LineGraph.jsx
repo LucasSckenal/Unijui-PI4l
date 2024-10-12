@@ -21,13 +21,7 @@ const LineGraph = ({
     value: 0,
   });
 
-  // Função para alternar visibilidade de uma linha
-  const toggleLineVisibility = (index) => {
-    setVisibility((prevVisibility) =>
-      prevVisibility.map((v, i) => (i === index ? !v : v))
-    );
-  };
-
+  
   const handleMouseEnter = (event, value) => {
     const rect = event.target.getBoundingClientRect();
     setTooltip({
