@@ -1,10 +1,10 @@
 .FrameGraph {
+  display: flex;
   border-radius: 8px;
   background-color: var(--GraphsContainer);
   padding: 10px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
 
   p {
     color: var(--TextGeneral);

@@ -45,8 +45,8 @@ const GraphicContainer = ({ visibleLines }) => {
                 fillColor: "rgba(0, 0, 255, 0.2)",
               },
             ].filter(Boolean)}
-            width={1250}
-            height={290}
+            width={1260}
+            height={250}
           />
         </Frame>
         <div className={styles.tempContainer}>
@@ -83,7 +83,7 @@ const GraphicContainer = ({ visibleLines }) => {
         <Frame
           isTitle={true}
           title={"Gráfico de Medidor"}
-          width="18%"
+          width="23%"
           height="320px"
         >
           <RadialBarCharts />
@@ -91,7 +91,7 @@ const GraphicContainer = ({ visibleLines }) => {
         <Frame
           isTitle={true}
           title={"Gráfico de Barras"}
-          width="59%"
+          width="54%"
           height="320px"
         >
           <HorizontalBarGraph></HorizontalBarGraph>
