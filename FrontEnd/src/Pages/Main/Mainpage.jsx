@@ -123,7 +123,7 @@ function Home() {
         <section className={styles.Home}>
           <div className={styles.greetings}>
             <h1>
-              Welcome back, <span>{mockUser.name}</span>
+              Bem-vindo de volta, <span>{mockUser.name}</span>
               <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. </p>
             </h1>
             {/* Passando o estado de visibilidade para o GraphicContainer */}

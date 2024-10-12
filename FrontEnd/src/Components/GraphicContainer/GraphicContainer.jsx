@@ -82,7 +82,7 @@ const GraphicContainer = ({ visibleLines }) => {
       <div className={styles.graphsBot}>
         <Frame
           isTitle={true}
-          title={"Gráfico de Pizza"}
+          title={"Gráfico de Medidor"}
           width="18%"
           height="320px"
         >
