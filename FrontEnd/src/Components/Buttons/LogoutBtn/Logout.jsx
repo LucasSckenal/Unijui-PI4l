@@ -1,17 +1,18 @@
-import styles from "../../../components/header/styles.module.scss";
+import styles from "./styles.module.scss";
 import lightImage from "../../../assets/LogoutBtnDark.png";
 import darkImage from "../../../assets/LogoutBtn.png";
 import ThemeSwap from "../../ThemeSwap/themeSwap";
-//? botao de logout
-const LogoutBtn = () => {
+
+const LogoutBtn = ({ hasText = false, text = "Logout" }) => {
   const handleLogout = () => {
-    localStorage.removeItem("loggedUsers");
+    localStorage.removeItem("loggedInUser");
     window.location.reload();
   };
 
   return (
     <button onClick={handleLogout} className={styles.button}>
-     <ThemeSwap darkImage={darkImage} lightImage={lightImage}/>
+      {hasText && <p>{text}</p>}
+      <ThemeSwap darkImage={darkImage} lightImage={lightImage} />
     </button>
   );
 };

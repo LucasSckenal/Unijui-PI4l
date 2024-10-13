@@ -1,0 +1,29 @@
+.button {
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+ justify-content: center;
+ vertical-align: middle;
+ gap: 8px;
+ background: none;
+ border: none;
+ color: var(--TextGeneral);
+
+ &:hover {
+  border: 1px solid var(--TextGeneral);
+  border-radius: 8px;
+  box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+ }
+
+ p {
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.2;
+ }
+
+ img {
+  height: 20px;
+  width: 20px;
+  margin-top: 5px;
+ }
+}
