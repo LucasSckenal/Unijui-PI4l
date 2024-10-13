@@ -4,7 +4,7 @@ import user from "../../../assets/UserDefault.png";
 
 const EditProfile = ({ isOpen, onClose }) => {
   const [name, setName] = useState(localStorage.getItem("nome"));
-  const [avatar, setAvatar] = useState(localStorage.getItem("image"));
+  const [avatar, setAvatar] = useState(localStorage.getItem("imagem"));
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [password, setPassword] = useState(localStorage.getItem("password"));
 
@@ -17,7 +17,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 
         reader.onloadend = () => {
           setAvatar(reader.result);
-          localStorage.setItem("image", reader.result);
+          localStorage.setItem("imagem", reader.result);
         };
 
         reader.readAsDataURL(image);
@@ -31,7 +31,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     setName(localStorage.getItem("nome"));
-    setAvatar(localStorage.getItem("image"));
+    setAvatar(localStorage.getItem("imagem"));
     setEmail(localStorage.getItem("email"));
     setPassword(localStorage.getItem("password"));
   }, [isOpen]);

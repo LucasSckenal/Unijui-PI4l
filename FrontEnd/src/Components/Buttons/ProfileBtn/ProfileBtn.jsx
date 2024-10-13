@@ -22,7 +22,7 @@ const ProfileBtn = () => {
     setIsModalOpen(false);
   };
 
-  const avatar = localStorage.getItem("image") || user;
+  const avatar = localStorage.getItem("imagem") || user;
 
   return (
     <div className={styles.ProfileBtn}>

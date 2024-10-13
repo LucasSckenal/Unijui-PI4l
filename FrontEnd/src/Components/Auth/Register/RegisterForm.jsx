@@ -2,9 +2,9 @@ import { useState } from "react";
 import styles from "./styles.module.scss";
 import { FaArrowRight } from "react-icons/fa";
 import RedirectionFrame from "../../Utilities/RedirectionFrame/redirectionFrame";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; // Importando a biblioteca de notificações
 import user from "../../../assets/UserDefault.png";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -13,6 +13,7 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
+  const navigate = useNavigate();
 
   function handleFile(e) {
     if (e.target.files[0]) {
@@ -22,29 +23,27 @@ function RegisterForm() {
         setImageAvatar(image);
         setAvatar(URL.createObjectURL(image));
       } else {
-        toast.warning("Upload a png image");
+        toast.warning("Faça upload de uma imagem PNG ou JPEG"); // Mensagem de aviso
         setImageAvatar(null);
         return;
       }
     }
   }
 
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Senhas não batem");
+      toast.error("Senhas não batem"); // Mensagem de erro
       return;
     }
 
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
 
     if (!regex.test(password)) {
-      alert(
+      toast.error(
         "A senha deve ter pelo menos 5 caracteres, incluindo letras e números."
-      );
+      ); // Mensagem de erro
       return;
     }
 
@@ -53,8 +52,7 @@ function RegisterForm() {
     localStorage.setItem("email", email);
     localStorage.setItem("password", password);
 
-    console.log("Registered:", { name, email, password });
-
+    toast.success("Registro realizado com sucesso!"); // Mensagem de sucesso
     navigate("/login");
   };
 
@@ -67,13 +65,13 @@ function RegisterForm() {
           {avatar === null ? (
             <img
               src={user}
-              alt=""
+              alt="User Avatar"
               onClick={() => document.getElementById("fileInput").click()}
             />
           ) : (
             <img
               src={avatar}
-              alt=""
+              alt="User Avatar"
               onClick={() => document.getElementById("fileInput").click()}
             />
           )}

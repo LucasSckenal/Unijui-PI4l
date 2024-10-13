@@ -18,8 +18,10 @@ export const ThemeProvider = ({ children }) => {
     document.body.setAttribute("data-theme", newTheme);
   };
 
+  const theme = isDarkMode ? "dark" : "light";
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme }}>
       {children}
     </ThemeContext.Provider>
   );
