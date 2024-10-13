@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
 const LineGraph = ({
   lines = [], // Array de objetos de linhas {data: [], strokeColor: "", fillColor: ""}
-  width = "500", // Agora aceita string
-  height = "300", // Agora aceita string
+  width = "100%", // Largura em porcentagem
+  height = "100%", // Altura em porcentagem
   strokeWidth = 2,
 }) => {
-  const numericWidth = parseInt(width, 10);
-  const numericHeight = parseInt(height, 10);
+  const svgRef = useRef(null); // Referência ao SVG para pegar largura e altura reais
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const [visibility, setVisibility] = useState(
     lines.map(() => true) // Inicia com todas as linhas visíveis
@@ -21,7 +21,23 @@ const LineGraph = ({
     value: 0,
   });
 
-  
+  // Atualiza as dimensões do SVG dinamicamente
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (svgRef.current) {
+        setDimensions({
+          width: svgRef.current.clientWidth,
+          height: svgRef.current.clientHeight,
+        });
+      }
+    };
+
+    updateDimensions(); // Chama ao montar o componente
+    window.addEventListener("resize", updateDimensions); // Atualiza ao redimensionar
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
   const handleMouseEnter = (event, value) => {
     const rect = event.target.getBoundingClientRect();
     setTooltip({
@@ -36,46 +52,43 @@ const LineGraph = ({
     setTooltip({ ...tooltip, visible: false });
   };
 
+  const { width: svgWidth, height: svgHeight } = dimensions;
+
   return (
     <div style={{ position: "relative", width, height }}>
       <svg
+        ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${numericWidth} ${numericHeight}`}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className={styles.lineGraph}
       >
-        {/* Renderiza cada linha de dados */}
         {lines.map((line, lineIndex) => {
-          if (!visibility[lineIndex]) return null; // Não renderiza se a linha estiver invisível
+          if (!visibility[lineIndex]) return null;
 
           const maxValue = Math.max(...line.data);
           const points = line.data
             .map((value, index) => {
-              const x = (index / (line.data.length - 1)) * numericWidth;
-              const y = numericHeight - (value / maxValue) * numericHeight;
+              const x = (index / (line.data.length - 1)) * svgWidth;
+              const y = svgHeight - (value / maxValue) * svgHeight;
               return `${x},${y}`;
             })
             .join(" ");
 
-          const fillPoints = `0,${numericHeight} ${points} ${numericWidth},${numericHeight}`;
+          const fillPoints = `0,${svgHeight} ${points} ${svgWidth},${svgHeight}`;
 
           return (
             <g key={lineIndex}>
-              {/* Área preenchida */}
               <polygon points={fillPoints} fill={line.fillColor} />
-
-              {/* Linha */}
               <polyline
                 points={points}
                 fill="none"
                 stroke={line.strokeColor}
                 strokeWidth={strokeWidth}
               />
-
-              {/* Pontos nas intersecções */}
               {line.data.map((value, index) => {
-                const x = (index / (line.data.length - 1)) * numericWidth;
-                const y = numericHeight - (value / maxValue) * numericHeight;
+                const x = (index / (line.data.length - 1)) * svgWidth;
+                const y = svgHeight - (value / maxValue) * svgHeight;
                 return (
                   <g key={index}>
                     <circle
@@ -86,7 +99,6 @@ const LineGraph = ({
                       onMouseEnter={(event) => handleMouseEnter(event, value)}
                       onMouseLeave={handleMouseLeave}
                     />
-                    {/* Texto acima do ponto */}
                     {tooltip.visible && tooltip.value === value && (
                       <text
                         x={x}

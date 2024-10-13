@@ -1,26 +1,46 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SpeedometerGraph = ({ value = 0 }) => {
   const canvasRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 360, height: 280 });
+
+  // Atualiza as dimensões do canvas com base no tamanho do contêiner pai
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (canvasRef.current) {
+        const { offsetWidth } = canvasRef.current.parentElement;
+        const newWidth = offsetWidth;
+        const newHeight = (newWidth / 360) * 280; // Mantém a proporção do gráfico
+        setDimensions({ width: newWidth, height: newHeight });
+      }
+    };
+
+    updateDimensions(); // Chama ao montar o componente
+    window.addEventListener("resize", updateDimensions); // Atualiza ao redimensionar
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   useEffect(() => {
+    const { width, height } = dimensions;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const centerX = canvas.width / 2; // Centraliza horizontalmente
-    const centerY = canvas.height * 0.8; // Mover o centro um pouco para cima
-    const radius = Math.min(centerX, centerY) - 30; // Ajustar o raio para não ficar muito próximo das bordas
+
+    const centerX = width / 2;
+    const centerY = height * 0.8;
+    const radius = Math.min(centerX, centerY) - 30;
 
     // Limpa o canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, width, height);
 
     // Desenha a borda do arco curvado
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, Math.PI, 0, false);
-    ctx.lineWidth = 10; // Largura maior para borda
-    ctx.strokeStyle = "black"; // Cor da borda
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "black";
     ctx.stroke();
 
-    // Criar gradiente circular
+    // Gradiente circular
     const gradient = ctx.createConicGradient(0.75 * Math.PI, centerX, centerY);
     gradient.addColorStop(0, "green");
     gradient.addColorStop(0.5, "yellow");
@@ -29,83 +49,72 @@ const SpeedometerGraph = ({ value = 0 }) => {
     // Desenha o arco com gradiente
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, Math.PI, 0, false);
-    ctx.lineWidth = 50; // Aumentar a espessura do arco
+    ctx.lineWidth = 50;
     ctx.strokeStyle = gradient;
     ctx.stroke();
 
     // Desenha o ponteiro
     const angle = Math.PI + (value / 150) * Math.PI;
-    const pointerLength = radius; // Mantém o comprimento do ponteiro
+    const pointerLength = radius;
     const pointerX = centerX + pointerLength * Math.cos(angle);
     const pointerY = centerY + pointerLength * Math.sin(angle);
-
-    // Define a espessura na base do ponteiro
     const pointerBaseWidth = 18;
 
-    // Desenha o ponteiro com afinamento
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
-
-    // Calcula as coordenadas das laterais da base do ponteiro, ajustando o ângulo
     ctx.lineTo(
       centerX - (pointerBaseWidth / 2) * Math.sin(angle),
       centerY + (pointerBaseWidth / 2) * Math.cos(angle)
     );
-
-    // Desenha a ponta do ponteiro (o ponto final do triângulo)
     ctx.lineTo(pointerX, pointerY);
-
-    // Desenha o outro lado da base do ponteiro
     ctx.lineTo(
       centerX + (pointerBaseWidth / 2) * Math.sin(angle),
       centerY - (pointerBaseWidth / 2) * Math.cos(angle)
     );
-
     ctx.closePath();
-
-    ctx.fillStyle = "red"; // Cor do ponteiro
+    ctx.fillStyle = "red";
     ctx.fill();
 
-    // Desenha o valor logo abaixo do ponteiro
-    const valueX = centerX;
-    const valueY = centerY; // Passando offset para ficar em baixo no meio do ponteiro
-
-    // Desenha a borda arredondada ao redor do valor
+    // Valor abaixo do ponteiro
     ctx.beginPath();
-    ctx.arc(valueX, valueY - 2, 25, 0, 2 * Math.PI); // (coordenada x, coordenada y, tamanho, resto é para manter como circulo)
-    ctx.fillStyle = "white"; // Cor do fundo
+    ctx.arc(centerX, centerY - 3, 25, 0, 2 * Math.PI);
+    ctx.fillStyle = "white";
     ctx.fill();
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black";
     ctx.stroke();
 
-    // Informações usadas para a impressão do valor:
     ctx.font = "20px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
-    ctx.fillText(`${value}`, valueX, valueY);
+    ctx.fillText(`${value}`, centerX, centerY);
 
-    // Desenha o texto "Velocidade do Vento" abaixo do valor
-    ctx.font = "16px Arial"; // Fonte do texto
-    ctx.fillStyle = "black"; // Cor do texto
-    ctx.textAlign = "center";
-    ctx.fillText("Velocidade do Vento", valueX, valueY + 40); // Aumente o valor aqui para dar mais espaço
+    ctx.font = "16px Arial";
+    ctx.fillText("Velocidade do Vento", centerX, centerY + 40);
 
     // Função para desenhar retângulos arredondados
-    const drawRoundedRect = (x, y, width, height, radius, fillColor, text) => {
+    const drawRoundedRect = (
+      x,
+      y,
+      rectWidth,
+      rectHeight,
+      radius,
+      fillColor,
+      text
+    ) => {
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
+      ctx.lineTo(x + rectWidth - radius, y);
+      ctx.quadraticCurveTo(x + rectWidth, y, x + rectWidth, y + radius);
+      ctx.lineTo(x + rectWidth, y + rectHeight - radius);
       ctx.quadraticCurveTo(
-        x + width,
-        y + height,
-        x + width - radius,
-        y + height
+        x + rectWidth,
+        y + rectHeight,
+        x + rectWidth - radius,
+        y + rectHeight
       );
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x + radius, y + rectHeight);
+      ctx.quadraticCurveTo(x, y + rectHeight, x, y + rectHeight - radius);
       ctx.lineTo(x, y + radius);
       ctx.quadraticCurveTo(x, y, x + radius, y);
       ctx.closePath();
@@ -117,38 +126,20 @@ const SpeedometerGraph = ({ value = 0 }) => {
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(text, x + width / 2, y + height / 2);
+      ctx.fillText(text, x + rectWidth / 2, y + rectHeight / 2);
     };
 
-    // Coordenadas
     const badCenterX = centerX + radius - 40;
     const goodCenterX = centerX - radius - 40;
-    const centerCoordenate = centerY + 5;
+    const centerCoordinate = centerY + 5;
 
-    // Desenha os labels "PERIGO" e "BOM"
-    drawRoundedRect(
-      badCenterX,
-      centerCoordenate,
-      80,
-      30,
-      10,
-      "#F44336",
-      "PERIGO"
-    );
-    drawRoundedRect(
-      goodCenterX,
-      centerCoordenate,
-      80,
-      30,
-      10,
-      "#4CAF50",
-      "BOM"
-    );
-  }, [value]);
+    drawRoundedRect(badCenterX, centerCoordinate, 80, 30, 10, "#F44336", "PERIGO");
+    drawRoundedRect(goodCenterX, centerCoordinate, 80, 30, 10, "#4CAF50", "BOM");
+  }, [value, dimensions]);
 
   return (
-    <div>
-      <canvas ref={canvasRef} width={360} height={280} />
+    <div style={{ width: "100%", height: "auto" }}>
+      <canvas ref={canvasRef} width={dimensions.width} height={dimensions.height} />
     </div>
   );
 };

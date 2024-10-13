@@ -47,7 +47,13 @@ function Home() {
     setSelectedSensor(event.target.value);
   };
 
-  const date = selectedDate ? new Date(selectedDate + "T00:00:00-03:00") : "";
+  const adjustToBrazilTimezone = (date) => {
+    const utcDate = new Date(date);
+    utcDate.setHours(utcDate.getHours() - 3);
+    return utcDate;
+  };
+
+  const date = selectedDate ? adjustToBrazilTimezone(selectedDate) : null;
   const day = date ? date.getDate() : "";
   const month = date ? date.toLocaleString("default", { month: "long" }) : "";
 
@@ -124,8 +130,8 @@ function Home() {
           <div className={styles.greetings}>
             <h1>
               Bem-vindo de volta, <span>{mockUser.name}</span>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. </p>
             </h1>
+            <p>Dê uma olhada nos gráficos atualizados constantemente, abaixo.</p>
             {/* Passando o estado de visibilidade para o GraphicContainer */}
             <GraphicContainer visibleLines={visibleLines} />
           </div>

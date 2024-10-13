@@ -5,8 +5,11 @@ import temp from "../../assets/thermometer-temperature.svg";
 import styles from "./styles.module.scss";
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
+import { useState, useEffect } from "react";
 
 const GraphicContainer = ({ visibleLines }) => {
+  const [hidden, setHidden] = useState(false);
+
   const dataPizza = [
     { value: 40, color: "#FA3E3E" },
     { value: 30, color: "#0056b3" },
@@ -16,12 +19,22 @@ const GraphicContainer = ({ visibleLines }) => {
 
   const dataLine = [35, 30, 50, 70, 90, 80, 60, 40, 80, 50];
 
+  useEffect(() => {
+    const handleHidden = () => {
+      setHidden(window.innerWidth <= 720);
+    };
+
+    handleHidden();
+
+    window.addEventListener("resize", handleHidden);
+  });
+
   return (
     <section className={styles.graphs}>
       <div className={styles.graphsTop}>
         <Frame
           isTitle={true}
-          title="Graficos Principal"
+          title="Principal"
           width="78.2%"
           height="350px"
         >
@@ -43,14 +56,14 @@ const GraphicContainer = ({ visibleLines }) => {
                 fillColor: "rgba(0, 0, 255, 0.2)",
               },
             ].filter(Boolean)}
-            width={1260}
+            width="100%"
             height={250}
           />
         </Frame>
         <div className={styles.tempContainer}>
           <Frame
             isTitle={true}
-            title={"Graficos Temperatura"}
+            title={"Temperatura"}
             width="110%"
             height="168px"
           >
@@ -63,7 +76,7 @@ const GraphicContainer = ({ visibleLines }) => {
           </Frame>
           <Frame
             isTitle={true}
-            title={"Graficos Temperatura interna"}
+            title={"Temperatura Interna"}
             width="110%"
             height="168px"
           >
@@ -78,26 +91,28 @@ const GraphicContainer = ({ visibleLines }) => {
       </div>
 
       <div className={styles.graphsBot}>
-        <Frame
+        {hidden ? null : <Frame
           isTitle={true}
-          title={"Gráfico de Medidor"}
+          title={"Medidor"}
           width="23%"
           height="320px"
         >
           <RadialBarCharts value={150} />
-        </Frame>
+        </Frame>}
+          <Frame
+            isTitle={true}
+            title={"Barras"}
+            width="54%"
+            height="320px"
+          >
+            <div className={styles.graphBar}>
+            <HorizontalBarGraph/>
+            </div>
+          </Frame>
         <Frame
           isTitle={true}
-          title={"Gráfico de Barras"}
-          width="54%"
-          height="320px"
-        >
-          <HorizontalBarGraph></HorizontalBarGraph>
-        </Frame>
-        <Frame
-          isTitle={true}
-          title={"Graficos maneiros"}
-          width="15.6%"
+          title={"Gráficos maneiros"}
+          width="15%"
           height="auto"
         >
           <div className={styles.dropDownBtns}>
