@@ -10,6 +10,7 @@ function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateInputRef = useRef(null);
 
@@ -32,6 +33,19 @@ function Home() {
     setSensors(mockSensors);
   }, []);
 
+  useEffect(() => {
+    const updateDate = () => {
+      // Se selectedDate não estiver vazio, use-o; caso contrário, use a data atual
+      const date = selectedDate ? new Date(selectedDate + 'T00:00:00Z') : new Date();
+      setCurrentDate(date);
+    };
+
+    updateDate(); // Atualiza a data inicialmente
+
+    const intervalId = setInterval(updateDate, 1000);
+    return () => clearInterval(intervalId);
+  }, [selectedDate]);
+
   const handleIconClick = () => {
     if (dateInputRef.current) {
       dateInputRef.current.showPicker();
@@ -40,22 +54,15 @@ function Home() {
 
   const handleDateChange = (event) => {
     const date = event.target.value;
-    setSelectedDate(date);
+    setSelectedDate(date); 
   };
 
   const handleChange = (event) => {
     setSelectedSensor(event.target.value);
   };
 
-  const adjustToBrazilTimezone = (date) => {
-    const utcDate = new Date(date);
-    utcDate.setHours(utcDate.getHours() - 3);
-    return utcDate;
-  };
-
-  const date = selectedDate ? adjustToBrazilTimezone(selectedDate) : null;
-  const day = date ? date.getDate() : "";
-  const month = date ? date.toLocaleString("default", { month: "long" }) : "";
+  const day = currentDate ? currentDate.getUTCDate() : ""; 
+  const month = currentDate ? currentDate.toLocaleString("default", { month: "long", timeZone: 'UTC' }) : ""; 
 
   const [visibleLines, setVisibleLines] = useState({
     line1: true,
@@ -132,7 +139,6 @@ function Home() {
               Bem-vindo de volta, <span>{mockUser.name}</span>
             </h1>
             <p>Dê uma olhada nos gráficos atualizados constantemente, abaixo.</p>
-            {/* Passando o estado de visibilidade para o GraphicContainer */}
             <GraphicContainer visibleLines={visibleLines} />
           </div>
         </section>

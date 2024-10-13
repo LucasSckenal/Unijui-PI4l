@@ -1,11 +1,13 @@
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
-import temp from "../../assets/thermometer-temperature.svg";
+import tempDark from "../../assets/thermometer-temperature.svg";
+import tempLight from "../../assets/thermometer-temperature-white.png"
 import styles from "./styles.module.scss";
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import { useState, useEffect } from "react";
+import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 
 const GraphicContainer = ({ visibleLines }) => {
   const [hidden, setHidden] = useState(false);
@@ -69,7 +71,7 @@ const GraphicContainer = ({ visibleLines }) => {
           >
             <div className={styles.TempGraph}>
               <div className={styles.temp}>
-                <img src={temp} alt="" />
+                <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
                 <span>19ºC</span>
               </div>
             </div>
@@ -82,7 +84,7 @@ const GraphicContainer = ({ visibleLines }) => {
           >
             <div className={styles.TempGraph}>
               <div className={styles.temp}>
-                <img src={temp} alt="" />
+                <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
                 <span>22ºC</span>
               </div>
             </div>
@@ -93,7 +95,7 @@ const GraphicContainer = ({ visibleLines }) => {
       <div className={styles.graphsBot}>
         {hidden ? null : <Frame
           isTitle={true}
-          title={"Medidor"}
+          title={"Velocidade do Vento"}
           width="23%"
           height="320px"
         >

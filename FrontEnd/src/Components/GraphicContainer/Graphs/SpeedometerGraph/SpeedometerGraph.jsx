@@ -77,7 +77,7 @@ const SpeedometerGraph = ({ value = 0 }) => {
 
     // Valor abaixo do ponteiro
     ctx.beginPath();
-    ctx.arc(centerX, centerY - 3, 25, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, 25, 0, 2 * Math.PI);
     ctx.fillStyle = "white";
     ctx.fill();
     ctx.lineWidth = 3;
@@ -88,9 +88,6 @@ const SpeedometerGraph = ({ value = 0 }) => {
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.fillText(`${value}`, centerX, centerY);
-
-    ctx.font = "16px Arial";
-    ctx.fillText("Velocidade do Vento", centerX, centerY + 40);
 
     // Função para desenhar retângulos arredondados
     const drawRoundedRect = (
