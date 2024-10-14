@@ -8,6 +8,7 @@ import HorizontalBarGraph from "../../Components/Graphs/HorizontalBarGraph/Horiz
 import PizzaGraph from "../../Components/Graphs/PizzaGraph/PizzaGraph.jsx";
 import LineGraph from "../../Components/Graphs/LineGraph/LineGraph.jsx";
 import temp from "../../assets/thermometer-temperature.svg";
+import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -25,7 +26,7 @@ function Home() {
   }, []);
 
   const mockUser = {
-    name: "Teste user",
+    name: localStorage.getItem("nome"),
   };
 
   useEffect(() => {
@@ -60,8 +61,6 @@ function Home() {
     setShowGraphs((prev) => !prev);
   };
 
-  const avatar = localStorage.getItem("imagem");
-
   const dataPizza = [
     { value: 40, color: "#FA3E3E" },
     { value: 30, color: "#0056b3" },
@@ -94,12 +93,12 @@ function Home() {
                 <p>Calendário</p>
               </div>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
             <div className={styles.date}>
               <h2>{day}</h2>
               <p>{month}</p>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={90} />
             <div className={styles.Sensor}>
               <select
                 id="sensorSelect"
@@ -121,7 +120,7 @@ function Home() {
                 ))}
               </select>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
             <div className={styles.reportInputs} onClick={toggleReports}>
               <p>Mostrar Relatórios</p>
               <div
@@ -142,7 +141,7 @@ function Home() {
                 <div className={styles.toggleBall}></div>
               </div>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
           </div>
           <div className={styles.Timer}>
             <Times />
