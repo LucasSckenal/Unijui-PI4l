@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./styles.module.scss";
 import { FaArrowRight } from "react-icons/fa";
 import RedirectionFrame from "../../Utilities/RedirectionFrame/redirectionFrame";
-import { toast } from "react-toastify"; // Importando a biblioteca de notificações
+import { toast } from "react-toastify";
 import user from "../../../assets/UserDefault.png";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +23,7 @@ function RegisterForm() {
         setImageAvatar(image);
         setAvatar(URL.createObjectURL(image));
       } else {
-        toast.warning("Faça upload de uma imagem PNG ou JPEG"); // Mensagem de aviso
+        toast.warning("Faça upload de uma imagem PNG ou JPEG");
         setImageAvatar(null);
         return;
       }
@@ -34,25 +34,27 @@ function RegisterForm() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Senhas não batem"); // Mensagem de erro
+      toast.error("Senhas não batem");
       return;
     }
 
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
+    const regex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
 
     if (!regex.test(password)) {
       toast.error(
         "A senha deve ter pelo menos 5 caracteres, incluindo letras e números."
-      ); // Mensagem de erro
+      );
       return;
     }
+    const avatarToSave = avatar === null ? user : avatar;
 
-    localStorage.setItem("imagem", avatar);
+    localStorage.setItem("imagem", avatarToSave);
     localStorage.setItem("nome", name);
     localStorage.setItem("email", email);
     localStorage.setItem("password", password);
 
-    toast.success("Registro realizado com sucesso!"); // Mensagem de sucesso
+    toast.success("Registro realizado com sucesso!");
     navigate("/login");
   };
 

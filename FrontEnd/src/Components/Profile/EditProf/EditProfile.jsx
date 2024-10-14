@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import user from "../../../assets/UserDefault.png";
 
+// eslint-disable-next-line react/prop-types
 const EditProfile = ({ isOpen, onClose }) => {
   const [name, setName] = useState(localStorage.getItem("nome"));
   const [avatar, setAvatar] = useState(localStorage.getItem("imagem"));
