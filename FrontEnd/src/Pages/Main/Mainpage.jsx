@@ -10,7 +10,7 @@ import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
-  const [selectedSensor, setSelectedSensor] = useState("");
+  const [selectedSensor, setSelectedSensor] = useState("sensor1");
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateInputRef = useRef(null);
@@ -27,17 +27,21 @@ function Home() {
 
   useEffect(() => {
     const mockSensors = [
-      { id: 1, name: "Sensor A" },
-      { id: 2, name: "Sensor B" },
-      { id: 3, name: "Sensor C" },
+      { id: "sensor1", name: "sensor1" },
+      { id: "sensor2", name: "sensor2" },
+      { id: "sensor3", name: "sensor3" },
     ];
     setSensors(mockSensors);
+
+    console.log(selectedSensor);
   }, []);
 
   useEffect(() => {
     const updateDate = () => {
       // Se selectedDate não estiver vazio, use-o; caso contrário, use a data atual
-      const date = selectedDate ? new Date(selectedDate + 'T00:00:00Z') : new Date();
+      const date = selectedDate
+        ? new Date(selectedDate + "T00:00:00Z")
+        : new Date();
       setCurrentDate(date);
     };
 
@@ -55,15 +59,17 @@ function Home() {
 
   const handleDateChange = (event) => {
     const date = event.target.value;
-    setSelectedDate(date); 
+    setSelectedDate(date);
   };
 
   const handleChange = (event) => {
     setSelectedSensor(event.target.value);
   };
 
-  const day = currentDate ? currentDate.getUTCDate() : ""; 
-  const month = currentDate ? currentDate.toLocaleString("default", { month: "long", timeZone: 'UTC' }) : ""; 
+  const day = currentDate ? currentDate.getUTCDate() : "";
+  const month = currentDate
+    ? currentDate.toLocaleString("default", { month: "long", timeZone: "UTC" })
+    : "";
 
   const [visibleLines, setVisibleLines] = useState({
     line1: true,
@@ -139,8 +145,13 @@ function Home() {
             <h1>
               Bem-vindo de volta, <span>{mockUser.name}</span>
             </h1>
-            <p>Dê uma olhada nos gráficos atualizados constantemente, abaixo.</p>
-            <GraphicContainer visibleLines={visibleLines} />
+            <p>
+              Dê uma olhada nos gráficos atualizados constantemente, abaixo.
+            </p>
+            <GraphicContainer
+              visibleLines={visibleLines}
+              sensor={selectedSensor}
+            />
           </div>
         </section>
       </div>

@@ -1,0 +1,128 @@
+{
+  "sensor1": {
+    "averageWind": {
+      "speed": 15,
+      "unit": "m/s"
+    },
+    "gustWind": {
+      "speed": 8.1,
+      "unit": "m/s"
+    },
+    "windDirection": {
+      "degrees": 180,
+      "cardinal": "S"
+    },
+    "temperature": {
+      "value": 22.5,
+      "unit": "°C"
+    },
+    "humidity": {
+      "value": 60,
+      "unit": "%"
+    },
+    "luminosity": {
+      "value": 1200,
+      "unit": "lux"
+    },
+    "ultraViolet": {
+      "index": 5,
+      "risk": "Moderate"
+    },
+    "atmosphericPressure": {
+      "value": 1013,
+      "unit": "hPa"
+    },
+    "internalTemperature": {
+      "value": 20.0,
+      "unit": "°C"
+    },
+    "internalHumidity": {
+      "value": 50,
+      "unit": "%"
+    }
+  },
+  "sensor2": {
+    "averageWind": {
+      "speed": 8.2,
+      "unit": "m/s"
+    },
+    "gustWind": {
+      "speed": 8.1,
+      "unit": "m/s"
+    },
+    "windDirection": {
+      "degrees": 180,
+      "cardinal": "S"
+    },
+    "temperature": {
+      "value": 22.5,
+      "unit": "°C"
+    },
+    "humidity": {
+      "value": 60,
+      "unit": "%"
+    },
+    "luminosity": {
+      "value": 1200,
+      "unit": "lux"
+    },
+    "ultraViolet": {
+      "index": 5,
+      "risk": "Moderate"
+    },
+    "atmosphericPressure": {
+      "value": 1013,
+      "unit": "hPa"
+    },
+    "internalTemperature": {
+      "value": 20.0,
+      "unit": "°C"
+    },
+    "internalHumidity": {
+      "value": 50,
+      "unit": "%"
+    }
+  },
+  "sensor3": {
+    "averageWind": {
+      "speed": 5.2,
+      "unit": "m/s"
+    },
+    "gustWind": {
+      "speed": 8.1,
+      "unit": "m/s"
+    },
+    "windDirection": {
+      "degrees": 180,
+      "cardinal": "S"
+    },
+    "temperature": {
+      "value": 22.5,
+      "unit": "°C"
+    },
+    "humidity": {
+      "value": 60,
+      "unit": "%"
+    },
+    "luminosity": {
+      "value": 1200,
+      "unit": "lux"
+    },
+    "ultraViolet": {
+      "index": 5,
+      "risk": "Moderate"
+    },
+    "atmosphericPressure": {
+      "value": 1013,
+      "unit": "hPa"
+    },
+    "internalTemperature": {
+      "value": 20.0,
+      "unit": "°C"
+    },
+    "internalHumidity": {
+      "value": 50,
+      "unit": "%"
+    }
+  }
+}

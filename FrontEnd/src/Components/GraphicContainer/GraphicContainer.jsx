@@ -2,15 +2,21 @@ import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
 import tempDark from "../../assets/thermometer-temperature.svg";
-import tempLight from "../../assets/thermometer-temperature-white.png"
+import tempLight from "../../assets/thermometer-temperature-white.png";
 import styles from "./styles.module.scss";
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
+import { DataContext } from "../../Contexts/DataContext.jsx";
 
-const GraphicContainer = ({ visibleLines }) => {
+const GraphicContainer = ({ visibleLines, sensor }) => {
   const [hidden, setHidden] = useState(false);
+
+  console.log(sensor);
+
+  const data = useContext(DataContext);
+  console.log(data);
 
   const dataPizza = [
     { value: 40, color: "#FA3E3E" },
@@ -34,12 +40,7 @@ const GraphicContainer = ({ visibleLines }) => {
   return (
     <section className={styles.graphs}>
       <div className={styles.graphsTop}>
-        <Frame
-          isTitle={true}
-          title="Principal"
-          width="78.2%"
-          height="350px"
-        >
+        <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
           <LineGraph
             lines={[
               visibleLines.line1 && {
@@ -93,24 +94,23 @@ const GraphicContainer = ({ visibleLines }) => {
       </div>
 
       <div className={styles.graphsBot}>
-        {hidden ? null : <Frame
-          isTitle={true}
-          title={"Velocidade do Vento"}
-          width="23%"
-          height="320px"
-        >
-          <RadialBarCharts value={150} />
-        </Frame>}
+        {hidden ? null : (
           <Frame
             isTitle={true}
-            title={"Barras"}
-            width="54%"
+            title={"Velocidade do Vento"}
+            width="23%"
             height="320px"
           >
-            <div className={styles.graphBar}>
-            <HorizontalBarGraph/>
-            </div>
+            <RadialBarCharts
+              value={data[sensor]?.averageWind?.speed || "N/A"}
+            />
           </Frame>
+        )}
+        <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
+          <div className={styles.graphBar}>
+            <HorizontalBarGraph />
+          </div>
+        </Frame>
         <Frame
           isTitle={true}
           title={"Gráficos maneiros"}

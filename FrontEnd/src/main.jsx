@@ -5,6 +5,7 @@ import { ThemeProvider, ThemeContext } from "./Contexts/themeContext";
 import Rotas from "./Routes/routes";
 import "./global.scss";
 import { ToastContainer } from "react-toastify";
+import { DataProvider } from "./Contexts/DataContext";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -32,7 +33,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <BrowserRouter>
-        <App />
+        <DataProvider>
+          <App />
+        </DataProvider>
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>
