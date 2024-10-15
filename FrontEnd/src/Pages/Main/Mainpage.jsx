@@ -3,19 +3,15 @@ import Header from "../../Components/Header/header.jsx";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./styles.module.scss";
 import Times from "../../Components/Time/time.jsx";
-import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
-import HorizontalBarGraph from "../../Components/Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
-import PizzaGraph from "../../Components/Graphs/PizzaGraph/PizzaGraph.jsx";
-import LineGraph from "../../Components/Graphs/LineGraph/LineGraph.jsx";
-import temp from "../../assets/thermometer-temperature.svg";
+import GraphicsBtn from "../../Components/Buttons/GraphicsBtn/GraphicsBtn.jsx";
+import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
 import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
-  const [showReports, setShowReports] = useState(true);
-  const [showGraphs, setShowGraphs] = useState(true);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateInputRef = useRef(null);
 
@@ -38,6 +34,19 @@ function Home() {
     setSensors(mockSensors);
   }, []);
 
+  useEffect(() => {
+    const updateDate = () => {
+      // Se selectedDate não estiver vazio, use-o; caso contrário, use a data atual
+      const date = selectedDate ? new Date(selectedDate + 'T00:00:00Z') : new Date();
+      setCurrentDate(date);
+    };
+
+    updateDate(); // Atualiza a data inicialmente
+
+    const intervalId = setInterval(updateDate, 1000);
+    return () => clearInterval(intervalId);
+  }, [selectedDate]);
+
   const handleIconClick = () => {
     if (dateInputRef.current) {
       dateInputRef.current.showPicker();
@@ -46,38 +55,33 @@ function Home() {
 
   const handleDateChange = (event) => {
     const date = event.target.value;
-    setSelectedDate(date);
+    setSelectedDate(date); 
   };
 
   const handleChange = (event) => {
     setSelectedSensor(event.target.value);
   };
 
-  const toggleReports = () => {
-    setShowReports((prev) => !prev);
+  const day = currentDate ? currentDate.getUTCDate() : ""; 
+  const month = currentDate ? currentDate.toLocaleString("default", { month: "long", timeZone: 'UTC' }) : ""; 
+
+  const [visibleLines, setVisibleLines] = useState({
+    line1: true,
+    line2: true,
+    line3: true,
+  });
+
+  const toggleLine = (lineKey) => {
+    setVisibleLines((prev) => ({
+      ...prev,
+      [lineKey]: !prev[lineKey],
+    }));
   };
-
-  const toggleGraphs = () => {
-    setShowGraphs((prev) => !prev);
-  };
-
-  const dataPizza = [
-    { value: 40, color: "#FA3E3E" },
-    { value: 30, color: "#0056b3" },
-    { value: 20, color: "#3C57C2" },
-    { value: 10, color: "#3CC2AC" },
-  ];
-
-  const dataLine = [35, 30, 50, 70, 90, 80, 60, 40, 80, 50];
-
-  const date = selectedDate ? new Date(selectedDate + "T00:00:00") : "";
-  const day = date ? date.getDate() : "";
-  const month = date ? date.toLocaleString("default", { month: "long" }) : "";
 
   return (
     <div className={styles.pageContainer}>
       <Header />
-      <div style={{ display: "flex", flexDirection: "row", gap: "4rem" }}>
+      <div style={{ display: "flex", flexDirection: "row", gap: "3.2%" }}>
         <aside className={styles.lines}>
           <div className={styles.top}>
             <div className={styles.calendar}>
@@ -120,28 +124,11 @@ function Home() {
                 ))}
               </select>
             </div>
-            <Divider width={"90px"} />
-            <div className={styles.reportInputs} onClick={toggleReports}>
-              <p>Mostrar Relatórios</p>
-              <div
-                className={
-                  showReports ? styles.toggleChecked : styles.toggleUnchecked
-                }
-              >
-                <div className={styles.toggleBall}></div>
-              </div>
-            </div>
-            <div className={styles.graphsInputs} onClick={toggleGraphs}>
-              <p>Mostrar Gráficos</p>
-              <div
-                className={
-                  showGraphs ? styles.toggleChecked : styles.toggleUnchecked
-                }
-              >
-                <div className={styles.toggleBall}></div>
-              </div>
-            </div>
-            <Divider width={"90px"} />
+            <div className={styles.divider}></div>
+            <GraphicsBtn name="Linha 1" onClick={() => toggleLine("line1")} />
+            <GraphicsBtn name="Linha 2" onClick={() => toggleLine("line2")} />
+            <GraphicsBtn name="Linha 3" onClick={() => toggleLine("line3")} />
+            <div className={styles.divider}></div>
           </div>
           <div className={styles.Timer}>
             <Times />
@@ -150,95 +137,10 @@ function Home() {
         <section className={styles.Home}>
           <div className={styles.greetings}>
             <h1>
-              Welcome back, <span>{mockUser.name}</span>
+              Bem-vindo de volta, <span>{mockUser.name}</span>
             </h1>
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. </p>
-          </div>
-          <div className={styles.graphs}>
-            <div className={styles.graphsTop}>
-              <div className={styles.MainGraph}>
-                <p>Graficos Principal</p>
-
-                <LineGraph
-                  data={dataLine}
-                  width={1250}
-                  height={290}
-                  strokeColor="#3C57C2"
-                  fillColor="rgba(16, 51, 207, 0.2)"
-                  strokeWidth={3}
-                />
-              </div>
-              <div className={styles.tempContainer}>
-                <div className={styles.TempGraph}>
-                  <p>Graficos Temperatura</p>
-                  <div className={styles.temp}>
-                    <img src={temp} alt="" />
-                    <span>19ºC</span>
-                  </div>
-                </div>
-                <div className={styles.TempIntGraph}>
-                  <p>Graficos Temperatura interna</p>
-                  <div className={styles.temp}>
-                    <img src={temp} alt="" />
-                    <span>22ºC</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.graphsBot}>
-              <div className={styles.graphPizza}>
-                <p>Gráfico de Pizza</p>
-
-                <PizzaGraph data={dataPizza} size={250} strokeWidth={60} />
-              </div>
-              <div className={styles.graphBar}>
-                <p>Gráfico de Barras</p>
-                <HorizontalBarGraph></HorizontalBarGraph>
-              </div>
-
-              <div className={styles.dropDownBtns}>
-                <p>Graficos maneiros</p>
-                <DropdownBtn title="Average Wind" width={"230px"}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                  atque voluptatibus quisquam quam modi possimus unde deserunt
-                  sed error similique fugiat! Rem.
-                </DropdownBtn>
-                <DropdownBtn title="Average Wind" width={"230px"}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                  atque voluptatibus quisquam quam modi possimus unde deserunt
-                  sed error similique fugiat! Rem.
-                </DropdownBtn>
-                <DropdownBtn title="Average Wind" width={"230px"}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                  atque voluptatibus quisquam quam modi possimus unde deserunt
-                  sed error similique fugiat! Rem.
-                </DropdownBtn>
-              </div>
-            </div>
-            <div className={styles.dropDownBtnsBot}>
-              <DropdownBtn title="Average Wind" width={"504px"}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                atque voluptatibus quisquam quam modi possimus unde deserunt sed
-                error similique fugiat! Rem.
-              </DropdownBtn>
-              <DropdownBtn title="Average Wind" width={"504px"}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                atque voluptatibus quisquam quam modi possimus unde deserunt sed
-                error similique fugiat! Rem.
-              </DropdownBtn>
-              <DropdownBtn title="Average Wind" width={"504px"}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-                atque voluptatibus quisquam quam modi possimus unde deserunt sed
-                error similique fugiat! Rem.
-              </DropdownBtn>
-            </div>
+            <p>Dê uma olhada nos gráficos atualizados constantemente, abaixo.</p>
+            <GraphicContainer visibleLines={visibleLines} />
           </div>
         </section>
       </div>

@@ -1,6 +1,6 @@
 import styles from "./styles.module.scss";
-import ChevronUp from "../../../assets/chevron-up.svg";
-import ChevronBottom from "../../../assets/chevron-bottom.svg";
+import ChevronUp from "../../../assets/chevron-up-white.png";
+import ChevronBottom from "../../../assets/chevron-bottom-white.png";
 import { useEffect, useState } from "react";
 
 const DropdownBtn = ({

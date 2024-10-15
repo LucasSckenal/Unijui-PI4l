@@ -1,0 +1,130 @@
+.graphs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  text-align: center;
+
+  .graphsTop {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    .tempContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+
+      .TempGraph {
+        img {
+          width: 75px;
+          height: 75px;
+          transition: width 0.3s, height 0.3s;
+        }
+
+        .temp {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+
+          span {
+            font-size: 70px;
+            color: var(--TextGeneral);
+            transition: font-size 0.3s;
+          }
+        }
+      }
+    }
+  }
+
+  .graphsBot {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    .dropDownBtns {
+      display: flex;
+      flex-direction: column;
+      min-height: 270px;
+      justify-content: space-evenly;
+      gap: 8px;
+
+      p {
+        color: var(--TextGeneral);
+        font-size: 20px;
+      }
+    }
+  }
+
+  .dropDownBtnsBot {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .graphsTop,
+    .graphsBot,
+    .dropDownBtnsBot {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tempContainer .TempGraph img {
+      width: 60px;
+      height: 60px;
+    }
+
+    .tempContainer .TempGraph .temp span {
+      font-size: 50px;
+    }
+
+    .dropDownBtns p {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .tempContainer .TempGraph img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .tempContainer .TempGraph .temp span {
+      font-size: 40px;
+    }
+
+    .dropDownBtns {
+      min-height: 200px;
+    }
+
+    .dropDownBtns p {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: 12px;
+
+    .tempContainer .TempGraph img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .tempContainer .TempGraph .temp span {
+      font-size: 30px;
+    }
+
+    .dropDownBtns p {
+      font-size: 14px;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

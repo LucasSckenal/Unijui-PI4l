@@ -64,89 +64,6 @@
         }
       }
 
-      .reportInputs {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        p {
-          margin-right: 10px;
-        }
-
-        .toggleUnchecked,
-        .toggleChecked {
-          width: 39%;
-          height: 1.75rem;
-          border-radius: 15px;
-          position: relative;
-          background-color: var(--InputCheckBox);
-          transition: background-color 0.3s ease;
-          border: 1px solid var(--TextGeneral);
-          box-sizing: border-box;
-        }
-
-        .toggleChecked {
-          background-color: var(--Green);
-        }
-
-        .toggleBall {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background-color: var(--White);
-          position: absolute;
-          top: 50%;
-          left: 2.5px;
-          transform: translateY(-50%);
-          transition: left 0.3s ease;
-        }
-
-        .toggleChecked .toggleBall {
-          left: 21px;
-        }
-      }
-
-      .graphsInputs {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        p {
-          margin-right: 10px;
-        }
-
-        .toggleUnchecked,
-        .toggleChecked {
-          width: 39%;
-          height: 1.75rem;
-          border-radius: 15px;
-          position: relative;
-          background-color: var(--InputCheckBox);
-          transition: background-color 0.3s ease;
-          border: 1px solid var(--TextGeneral);
-          box-sizing: border-box;
-        }
-
-        .toggleChecked {
-          background-color: var(--Green);
-        }
-
-        .toggleBall {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background-color: var(--White);
-          position: absolute;
-          top: 50%;
-          left: 2.5px;
-          transform: translateY(-50%);
-          transition: left 0.3s ease;
-        }
-
-        .toggleChecked .toggleBall {
-          left: 25px;
-        }
-      }
     }
 
     .Timer {
@@ -201,7 +118,7 @@
     height: 87vh;
     overflow-y: scroll;
 
-    
+
     .greetings {
       padding-top: 35px;
       color: var(--TextGeneral);
