@@ -1,13 +1,17 @@
 import styles from "./styles.module.scss";
 
 const data = [
-  { label: "Category 1", value: 80 },
-  { label: "Category 2", value: 50 },
-  { label: "Category 3", value: 70 },
-  { label: "Category 4", value: 90 },
+  { label: "Luminosity", value: 10 },
+  { label: "Ultra Violet", value: 50 },
 ];
 
-const HorizontalBarGraph = () => {
+const getBarColor = (value) => {
+  if (value <= 33) return "#3CC27F"; 
+  if (value <= 66) return "#E6FF2B"; 
+  return "#FA3E3E"; 
+};
+
+const HorizontalBarGraph = ({ data }) => {
   return (
     <div className={styles.barchart}>
       {data.map((item, index) => (
@@ -16,7 +20,10 @@ const HorizontalBarGraph = () => {
           <div className={styles.bar}>
             <div
               className={styles.barFill}
-              style={{ width: `${item.value}%` }}
+              style={{
+                width: `${item.value}%`,
+                backgroundColor: getBarColor(item.value),
+              }}
             ></div>
           </div>
         </div>

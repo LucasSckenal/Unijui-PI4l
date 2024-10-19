@@ -21,11 +21,11 @@
       "unit": "%"
     },
     "luminosity": {
-      "value": 1200,
+      "value": 10,
       "unit": "lux"
     },
     "ultraViolet": {
-      "index": 5,
+      "index": 52,
       "risk": "Moderate"
     },
     "atmosphericPressure": {
@@ -33,7 +33,7 @@
       "unit": "hPa"
     },
     "internalTemperature": {
-      "value": 20.0,
+      "value": 10.0,
       "unit": "°C"
     },
     "internalHumidity": {
@@ -55,7 +55,7 @@
       "cardinal": "S"
     },
     "temperature": {
-      "value": 22.5,
+      "value": 11,
       "unit": "°C"
     },
     "humidity": {
@@ -63,11 +63,11 @@
       "unit": "%"
     },
     "luminosity": {
-      "value": 1200,
+      "value": 35,
       "unit": "lux"
     },
     "ultraViolet": {
-      "index": 5,
+      "index": 15,
       "risk": "Moderate"
     },
     "atmosphericPressure": {
@@ -75,7 +75,7 @@
       "unit": "hPa"
     },
     "internalTemperature": {
-      "value": 20.0,
+      "value": 22.0,
       "unit": "°C"
     },
     "internalHumidity": {
@@ -97,7 +97,7 @@
       "cardinal": "S"
     },
     "temperature": {
-      "value": 22.5,
+      "value": 2.5,
       "unit": "°C"
     },
     "humidity": {
@@ -105,11 +105,11 @@
       "unit": "%"
     },
     "luminosity": {
-      "value": 1200,
+      "value": 50,
       "unit": "lux"
     },
     "ultraViolet": {
-      "index": 5,
+      "index": 80,
       "risk": "Moderate"
     },
     "atmosphericPressure": {
@@ -117,7 +117,7 @@
       "unit": "hPa"
     },
     "internalTemperature": {
-      "value": 20.0,
+      "value": 25.0,
       "unit": "°C"
     },
     "internalHumidity": {

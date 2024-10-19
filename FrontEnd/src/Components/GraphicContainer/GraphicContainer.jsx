@@ -25,6 +25,11 @@ const GraphicContainer = ({ visibleLines, sensor }) => {
     { value: 10, color: "#3CC2AC" },
   ];
 
+  const dataBar = [
+    { label: "Luminosity", value: data[sensor]?.luminosity.value },
+    { label: "Ultra Violet", value: data[sensor]?.ultraViolet.index },
+  ];
+
   const dataLine = [35, 30, 50, 70, 90, 80, 60, 40, 80, 50];
 
   useEffect(() => {
@@ -73,7 +78,10 @@ const GraphicContainer = ({ visibleLines, sensor }) => {
             <div className={styles.TempGraph}>
               <div className={styles.temp}>
                 <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                <span>19ºC</span>
+                <span>
+                  {data[sensor]?.temperature?.value}
+                  {data[sensor]?.temperature?.unit}
+                </span>
               </div>
             </div>
           </Frame>
@@ -86,7 +94,10 @@ const GraphicContainer = ({ visibleLines, sensor }) => {
             <div className={styles.TempGraph}>
               <div className={styles.temp}>
                 <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                <span>22ºC</span>
+                <span>
+                  {data[sensor]?.internalTemperature?.value}
+                  {data[sensor]?.internalTemperature?.unit}
+                </span>
               </div>
             </div>
           </Frame>
@@ -108,7 +119,7 @@ const GraphicContainer = ({ visibleLines, sensor }) => {
         )}
         <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
           <div className={styles.graphBar}>
-            <HorizontalBarGraph />
+            <HorizontalBarGraph data={dataBar} />
           </div>
         </Frame>
         <Frame
