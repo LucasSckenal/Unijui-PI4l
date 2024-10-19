@@ -1,7 +1,7 @@
 import styles from "./styles.module.scss";
 import ChevronUp from "../../../assets/chevron-up-white.png";
 import ChevronBottom from "../../../assets/chevron-bottom-white.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const DropdownBtn = ({
   children,
@@ -14,6 +14,7 @@ const DropdownBtn = ({
 }) => {
   const [show, setShow] = useState(false);
   const [image, setImage] = useState();
+  const contentRef = useRef(null); // Referência para o conteúdo
 
   useEffect(() => {
     if (iconType === "Plus") {
@@ -24,20 +25,16 @@ const DropdownBtn = ({
   }, []);
 
   function handleClick() {
-    if (show) {
-      setShow(false);
-      if (iconType === "Plus") {
-        setImage(Plus);
-      } else {
-        setImage(ChevronBottom);
-      }
+    setShow((prev) => !prev); // Alterna o estado de show
+    if (iconType === "Plus") {
+      setImage((prev) => (prev === Plus ? Minus : Plus));
     } else {
-      setShow(true);
-      if (iconType === "Plus") {
-        setImage(Minus);
-      } else {
-        setImage(ChevronUp);
-      }
+      setImage((prev) => (prev === ChevronBottom ? ChevronUp : ChevronBottom));
+    }
+
+    if (!show && contentRef.current) {
+      // Rola a tela para o conteúdo se estiver sendo aberto
+      contentRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }
 
@@ -49,14 +46,19 @@ const DropdownBtn = ({
     >
       <button onClick={handleClick} className={styles.button}>
         <span className={contentFooter ? styles.textFooter : ""}>{title}</span>
-        <img src={image} alt="Dropdow Button" />
+        <img src={image} alt="Dropdown Button" />
       </button>
-      {show && (
-        <div className={contentFooter ? styles.footer : styles.content}>
-          {divisor && <div className={styles.separator}></div>}
+      <div
+
+        className={`${styles.content} ${show ? styles.show : styles.hide}`}
+        style={{ paddingTop: "20px" }}
+      >
+        <div
+          ref={contentRef} // Adiciona a referência aqui
+        >
           {children}
         </div>
-      )}
+      </div>
     </div>
   );
 };

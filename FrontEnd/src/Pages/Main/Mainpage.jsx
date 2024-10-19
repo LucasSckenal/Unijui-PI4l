@@ -4,6 +4,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./styles.module.scss";
 import Times from "../../Components/Time/time.jsx";
 import GraphicsBtn from "../../Components/Buttons/GraphicsBtn/GraphicsBtn.jsx";
+import GraphicsOptions from "../../Components/Buttons/graphicOptionsBtn/GraphicOptionsBtn.jsx";
 import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
 
 function Home() {
@@ -11,6 +12,19 @@ function Home() {
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [typeGraph, setTypeGraph] = useState(null);
+  const [activeBtn, setActiveBtn] = useState(null);
+  const [visibleLines, setVisibleLines] = useState({
+    line1: true,
+    line2: true,
+    line3: true,
+  });
+
+  const GraphsBtns = [
+    { name: "Vento", options: ["Opção 1", "Opção 2", "Opção 3"] },
+    { name: "Temperatura", options: ["Opção 1", "Opção 2", "Opção 3"] },
+    { name: "Diversos", options: ["Opção 1", "Opção 2"] },
+  ];
 
   const dateInputRef = useRef(null);
 
@@ -61,14 +75,14 @@ function Home() {
     setSelectedSensor(event.target.value);
   };
 
+  const handleButtonClick = (buttonName) => {
+    setActiveBtn((prev) => (prev === buttonName ? null : buttonName)); // Alterna o botão ativo
+  };
+
   const day = currentDate ? currentDate.getUTCDate() : ""; 
   const month = currentDate ? currentDate.toLocaleString("default", { month: "long", timeZone: 'UTC' }) : ""; 
 
-  const [visibleLines, setVisibleLines] = useState({
-    line1: true,
-    line2: true,
-    line3: true,
-  });
+  
 
   const toggleLine = (lineKey) => {
     setVisibleLines((prev) => ({
@@ -124,6 +138,12 @@ function Home() {
               </select>
             </div>
             <div className={styles.divider}></div>
+            {GraphsBtns.map(({name, options}) =>(
+              <div key={name}>
+                <GraphicsBtn name={name} isActive={activeBtn === name} onClick={() => handleButtonClick(name)} />
+                  {activeBtn === name && <GraphicsOptions options={options} />}
+              </div>
+            ))}
             <GraphicsBtn name="Linha 1" onClick={() => toggleLine("line1")} />
             <GraphicsBtn name="Linha 2" onClick={() => toggleLine("line2")} />
             <GraphicsBtn name="Linha 3" onClick={() => toggleLine("line3")} />

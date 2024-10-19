@@ -2,26 +2,24 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
 const LineGraph = ({
-  lines = [], // Array de objetos de linhas {data: [], strokeColor: "", fillColor: ""}
-  width = "100%", // Largura em porcentagem
-  height = "100%", // Altura em porcentagem
+  lines = [],
+  width = "100%",
+  height = "100%",
   strokeWidth = 2,
+  pointBorderColor = "white",
+  pointBorderWidth = 0.5,
+  lineBorderColor = "white",
+  lineBorderWidth = 0.001,
+  xLabels = [],
+  yMax = 100, //Esse eh o numero que aparece no eixo Y do grafico principal
+  yLabel = "",
+  xLabel = "",
+  margin = { top: 10, right: 10, bottom: 20, left: 20 }, // Margens internas
 }) => {
-  const svgRef = useRef(null); // Referência ao SVG para pegar largura e altura reais
+  const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: null });
 
-  const [visibility, setVisibility] = useState(
-    lines.map(() => true) // Inicia com todas as linhas visíveis
-  );
-
-  const [tooltip, setTooltip] = useState({
-    visible: false,
-    x: 0,
-    y: 0,
-    value: 0,
-  });
-
-  // Atualiza as dimensões do SVG dinamicamente
   useEffect(() => {
     const updateDimensions = () => {
       if (svgRef.current) {
@@ -31,28 +29,24 @@ const LineGraph = ({
         });
       }
     };
-
-    updateDimensions(); // Chama ao montar o componente
-    window.addEventListener("resize", updateDimensions); // Atualiza ao redimensionar
-
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  const handleMouseEnter = (event, value) => {
-    const rect = event.target.getBoundingClientRect();
-    setTooltip({
-      visible: true,
-      x: rect.left + window.scrollX,
-      y: rect.top + window.scrollY - 40,
-      value,
-    });
+  const { width: svgWidth, height: svgHeight } = dimensions;
+  const { top, right, bottom, left } = margin;
+  const innerWidth = svgWidth - left - right;
+  const innerHeight = svgHeight - top - bottom;
+  const yStep = innerHeight / 5;
+
+  const handleMouseEnter = (event, value, x, y) => {
+    setTooltip({ visible: true, x, y, value });
   };
 
   const handleMouseLeave = () => {
     setTooltip({ ...tooltip, visible: false });
   };
-
-  const { width: svgWidth, height: svgHeight } = dimensions;
 
   return (
     <div style={{ position: "relative", width, height }}>
@@ -60,63 +54,174 @@ const LineGraph = ({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        viewBox={`0 0 ${svgWidth - 10} ${svgHeight}`}
         className={styles.lineGraph}
       >
-        {lines.map((line, lineIndex) => {
-          if (!visibility[lineIndex]) return null;
+        <defs>
+          {lines.map((line, index) => (
+            <linearGradient
+              key={`gradient-${index}`}
+              id={`gradient-${index}`}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop offset="0%" stopColor={line.fillColor} stopOpacity="0.8" />
+              <stop offset="100%" stopColor={line.fillColor} stopOpacity="0.2" />
+            </linearGradient>
+          ))}
+        </defs>
 
+        {/* Eixo Y */}
+        {[...Array(6)].map((_, index) => {
+          const y = top + index * yStep;
+          const value = yMax - (yMax / 5) * index;
+          return (
+            <g key={`y-label-${index}`}>
+              <line
+                x1={left}
+                y1={y}
+                x2={left + innerWidth}
+                y2={y}
+                stroke="var(--TextGeneral)"  // Cor alterada
+                strokeWidth={0.5}
+              />
+              <text
+                x={left - 10}
+                y={y + 5}
+                textAnchor="end"
+                fontSize="10"
+                fill="var(--TextGeneral)"  // Cor alterada
+              >
+                {value}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Label do eixo Y */}
+        <text
+          x={-svgHeight / 2}
+          y={left / 2}
+          transform="rotate(-90)"
+          textAnchor="middle"
+          fontSize="12"
+          fill="var(--TextGeneral)"  // Cor alterada
+        >
+          {yLabel}
+        </text>
+
+        {/* Eixo X */}
+        {xLabels.map((label, index) => {
+          const x = left + (index / (xLabels.length - 1)) * innerWidth;
+          return (
+            <g key={`x-label-${index}`}>
+              <line
+                x1={x}
+                y1={top}
+                x2={x}
+                y2={top + innerHeight}
+                stroke="var(--TextGeneral)"  // Cor alterada
+                strokeWidth={0.5}
+              />
+              <text
+                x={x}
+                y={top + innerHeight + 15}
+                textAnchor="middle"
+                fontSize="10"
+                fill="var(--TextGeneral)"  // Cor alterada
+              >
+                {label}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Label do eixo X */}
+        <text
+          x={left + innerWidth / 2}
+          y={svgHeight - 5}
+          textAnchor="middle"
+          fontSize="12"
+          fill="var(--TextGeneral)"  // Cor alterada
+        >
+          {xLabel}
+        </text>
+
+        {/* Linhas com gradiente */}
+        {lines.map((line, lineIndex) => {
           const maxValue = Math.max(...line.data);
           const points = line.data
             .map((value, index) => {
-              const x = (index / (line.data.length - 1)) * svgWidth;
-              const y = svgHeight - (value / maxValue) * svgHeight;
+              const x = left + (index / (line.data.length - 1)) * innerWidth;
+              const y = top + innerHeight - (value / maxValue) * innerHeight;
               return `${x},${y}`;
             })
             .join(" ");
 
-          const fillPoints = `0,${svgHeight} ${points} ${svgWidth},${svgHeight}`;
+          const fillPoints = `${left},${top + innerHeight} ${points} ${
+            left + innerWidth
+          },${top + innerHeight}`;
 
           return (
-            <g key={lineIndex}>
-              <polygon points={fillPoints} fill={line.fillColor} />
+            <g key={`line-${lineIndex}`}>
+              <polygon points={fillPoints} fill={`url(#gradient-${lineIndex})`} />
               <polyline
                 points={points}
                 fill="none"
                 stroke={line.strokeColor}
-                strokeWidth={strokeWidth}
+                strokeWidth={strokeWidth + lineBorderWidth - 1.5}
+                stroke={lineBorderColor}
               />
-              {line.data.map((value, index) => {
-                const x = (index / (line.data.length - 1)) * svgWidth;
-                const y = svgHeight - (value / maxValue) * svgHeight;
-                return (
-                  <g key={index}>
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={4}
-                      fill={line.strokeColor}
-                      onMouseEnter={(event) => handleMouseEnter(event, value)}
-                      onMouseLeave={handleMouseLeave}
-                    />
-                    {tooltip.visible && tooltip.value === value && (
-                      <text
-                        x={x}
-                        y={y - 10}
-                        fill="var(--TextGeneral)"
-                        fontSize="12"
-                        textAnchor="middle"
-                      >
-                        {value}
-                      </text>
-                    )}
-                  </g>
-                );
-              })}
             </g>
           );
         })}
+
+        {/* Pontos com borda */}
+        {lines.map((line, lineIndex) =>
+          line.data.map((value, index) => {
+            const x = left + (index / (line.data.length - 1)) * innerWidth;
+            const y = top + innerHeight - (value / Math.max(...line.data)) * innerHeight;
+
+            return (
+              <g key={`point-${lineIndex}-${index}`}>
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={4}
+                  fill={line.strokeColor}
+                  stroke={pointBorderColor}
+                  strokeWidth={pointBorderWidth}
+                  onMouseEnter={(event) => handleMouseEnter(event, value, x, y)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              </g>
+            );
+          })
+        )}
       </svg>
+
+      {/* Tooltip */}
+      {tooltip.visible && (
+        <div
+          className={styles.tooltip}
+          style={{
+            position: "absolute",
+            left: tooltip.x,
+            top: tooltip.y,
+            background: "#fff",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            padding: "4px 8px",
+            pointerEvents: "none",
+            transform: "translate(-50%, -100%)",
+            color: "black",
+          }}
+        >
+          {tooltip.value}
+        </div>
+      )}
     </div>
   );
 };

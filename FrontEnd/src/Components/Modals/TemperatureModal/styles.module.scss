@@ -1,0 +1,26 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(168, 168, 168, 0.25);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+   }
+
+
+.innerModal {
+    display: flex;
+    width: 20%;
+    max-width: 500px;
+    height: 500px;
+    flex-direction: column;
+    gap: 40px;
+    background-color: var(--Bg);
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 5;
+}

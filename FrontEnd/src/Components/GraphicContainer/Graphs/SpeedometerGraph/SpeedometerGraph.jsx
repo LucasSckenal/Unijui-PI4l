@@ -81,12 +81,13 @@ const SpeedometerGraph = ({ value = 0 }) => {
     ctx.fillStyle = "white";
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#2D2D2D";
     ctx.stroke();
 
     ctx.font = "20px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(`${value}`, centerX, centerY);
 
     // Função para desenhar retângulos arredondados

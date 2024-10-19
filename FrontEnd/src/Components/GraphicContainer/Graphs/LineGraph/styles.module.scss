@@ -1,6 +1,8 @@
 .lineGraph {
   display: block;
   margin: 20px auto;
+  z-index: 0;
+  color: var(--TextGeneral) !important;
 
   polyline {
     transition: stroke-dasharray 0.4s ease;
@@ -12,9 +14,17 @@
 
   circle {
     transition: r 0.2s ease;
-
     &:hover {
-      r: 6px; 
+      r: 6px;
     }
+  }
+
+  text {
+    pointer-events: none; // Impede que o texto interfira na interação com pontos
+  }
+
+  .tooltip {
+    fill: #333;
+    font-weight: bold;
   }
 }

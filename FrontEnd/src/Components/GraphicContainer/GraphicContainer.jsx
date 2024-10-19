@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
@@ -8,6 +9,7 @@ import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import { useState, useEffect } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
+import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 
 const GraphicContainer = ({ visibleLines }) => {
   const [hidden, setHidden] = useState(false);
@@ -18,8 +20,6 @@ const GraphicContainer = ({ visibleLines }) => {
     { value: 20, color: "#3C57C2" },
     { value: 10, color: "#3CC2AC" },
   ];
-
-  const dataLine = [35, 30, 50, 70, 90, 80, 60, 40, 80, 50];
 
   useEffect(() => {
     const handleHidden = () => {
@@ -44,18 +44,18 @@ const GraphicContainer = ({ visibleLines }) => {
             lines={[
               visibleLines.line1 && {
                 data: [10, 20, 30, 40],
-                strokeColor: "#ff0000",
-                fillColor: "rgba(255, 0, 0, 0.2)",
+                strokeColor: "#d40d77",
+                fillColor: "rgba(212, 13, 119, 0.8)",
               },
               visibleLines.line2 && {
                 data: [40, 30, 20, 10],
-                strokeColor: "#00ff00",
-                fillColor: "rgba(0, 255, 0, 0.2)",
+                strokeColor: "#14ccc9",
+                fillColor: "rgba(20, 204, 201, 0.8)",
               },
               visibleLines.line3 && {
                 data: [20, 30, 25, 35],
-                strokeColor: "#0000ff",
-                fillColor: "rgba(0, 0, 255, 0.2)",
+                strokeColor: "#dbd10f",
+                fillColor: "rgba(219, 209, 15, 0.8)",
               },
             ].filter(Boolean)}
             width="100%"
@@ -66,7 +66,7 @@ const GraphicContainer = ({ visibleLines }) => {
           <Frame
             isTitle={true}
             title={"Temperatura"}
-            width="110%"
+            width="105%"
             height="168px"
           >
             <div className={styles.TempGraph}>
@@ -79,7 +79,7 @@ const GraphicContainer = ({ visibleLines }) => {
           <Frame
             isTitle={true}
             title={"Temperatura Interna"}
-            width="110%"
+            width="105%"
             height="168px"
           >
             <div className={styles.TempGraph}>
@@ -114,15 +114,11 @@ const GraphicContainer = ({ visibleLines }) => {
         <Frame
           isTitle={true}
           title={"Gráficos maneiros"}
-          width="15%"
           height="auto"
         >
           <div className={styles.dropDownBtns}>
-            <DropdownBtn title="Average Wind" width={"230px"}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-              atque voluptatibus quisquam quam modi possimus unde deserunt sed
-              error similique fugiat! Rem.
+            <DropdownBtn title="AQUI Lindo :3" width={"230px"}>
+            
             </DropdownBtn>
             <DropdownBtn title="Average Wind" width={"230px"}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -140,12 +136,10 @@ const GraphicContainer = ({ visibleLines }) => {
         </Frame>
       </div>
       <div className={styles.dropDownBtnsBot}>
-        <DropdownBtn title="Average Wind" width={"504px"}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-          aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
-          quisquam quam modi possimus unde deserunt sed error similique fugiat!
-          Rem.
+        <DropdownBtn title="Direção do Vento" width={"504px"}>
+          <WindRose direction={270} size={300} /> {/* Exemplo: 90 graus (Leste) */}
         </DropdownBtn>
+        
         <DropdownBtn title="Average Wind" width={"504px"}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
           aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus

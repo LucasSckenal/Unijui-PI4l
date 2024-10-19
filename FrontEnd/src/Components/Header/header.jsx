@@ -2,6 +2,7 @@ import Logo from "../../Components/Logo/logo";
 import styles from "./styles.module.scss";
 import LogoutBtn from "../Buttons/LogoutBtn/Logout";
 import DarkModeBtn from "../Buttons/DarkModeBtn/DarkModeBtn";
+import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal";
 
 const Header = () => {
   return (
@@ -18,6 +19,7 @@ const Header = () => {
                 <DarkModeBtn />
               </div>
         </div>
+        <TemperatureModal></TemperatureModal>
         <div className={styles.logoutBtn}>
             <LogoutBtn />
         </div>
