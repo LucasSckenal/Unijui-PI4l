@@ -11,7 +11,12 @@ import { useState, useEffect } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 
-const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
+const GraphicContainer = ({
+  visibleLines,
+  setVisibleLines,
+  lineDatas = [],
+  line,
+}) => {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -38,23 +43,29 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
       <div className={styles.graphsTop}>
         <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
           <LineGraph
-            lines={[
-              visibleLines["1"] && {
-                data: [10, 20, 30, 40],
-                strokeColor: "#d40d77",
-                fillColor: "rgba(212, 13, 119, 0.8)",
-              },
-              visibleLines["2"] && {
-                data: [40, 30, 20, 10],
-                strokeColor: "#14ccc9",
-                fillColor: "rgba(20, 204, 201, 0.8)",
-              },
-              visibleLines["3"] && {
-                data: [20, 30, 25, 35],
-                strokeColor: "#dbd10f",
-                fillColor: "rgba(219, 209, 15, 0.8)",
-              },
-            ].filter(Boolean)}
+            lines={Object.keys(visibleLines)
+              .map((key, index) => {
+                if (visibleLines[key]) {
+                  const lineData = lineDatas.find((item) => item.name === line); // Acessando os dados da linha
+                  return {
+                    data: lineData ? lineData.data[index] : [], // Acessando os dados da linha com base no índice
+                    strokeColor:
+                      key === "line1"
+                        ? "#d40d77"
+                        : key === "line2"
+                        ? "#14ccc9"
+                        : "#dbd10f", // Cores para as linhas
+                    fillColor:
+                      key === "line1"
+                        ? "rgba(212, 13, 119, 0.8)"
+                        : key === "line2"
+                        ? "rgba(20, 204, 201, 0.8)"
+                        : "rgba(219, 209, 15, 0.8)", // Cores para o preenchimento
+                  };
+                }
+                return null; // Se a linha não estiver visível, retorna null
+              })
+              .filter(Boolean)} // Filtrando para remover valores nulos
             width="100%"
             height={250}
           />
@@ -101,7 +112,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
           </Frame>
         )}
         <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
-            <HorizontalBarGraph />
+          <HorizontalBarGraph />
         </Frame>
         <Frame isTitle={true} title={"Gráficos maneiros"} height="auto">
           <div className={styles.dropDownBtns}>
@@ -128,7 +139,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
               title="Average Wind"
               width={"230px"}
               onClick={() => {
-                resetLines(); 
+                resetLines();
               }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -142,7 +153,6 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn title="Direção do Vento" width={"504px"}>
           <WindRose direction={270} size={300} />{" "}
-
         </DropdownBtn>
 
         <DropdownBtn title="Average Wind" width={"504px"}>

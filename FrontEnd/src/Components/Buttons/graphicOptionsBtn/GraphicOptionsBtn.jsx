@@ -1,4 +1,5 @@
 // GraphicsOptions.jsx
+import Divider from "../../Utilities/Divider/Divider";
 import styles from "./styles.module.scss";
 
 const GraphicsOptions = ({ options, isActiveOptions = [], onToggle }) => {
@@ -11,7 +12,12 @@ const GraphicsOptions = ({ options, isActiveOptions = [], onToggle }) => {
             <div
               key={option.id}
               className={styles.optionContainer}
-              style={{ display: "flex", flexDirection: "row" }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignContent: "center",
+                marginBottom: "8px",
+              }}
               onClick={() => onToggle(option.id, !isActive)}
             >
               <p>{option.label}</p>

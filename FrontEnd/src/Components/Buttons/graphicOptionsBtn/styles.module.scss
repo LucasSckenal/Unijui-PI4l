@@ -5,14 +5,20 @@
  flex-direction: column;
 
  .innerButton {
-
- padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 15px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
 
   p {
    margin-right: 10px;
    max-width: 180px;
    width: 120px;
    user-select: none;
+   height: 40px;
   }
 
   .toggleUncheckedOptions,

@@ -15,6 +15,7 @@ function Home() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeBtn, setActiveBtn] = useState(null);
   const [activeOptions, setActiveOptions] = useState([]);
+  const [line, setLine] = useState("");
   const [visibleLines, setVisibleLines] = useState({
     line1: false,
     line2: false,
@@ -24,6 +25,7 @@ function Home() {
   const GraphsBtns = [
     {
       name: "Vento",
+      id: 1,
       options: [
         { id: "1", label: "Avg. Wind Speed" },
         { id: "2", label: "Gust Wind Speed" },
@@ -32,6 +34,7 @@ function Home() {
     },
     {
       name: "Temperatura",
+      id: 2,
       options: [
         { id: "1", label: "Temperatura Ext" },
         { id: "2", label: "Temperatura Int" },
@@ -40,9 +43,36 @@ function Home() {
     },
     {
       name: "Diversos",
+      id: 3,
       options: [
         { id: "1", label: "Pressão atmosférica" },
         { id: "2", label: "Radiação solar" },
+      ],
+    },
+  ];
+
+  const lineDatas = [
+    {
+      name: "Vento",
+      data: [
+        [10, 20, 30],
+        [15, 25, 30],
+        [50, 15, 20, 25, 40, 50],
+      ],
+    },
+    {
+      name: "Temperatura",
+      data: [
+        [40, 30, 20],
+        [35, 50, 100],
+        [60, 70],
+      ],
+    },
+    {
+      name: "Diversos",
+      data: [
+        [20, 30],
+        [22, 28, 24],
       ],
     },
   ];
@@ -97,32 +127,35 @@ function Home() {
   };
 
   const handleButtonClick = (buttonName) => {
-   
     if (activeBtn === buttonName) {
-      setActiveBtn(null); 
-      setActiveOptions([]); 
-      setVisibleLines({ line1: false, line2: false, line3: false });
-    } else {
-      setActiveBtn(buttonName);
+      setActiveBtn(null);
       setActiveOptions([]);
       setVisibleLines({ line1: false, line2: false, line3: false });
+      setLine("");
+    } else {
+      setActiveBtn(buttonName);
+      setActiveOptions([]); // Limpa as opções ativas
+      setVisibleLines({ line1: false, line2: false, line3: false }); // Limpa a visibilidade das linhas
+      setLine(buttonName); // Define a linha ativa
     }
   };
 
   const toggleLineVisibility = (optionId, shouldActivate) => {
-    setActiveOptions((prev) => {
-      if (shouldActivate) {
-        return [...prev, optionId]; 
-      } else {
-        return prev.filter((id) => id !== optionId); 
-      }
-    });
+    if (activeBtn) {
+      setActiveOptions((prev) => {
+        if (shouldActivate) {
+          return [...prev, optionId];
+        } else {
+          return prev.filter((id) => id !== optionId);
+        }
+      });
 
-
-    setVisibleLines((prev) => ({
-      ...prev,
-      [optionId]: shouldActivate, 
-    }));
+      // Atualiza a visibilidade das linhas com base no activeBtn
+      setVisibleLines((prev) => ({
+        ...prev,
+        [`line${optionId}`]: shouldActivate,
+      }));
+    }
   };
 
   const day = currentDate ? currentDate.getUTCDate() : "";
@@ -185,11 +218,11 @@ function Home() {
                   onClick={() => handleButtonClick(name)}
                 />
                 {activeBtn === name && (
-                  <Divi
-                <GraphicsOptions
+                  <GraphicsOptions
                     options={options}
                     isActiveOptions={activeOptions}
-                    onToggle={toggleLineVisibility} />
+                    onToggle={toggleLineVisibility}
+                  />
                 )}
               </div>
             ))}
@@ -207,7 +240,11 @@ function Home() {
             <p>
               Dê uma olhada nos gráficos atualizados constantemente, abaixo.
             </p>
-            <GraphicContainer visibleLines={visibleLines} />
+            <GraphicContainer
+              visibleLines={visibleLines}
+              line={line}
+              lineDatas={lineDatas}
+            />
           </div>
         </section>
       </div>

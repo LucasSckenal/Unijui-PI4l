@@ -18,7 +18,12 @@ const LineGraph = ({
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: null });
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    value: null,
+  });
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -68,7 +73,11 @@ const LineGraph = ({
               y2="1"
             >
               <stop offset="0%" stopColor={line.fillColor} stopOpacity="0.8" />
-              <stop offset="100%" stopColor={line.fillColor} stopOpacity="0.2" />
+              <stop
+                offset="100%"
+                stopColor={line.fillColor}
+                stopOpacity="0.2"
+              />
             </linearGradient>
           ))}
         </defs>
@@ -84,7 +93,7 @@ const LineGraph = ({
                 y1={y}
                 x2={left + innerWidth}
                 y2={y}
-                stroke="var(--TextGeneral)"  // Cor alterada
+                stroke="var(--TextGeneral)" // Cor alterada
                 strokeWidth={0.5}
               />
               <text
@@ -92,7 +101,7 @@ const LineGraph = ({
                 y={y + 5}
                 textAnchor="end"
                 fontSize="10"
-                fill="var(--TextGeneral)"  // Cor alterada
+                fill="var(--TextGeneral)" // Cor alterada
               >
                 {value}
               </text>
@@ -107,7 +116,7 @@ const LineGraph = ({
           transform="rotate(-90)"
           textAnchor="middle"
           fontSize="12"
-          fill="var(--TextGeneral)"  // Cor alterada
+          fill="var(--TextGeneral)" // Cor alterada
         >
           {yLabel}
         </text>
@@ -122,7 +131,7 @@ const LineGraph = ({
                 y1={top}
                 x2={x}
                 y2={top + innerHeight}
-                stroke="var(--TextGeneral)"  // Cor alterada
+                stroke="var(--TextGeneral)" // Cor alterada
                 strokeWidth={0.5}
               />
               <text
@@ -130,7 +139,7 @@ const LineGraph = ({
                 y={top + innerHeight + 15}
                 textAnchor="middle"
                 fontSize="10"
-                fill="var(--TextGeneral)"  // Cor alterada
+                fill="var(--TextGeneral)" // Cor alterada
               >
                 {label}
               </text>
@@ -144,7 +153,7 @@ const LineGraph = ({
           y={svgHeight - 5}
           textAnchor="middle"
           fontSize="12"
-          fill="var(--TextGeneral)"  // Cor alterada
+          fill="var(--TextGeneral)" // Cor alterada
         >
           {xLabel}
         </text>
@@ -166,13 +175,20 @@ const LineGraph = ({
 
           return (
             <g key={`line-${lineIndex}`}>
-              <polygon points={fillPoints} fill={`url(#gradient-${lineIndex})`} />
+              {/* Preenchimento com Animação */}
+              <polygon
+                points={fillPoints}
+                fill={`url(#gradient-${lineIndex})`}
+                className={styles.polygon}
+              />
+              {/* Linha com Animação de Stroke */}
               <polyline
                 points={points}
                 fill="none"
                 stroke={line.strokeColor}
                 strokeWidth={strokeWidth + lineBorderWidth - 1.5}
                 stroke={lineBorderColor}
+                className={styles.polyline}
               />
             </g>
           );
@@ -182,7 +198,10 @@ const LineGraph = ({
         {lines.map((line, lineIndex) =>
           line.data.map((value, index) => {
             const x = left + (index / (line.data.length - 1)) * innerWidth;
-            const y = top + innerHeight - (value / Math.max(...line.data)) * innerHeight;
+            const y =
+              top +
+              innerHeight -
+              (value / Math.max(...line.data)) * innerHeight;
 
             return (
               <g key={`point-${lineIndex}-${index}`}>

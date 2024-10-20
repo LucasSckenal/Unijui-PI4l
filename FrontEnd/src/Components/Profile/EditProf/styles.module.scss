@@ -31,12 +31,14 @@
 
   .avatarWrapper {
    img {
-    width: 40%;
+    width: 150px; //Previamente era 40%
     height: auto;
     min-height: 150px;
     max-height: 350px;
     border-radius: 50%;
     cursor: pointer;
+    border: 1px solid var(--Grey);
+    border-radius: 50%;
    }
 
    input[type="file"] {
