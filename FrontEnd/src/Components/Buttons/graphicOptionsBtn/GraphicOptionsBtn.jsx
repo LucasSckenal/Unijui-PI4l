@@ -1,19 +1,39 @@
-/* eslint-disable react/prop-types */
+// GraphicsOptions.jsx
 import styles from "./styles.module.scss";
-import { useState } from "react";
 
-const GraphicsOptions = ({ options }) => {
-   const [showGraphs, setShowGraphs] = useState(true);
-
-    return (
-      <div className={styles.optionsContainer}>
+const GraphicsOptions = ({ options, isActiveOptions = [], onToggle }) => {
+  return (
+    <div className={styles.graphsInputs}>
+      <div className={styles.innerButton}>
         {options.map((option) => (
-          <button key={option} className={styles.optionButton}>
-            {option}
-          </button>
+          <div
+            key={option.id}
+            className={styles.optionContainer}
+            style={{ display: "flex", flexDirection: "row" }}
+            onClick={() => {
+              const isActive = isActiveOptions.includes(option.id);
+              onToggle(option.id, !isActive);
+            }}
+          >
+            <p>
+              {isActiveOptions.includes(option.id)
+                ? `Ocultar ${option.label}`
+                : `Mostrar ${option.label}`}
+            </p>
+            <div
+              className={
+                isActiveOptions.includes(option.id)
+                  ? styles.toggleCheckedOptions
+                  : styles.toggleUncheckedOptions
+              }
+            >
+              <div className={styles.toggleBallOptions}></div>
+            </div>
+          </div>
         ))}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default GraphicsOptions;

@@ -12,18 +12,38 @@ function Home() {
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [typeGraph, setTypeGraph] = useState(null);
   const [activeBtn, setActiveBtn] = useState(null);
+  const [activeOptions, setActiveOptions] = useState([]);
   const [visibleLines, setVisibleLines] = useState({
-    line1: true,
-    line2: true,
-    line3: true,
+    line1: false,
+    line2: false,
+    line3: false,
   });
 
   const GraphsBtns = [
-    { name: "Vento", options: ["Opção 1", "Opção 2", "Opção 3"] },
-    { name: "Temperatura", options: ["Opção 1", "Opção 2", "Opção 3"] },
-    { name: "Diversos", options: ["Opção 1", "Opção 2"] },
+    {
+      name: "Vento",
+      options: [
+        { id: "1", label: "Opção 1" },
+        { id: "2", label: "Opção 2" },
+        { id: "3", label: "Opção 3" },
+      ],
+    },
+    {
+      name: "Temperatura",
+      options: [
+        { id: "1", label: "Opção 1" },
+        { id: "2", label: "Opção 2" },
+        { id: "3", label: "Opção 3" },
+      ],
+    },
+    {
+      name: "Diversos",
+      options: [
+        { id: "1", label: "Opção 1" },
+        { id: "2", label: "Opção 2" },
+      ],
+    },
   ];
 
   const dateInputRef = useRef(null);
@@ -49,13 +69,13 @@ function Home() {
 
   useEffect(() => {
     const updateDate = () => {
-      // Se selectedDate não estiver vazio, use-o; caso contrário, use a data atual
-      const date = selectedDate ? new Date(selectedDate + 'T00:00:00Z') : new Date();
+      const date = selectedDate
+        ? new Date(selectedDate + "T00:00:00Z")
+        : new Date();
       setCurrentDate(date);
     };
 
     updateDate(); // Atualiza a data inicialmente
-
     const intervalId = setInterval(updateDate, 1000);
     return () => clearInterval(intervalId);
   }, [selectedDate]);
@@ -68,7 +88,7 @@ function Home() {
 
   const handleDateChange = (event) => {
     const date = event.target.value;
-    setSelectedDate(date); 
+    setSelectedDate(date);
   };
 
   const handleChange = (event) => {
@@ -76,20 +96,38 @@ function Home() {
   };
 
   const handleButtonClick = (buttonName) => {
-    setActiveBtn((prev) => (prev === buttonName ? null : buttonName)); // Alterna o botão ativo
+    // Se o botão já estiver ativo, desativa-o e reseta as opções
+    if (activeBtn === buttonName) {
+      setActiveBtn(null); // Desativa o botão
+      setActiveOptions([]); // Reseta as opções
+      setVisibleLines({ line1: false, line2: false, line3: false }); // Reseta as linhas
+    } else {
+      setActiveBtn(buttonName); // Ativa o novo botão
+      setActiveOptions([]); // Reseta as opções ao mudar de botão
+      setVisibleLines({ line1: false, line2: false, line3: false }); // Reseta as linhas
+    }
   };
 
-  const day = currentDate ? currentDate.getUTCDate() : ""; 
-  const month = currentDate ? currentDate.toLocaleString("default", { month: "long", timeZone: 'UTC' }) : ""; 
+  const toggleLineVisibility = (optionId, shouldActivate) => {
+    setActiveOptions((prev) => {
+      if (shouldActivate) {
+        return [...prev, optionId]; // Adiciona a opção ativa
+      } else {
+        return prev.filter((id) => id !== optionId); // Remove a opção
+      }
+    });
 
-  
-
-  const toggleLine = (lineKey) => {
+    // Atualiza a visibilidade das linhas com base nas opções ativas
     setVisibleLines((prev) => ({
       ...prev,
-      [lineKey]: !prev[lineKey],
+      [optionId]: shouldActivate, // Ativa ou desativa a linha correspondente
     }));
   };
+
+  const day = currentDate ? currentDate.getUTCDate() : "";
+  const month = currentDate
+    ? currentDate.toLocaleString("default", { month: "long", timeZone: "UTC" })
+    : "";
 
   return (
     <div className={styles.pageContainer}>
@@ -138,15 +176,22 @@ function Home() {
               </select>
             </div>
             <div className={styles.divider}></div>
-            {GraphsBtns.map(({name, options}) =>(
+            {GraphsBtns.map(({ name, options }) => (
               <div key={name}>
-                <GraphicsBtn name={name} isActive={activeBtn === name} onClick={() => handleButtonClick(name)} />
-                  {activeBtn === name && <GraphicsOptions options={options} />}
+                <GraphicsBtn
+                  name={name}
+                  isActive={activeBtn === name}
+                  onClick={() => handleButtonClick(name)}
+                />
+                {activeBtn === name && (
+                  <GraphicsOptions
+                    options={options}
+                    isActiveOptions={activeOptions}
+                    onToggle={toggleLineVisibility}
+                  />
+                )}
               </div>
             ))}
-            <GraphicsBtn name="Linha 1" onClick={() => toggleLine("line1")} />
-            <GraphicsBtn name="Linha 2" onClick={() => toggleLine("line2")} />
-            <GraphicsBtn name="Linha 3" onClick={() => toggleLine("line3")} />
             <div className={styles.divider}></div>
           </div>
           <div className={styles.Timer}>
@@ -158,7 +203,9 @@ function Home() {
             <h1>
               Bem-vindo de volta, <span>{mockUser.name}</span>
             </h1>
-            <p>Dê uma olhada nos gráficos atualizados constantemente, abaixo.</p>
+            <p>
+              Dê uma olhada nos gráficos atualizados constantemente, abaixo.
+            </p>
             <GraphicContainer visibleLines={visibleLines} />
           </div>
         </section>
