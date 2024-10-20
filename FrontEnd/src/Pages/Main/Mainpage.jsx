@@ -6,6 +6,7 @@ import Times from "../../Components/Time/time.jsx";
 import GraphicsBtn from "../../Components/Buttons/GraphicsBtn/GraphicsBtn.jsx";
 import GraphicsOptions from "../../Components/Buttons/graphicOptionsBtn/GraphicOptionsBtn.jsx";
 import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
+import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -55,7 +56,7 @@ function Home() {
   }, []);
 
   const mockUser = {
-    name: "Teste user",
+    name: localStorage.getItem("nome"),
   };
 
   useEffect(() => {
@@ -148,12 +149,12 @@ function Home() {
                 <p>Calendário</p>
               </div>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
             <div className={styles.date}>
               <h2>{day}</h2>
               <p>{month}</p>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={90} />
             <div className={styles.Sensor}>
               <select
                 id="sensorSelect"
@@ -175,7 +176,7 @@ function Home() {
                 ))}
               </select>
             </div>
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
             {GraphsBtns.map(({ name, options }) => (
               <div key={name}>
                 <GraphicsBtn
@@ -192,7 +193,7 @@ function Home() {
                 )}
               </div>
             ))}
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
           </div>
           <div className={styles.Timer}>
             <Times />
