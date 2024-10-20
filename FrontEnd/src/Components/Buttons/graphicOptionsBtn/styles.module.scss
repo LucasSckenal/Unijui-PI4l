@@ -6,15 +6,20 @@
 
  .innerButton {
 
+ padding-top: 15px;
+
   p {
    margin-right: 10px;
    max-width: 180px;
+   width: 120px;
    user-select: none;
   }
 
   .toggleUncheckedOptions,
   .toggleCheckedOptions {
+   max-width: 50px;
    width: 59%;
+   min-width: 25px;
    height: 1.75rem;
    border-radius: 15px;
    position: relative;
@@ -41,7 +46,7 @@
   }
 
   .toggleCheckedOptions .toggleBallOptions {
-   left: 18px;
+   left: 53%;
   }
  }
 }

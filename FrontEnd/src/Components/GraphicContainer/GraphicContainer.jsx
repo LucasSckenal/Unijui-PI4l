@@ -54,7 +54,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
                 strokeColor: "#dbd10f",
                 fillColor: "rgba(219, 209, 15, 0.8)",
               },
-            ].filter(Boolean)} // Remove valores falsos
+            ].filter(Boolean)}
             width="100%"
             height={250}
           />
@@ -101,9 +101,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
           </Frame>
         )}
         <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
-          <div className={styles.graphBar}>
             <HorizontalBarGraph />
-          </div>
         </Frame>
         <Frame isTitle={true} title={"Gráficos maneiros"} height="auto">
           <div className={styles.dropDownBtns}>
@@ -111,14 +109,14 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
               title="AQUI Lindo :3"
               width={"230px"}
               onClick={() => {
-                resetLines(); /* Aqui, chame a função de ativação do botão */
+                resetLines();
               }}
             />
             <DropdownBtn
               title="Average Wind"
               width={"230px"}
               onClick={() => {
-                resetLines(); /* Aqui, chame a função de ativação do botão */
+                resetLines();
               }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -130,7 +128,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
               title="Average Wind"
               width={"230px"}
               onClick={() => {
-                resetLines(); /* Aqui, chame a função de ativação do botão */
+                resetLines(); 
               }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -144,7 +142,7 @@ const GraphicContainer = ({ visibleLines, setVisibleLines }) => {
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn title="Direção do Vento" width={"504px"}>
           <WindRose direction={270} size={300} />{" "}
-          {/* Exemplo: 90 graus (Leste) */}
+
         </DropdownBtn>
 
         <DropdownBtn title="Average Wind" width={"504px"}>

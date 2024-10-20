@@ -24,24 +24,24 @@ function Home() {
     {
       name: "Vento",
       options: [
-        { id: "1", label: "Opção 1" },
-        { id: "2", label: "Opção 2" },
-        { id: "3", label: "Opção 3" },
+        { id: "1", label: "Avg. Wind Speed" },
+        { id: "2", label: "Gust Wind Speed" },
+        { id: "3", label: "Teste teste" },
       ],
     },
     {
       name: "Temperatura",
       options: [
-        { id: "1", label: "Opção 1" },
-        { id: "2", label: "Opção 2" },
+        { id: "1", label: "Temperatura Ext" },
+        { id: "2", label: "Temperatura Int" },
         { id: "3", label: "Opção 3" },
       ],
     },
     {
       name: "Diversos",
       options: [
-        { id: "1", label: "Opção 1" },
-        { id: "2", label: "Opção 2" },
+        { id: "1", label: "Pressão atmosférica" },
+        { id: "2", label: "Radiação solar" },
       ],
     },
   ];
@@ -75,7 +75,7 @@ function Home() {
       setCurrentDate(date);
     };
 
-    updateDate(); // Atualiza a data inicialmente
+    updateDate();
     const intervalId = setInterval(updateDate, 1000);
     return () => clearInterval(intervalId);
   }, [selectedDate]);
@@ -96,31 +96,31 @@ function Home() {
   };
 
   const handleButtonClick = (buttonName) => {
-    // Se o botão já estiver ativo, desativa-o e reseta as opções
+   
     if (activeBtn === buttonName) {
-      setActiveBtn(null); // Desativa o botão
-      setActiveOptions([]); // Reseta as opções
-      setVisibleLines({ line1: false, line2: false, line3: false }); // Reseta as linhas
+      setActiveBtn(null); 
+      setActiveOptions([]); 
+      setVisibleLines({ line1: false, line2: false, line3: false });
     } else {
-      setActiveBtn(buttonName); // Ativa o novo botão
-      setActiveOptions([]); // Reseta as opções ao mudar de botão
-      setVisibleLines({ line1: false, line2: false, line3: false }); // Reseta as linhas
+      setActiveBtn(buttonName);
+      setActiveOptions([]);
+      setVisibleLines({ line1: false, line2: false, line3: false });
     }
   };
 
   const toggleLineVisibility = (optionId, shouldActivate) => {
     setActiveOptions((prev) => {
       if (shouldActivate) {
-        return [...prev, optionId]; // Adiciona a opção ativa
+        return [...prev, optionId]; 
       } else {
-        return prev.filter((id) => id !== optionId); // Remove a opção
+        return prev.filter((id) => id !== optionId); 
       }
     });
 
-    // Atualiza a visibilidade das linhas com base nas opções ativas
+
     setVisibleLines((prev) => ({
       ...prev,
-      [optionId]: shouldActivate, // Ativa ou desativa a linha correspondente
+      [optionId]: shouldActivate, 
     }));
   };
 
@@ -184,11 +184,11 @@ function Home() {
                   onClick={() => handleButtonClick(name)}
                 />
                 {activeBtn === name && (
-                  <GraphicsOptions
+                  <Divi
+                <GraphicsOptions
                     options={options}
                     isActiveOptions={activeOptions}
-                    onToggle={toggleLineVisibility}
-                  />
+                    onToggle={toggleLineVisibility} />
                 )}
               </div>
             ))}
