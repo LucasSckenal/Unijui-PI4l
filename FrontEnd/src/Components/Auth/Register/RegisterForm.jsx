@@ -43,7 +43,7 @@ function RegisterForm() {
 
     if (!regex.test(password)) {
       toast.error(
-        "A senha deve ter pelo menos 5 caracteres, incluindo letras e números."
+        "A senha deve ter pelo menos 5 caracteres, incluindo letras, números e caracteres especiais."
       );
       return;
     }
