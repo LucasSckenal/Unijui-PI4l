@@ -31,7 +31,7 @@ const GraphicContainer = ({
     handleHidden();
 
     window.addEventListener("resize", handleHidden);
-    return () => window.removeEventListener("resize", handleHidden); // Remova o ouvinte ao desmontar
+    return () => window.removeEventListener("resize", handleHidden);
   }, []);
 
   const resetLines = () => {
@@ -69,11 +69,19 @@ const GraphicContainer = ({
     },
   ];
 
-  const pieData = [
-    { value: 40, color: "#ff0000" }, 
-    { value: 30, color: "#00ff00" }, 
-    { value: 20, color: "#0000ff" }, 
-    { value: 10, color: "#ffff00" }, 
+  const TempGraph = [
+    {
+      name: "Temperatura",
+      data: [[0, 30, 10, 22]],
+      color: ["#de7c21"],
+      rgba: ["rgba(222, 124, 33, 0.8)"],
+    },
+    {
+      name: "Temperatura Interna",
+      data: [[10, 20, 50, 80, 5, 13, 15, 15.9, 28]],
+      color: ["#de7c21"],
+      rgba: ["rgba(222, 124, 33, 0.8)"],
+    },
   ];
 
   const openModal = (tempType) => {
@@ -84,6 +92,17 @@ const GraphicContainer = ({
     setModalVisible(false);
   };
 
+  const getLastTemperatureValue = (tempName) => {
+    const tempData = TempGraph.find((temp) => temp.name === tempName);
+    if (tempData && tempData.data.length > 0) {
+      return tempData.data[0][tempData.data[0].length - 1];
+    }
+    return null;
+  };
+
+  const lastExternalTemp = getLastTemperatureValue("Temperatura");
+  const lastInternalTemp = getLastTemperatureValue("Temperatura Interna");
+
   return (
     <section className={styles.graphs}>
       {isModalVisible && (
@@ -92,7 +111,17 @@ const GraphicContainer = ({
           isVisible={isModalVisible}
           selectedTemp={selectedTemp}
         >
-          <PieChart data={pieData} />
+          <LineGraph
+            lines={TempGraph.filter(
+              (lineData) => lineData.name === selectedTemp
+            ).map((lineData) => ({
+              data: lineData.data[0],
+              strokeColor: lineData.color[0],
+              fillColor: lineData.rgba[0],
+            }))}
+            width="100%"
+            height={250}
+          />
         </TemperatureModal>
       )}
 
@@ -140,7 +169,7 @@ const GraphicContainer = ({
               <div className={styles.TempGraph}>
                 <div className={styles.temp}>
                   <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>19ºC</span>
+                  <span>{lastExternalTemp}ºC</span>
                 </div>
               </div>
             </Frame>
@@ -158,7 +187,7 @@ const GraphicContainer = ({
               <div className={styles.TempGraph}>
                 <div className={styles.temp}>
                   <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>22ºC</span>
+                  <span>{lastInternalTemp}ºC</span>
                 </div>
               </div>
             </Frame>
