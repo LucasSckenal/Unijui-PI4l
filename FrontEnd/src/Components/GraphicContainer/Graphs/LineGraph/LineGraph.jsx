@@ -11,10 +11,10 @@ const LineGraph = ({
   lineBorderColor = "white",
   lineBorderWidth = 0.001,
   xLabels = [],
-  yMax = 100, //Esse eh o numero que aparece no eixo Y do grafico principal
+  yMax = 100,
   yLabel = "",
   xLabel = "",
-  margin = { top: 10, right: 10, bottom: 20, left: 20 }, // Margens internas
+  margin = { top: 10, right: 10, bottom: 20, left: 20 },
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -93,7 +93,7 @@ const LineGraph = ({
                 y1={y}
                 x2={left + innerWidth}
                 y2={y}
-                stroke="var(--TextGeneral)" // Cor alterada
+                stroke="var(--TextGeneral)"
                 strokeWidth={0.5}
               />
               <text
@@ -101,25 +101,13 @@ const LineGraph = ({
                 y={y + 5}
                 textAnchor="end"
                 fontSize="10"
-                fill="var(--TextGeneral)" // Cor alterada
+                fill="var(--TextGeneral)"
               >
                 {value}
               </text>
             </g>
           );
         })}
-
-        {/* Label do eixo Y */}
-        <text
-          x={-svgHeight / 2}
-          y={left / 2}
-          transform="rotate(-90)"
-          textAnchor="middle"
-          fontSize="12"
-          fill="var(--TextGeneral)" // Cor alterada
-        >
-          {yLabel}
-        </text>
 
         {/* Eixo X */}
         {xLabels.map((label, index) => {
@@ -131,7 +119,7 @@ const LineGraph = ({
                 y1={top}
                 x2={x}
                 y2={top + innerHeight}
-                stroke="var(--TextGeneral)" // Cor alterada
+                stroke="var(--TextGeneral)"
                 strokeWidth={0.5}
               />
               <text
@@ -139,24 +127,13 @@ const LineGraph = ({
                 y={top + innerHeight + 15}
                 textAnchor="middle"
                 fontSize="10"
-                fill="var(--TextGeneral)" // Cor alterada
+                fill="var(--TextGeneral)"
               >
                 {label}
               </text>
             </g>
           );
         })}
-
-        {/* Label do eixo X */}
-        <text
-          x={left + innerWidth / 2}
-          y={svgHeight - 5}
-          textAnchor="middle"
-          fontSize="12"
-          fill="var(--TextGeneral)" // Cor alterada
-        >
-          {xLabel}
-        </text>
 
         {/* Linhas com gradiente */}
         {lines.map((line, lineIndex) => {
@@ -175,20 +152,16 @@ const LineGraph = ({
 
           return (
             <g key={`line-${lineIndex}`}>
-              {/* Preenchimento com Animação */}
               <polygon
                 points={fillPoints}
                 fill={`url(#gradient-${lineIndex})`}
-                className={styles.polygon}
               />
-              {/* Linha com Animação de Stroke */}
               <polyline
                 points={points}
                 fill="none"
                 stroke={line.strokeColor}
-                strokeWidth={strokeWidth + lineBorderWidth - 1.5}
-                stroke={lineBorderColor}
-                className={styles.polyline}
+                strokeWidth={strokeWidth}
+                strokeLinejoin="round"
               />
             </g>
           );

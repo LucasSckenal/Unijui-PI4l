@@ -3,12 +3,14 @@
   margin: 20px auto;
   z-index: 0;
   color: var(--TextGeneral) !important;
+  z-index: 0;
 
   polyline {
     stroke-dasharray: 2000; // Define o tamanho do traço para animação
     stroke-dashoffset: 2000; // Inicia o traço fora da linha
     animation: draw 3s ease forwards;
     transition: stroke-dasharray 1.5s ease;
+    mix-blend-mode: color-dodge;
   }
 
   polygon {

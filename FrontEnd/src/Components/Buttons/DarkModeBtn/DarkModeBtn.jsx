@@ -8,7 +8,7 @@ const DarkModeBtn = () => {
 
   return (
     <button onClick={toggleTheme} className={styles.DarkModeBtn}>
-      {isDarkMode ? <PiMoonFill size={24} color="#fff" /> : <PiSunFill size={24} />}
+      {isDarkMode ? <PiSunFill size={24} color="#fff"/> : <PiMoonFill size={24}  />}
     </button>
   );
 };

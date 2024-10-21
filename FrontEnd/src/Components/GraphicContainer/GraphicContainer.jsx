@@ -10,6 +10,7 @@ import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import { useState, useEffect } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
+import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
 
 const GraphicContainer = ({
   visibleLines,
@@ -18,6 +19,7 @@ const GraphicContainer = ({
   line,
 }) => {
   const [hidden, setHidden] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const handleHidden = () => {
@@ -38,34 +40,76 @@ const GraphicContainer = ({
     });
   };
 
+  const dataBar = [
+    {
+      label: "Category 1",
+      value: 80,
+      backgroundColor:
+        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
+    },
+    {
+      label: "Category 2",
+      value: 50,
+      backgroundColor:
+        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
+    },
+    {
+      label: "Category 3",
+      value: 70,
+      backgroundColor:
+        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
+    },
+    {
+      label: "Category 4",
+      value: 25,
+      backgroundColor:
+        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
+    },
+  ];
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <section className={styles.graphs}>
+      {isModalVisible && (
+        <TemperatureModal onClose={closeModal} isVisible={isModalVisible}>
+          <h2>Conteúdo do Modal</h2>
+          <p>Aqui está alguma informação sobre a temperatura.</p>
+          <button onClick={closeModal}>Fechar</button>
+        </TemperatureModal>
+      )}
+
       <div className={styles.graphsTop}>
         <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
           <LineGraph
             lines={Object.keys(visibleLines)
               .map((key, index) => {
                 if (visibleLines[key]) {
-                  const lineData = lineDatas.find((item) => item.name === line); // Acessando os dados da linha
+                  const lineData = lineDatas.find((item) => item.name === line);
                   return {
-                    data: lineData ? lineData.data[index] : [], // Acessando os dados da linha com base no índice
+                    data: lineData ? lineData.data[index] : [],
                     strokeColor:
                       key === "line1"
-                        ? "#d40d77"
+                        ? lineData.color[index]
                         : key === "line2"
-                        ? "#14ccc9"
-                        : "#dbd10f", // Cores para as linhas
+                        ? lineData.color[index]
+                        : lineData.color[index],
                     fillColor:
                       key === "line1"
-                        ? "rgba(212, 13, 119, 0.8)"
+                        ? lineData.rgba[index]
                         : key === "line2"
-                        ? "rgba(20, 204, 201, 0.8)"
-                        : "rgba(219, 209, 15, 0.8)", // Cores para o preenchimento
+                        ? lineData.color[index]
+                        : lineData.color[index],
                   };
                 }
-                return null; // Se a linha não estiver visível, retorna null
+                return null;
               })
-              .filter(Boolean)} // Filtrando para remover valores nulos
+              .filter(Boolean)}
             width="100%"
             height={250}
           />
@@ -77,7 +121,7 @@ const GraphicContainer = ({
             width="105%"
             height="168px"
           >
-            <div className={styles.TempGraph}>
+            <div className={styles.TempGraph} onClick={openModal}>
               <div className={styles.temp}>
                 <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
                 <span>19ºC</span>
@@ -108,11 +152,11 @@ const GraphicContainer = ({
             width="23%"
             height="320px"
           >
-            <RadialBarCharts value={150} />
+            <RadialBarCharts value={0} />
           </Frame>
         )}
         <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
-          <HorizontalBarGraph />
+          <HorizontalBarGraph dataBar={dataBar} />
         </Frame>
         <Frame isTitle={true} title={"Gráficos maneiros"} height="auto">
           <div className={styles.dropDownBtns}>
