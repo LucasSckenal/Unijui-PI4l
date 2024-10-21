@@ -84,6 +84,16 @@ a {
 button {
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 8px;
+  border: none;
+  min-height: 20px;
+  height: auto;
+  color: var(--TextGeneral);
+  background: var(--Aside);
+}
+
+input {
+  color: var(--TextGeneral)
 }
 
 body {
