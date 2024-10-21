@@ -1,23 +1,27 @@
 import styles from "./styles.module.scss";
 
-function TemperatureModal({ children, onClose, isModalVisible }) {
+function TemperatureModal({ children, onClose, isVisible, selectedTemp }) {
   const handleOverlayClick = (e) => {
-    // Verifica se o clique foi diretamente no overlay
     if (e.target.classList.contains(styles.modalOverlay)) {
       onClose();
     }
+    console.log(selectedTemp);
   };
-
-  //TODO: Entender como funciona, isModalVisible funciona no GraphicContainer, é por aqui o problema
 
   return (
     <div
       className={`${styles.modalOverlay} ${
-        isModalVisible ? styles.visible : styles.hidden
+        isVisible ? styles.visible : styles.hidden
       }`}
       onClick={handleOverlayClick}
     >
-      <div className={styles.innerModal}>{children}</div>
+      <div className={styles.innerModal}>
+        <h2>
+          Aqui está alguma informação sobre a {selectedTemp || "indefinida"}
+        </h2>
+        {children}
+        <button onClick={onClose}>Fechar</button>
+      </div>
     </div>
   );
 }

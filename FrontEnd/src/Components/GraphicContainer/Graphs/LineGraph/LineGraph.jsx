@@ -135,7 +135,6 @@ const LineGraph = ({
           );
         })}
 
-        {/* Linhas com gradiente */}
         {lines.map((line, lineIndex) => {
           const maxValue = Math.max(...line.data);
           const points = line.data

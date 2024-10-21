@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
+import PieChart from "./Graphs/PizzaGraph/PizzaGraph.jsx";
 
 const GraphicContainer = ({
   visibleLines,
@@ -20,6 +21,7 @@ const GraphicContainer = ({
 }) => {
   const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedTemp, setSelectedTemp] = useState("");
 
   useEffect(() => {
     const handleHidden = () => {
@@ -67,7 +69,15 @@ const GraphicContainer = ({
     },
   ];
 
-  const openModal = () => {
+  const pieData = [
+    { value: 40, color: "#ff0000" }, 
+    { value: 30, color: "#00ff00" }, 
+    { value: 20, color: "#0000ff" }, 
+    { value: 10, color: "#ffff00" }, 
+  ];
+
+  const openModal = (tempType) => {
+    setSelectedTemp(tempType);
     setModalVisible(true);
   };
   const closeModal = () => {
@@ -77,10 +87,12 @@ const GraphicContainer = ({
   return (
     <section className={styles.graphs}>
       {isModalVisible && (
-        <TemperatureModal onClose={closeModal} isVisible={isModalVisible}>
-          <h2>Conteúdo do Modal</h2>
-          <p>Aqui está alguma informação sobre a temperatura.</p>
-          <button onClick={closeModal}>Fechar</button>
+        <TemperatureModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          selectedTemp={selectedTemp}
+        >
+          <PieChart data={pieData} />
         </TemperatureModal>
       )}
 
@@ -115,35 +127,44 @@ const GraphicContainer = ({
           />
         </Frame>
         <div className={styles.tempContainer}>
-          <Frame
-            isTitle={true}
-            title={"Temperatura"}
-            width="105%"
-            height="168px"
+          <div
+            onClick={() => openModal("Temperatura")}
+            style={{ cursor: "pointer" }}
           >
-            <div className={styles.TempGraph} onClick={openModal}>
-              <div className={styles.temp}>
-                <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                <span>19ºC</span>
+            <Frame
+              isTitle={true}
+              title={"Temperatura"}
+              width="105%"
+              height="168px"
+            >
+              <div className={styles.TempGraph}>
+                <div className={styles.temp}>
+                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
+                  <span>19ºC</span>
+                </div>
               </div>
-            </div>
-          </Frame>
-          <Frame
-            isTitle={true}
-            title={"Temperatura Interna"}
-            width="105%"
-            height="168px"
+            </Frame>
+          </div>
+          <div
+            onClick={() => openModal("Temperatura Interna")}
+            style={{ cursor: "pointer" }}
           >
-            <div className={styles.TempGraph}>
-              <div className={styles.temp}>
-                <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                <span>22ºC</span>
+            <Frame
+              isTitle={true}
+              title={"Temperatura Interna"}
+              width="105%"
+              height="168px"
+            >
+              <div className={styles.TempGraph}>
+                <div className={styles.temp}>
+                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
+                  <span>22ºC</span>
+                </div>
               </div>
-            </div>
-          </Frame>
+            </Frame>
+          </div>
         </div>
       </div>
-
       <div className={styles.graphsBot}>
         {!hidden && (
           <Frame
@@ -152,7 +173,7 @@ const GraphicContainer = ({
             width="23%"
             height="320px"
           >
-            <RadialBarCharts value={0} />
+            <RadialBarCharts value={100} />
           </Frame>
         )}
         <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
@@ -196,7 +217,7 @@ const GraphicContainer = ({
       </div>
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn title="Direção do Vento" width={"504px"}>
-          <WindRose direction={270} size={300} />{" "}
+          <WindRose direction={0} size={300} />{" "}
         </DropdownBtn>
 
         <DropdownBtn title="Average Wind" width={"504px"}>
