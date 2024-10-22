@@ -11,13 +11,13 @@ import { useState, useEffect } from "react";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
-import PieChart from "./Graphs/PizzaGraph/PizzaGraph.jsx";
 
 const GraphicContainer = ({
   visibleLines,
   setVisibleLines,
   lineDatas = [],
   line,
+  activeBtn,
 }) => {
   const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -72,15 +72,27 @@ const GraphicContainer = ({
   const TempGraph = [
     {
       name: "Temperatura",
-      data: [[0, 30, 10, 22]],
+      data: [
+        [
+          22, 21, 20, 20, 19, 19, 20, 22, 25, 28, 30, 32, 34, 35, 35, 34, 32,
+          30, 28, 26, 24, 23, 23, 22,
+        ],
+      ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
+      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     },
     {
       name: "Temperatura Interna",
-      data: [[10, 20, 50, 80, 5, 13, 15, 15.9, 28]],
+      data: [
+        [
+          25, 24, 24, 23, 23, 22, 23, 24, 26, 28, 29, 31, 33, 34, 34, 33, 32,
+          30, 29, 28, 27, 26, 25, 25,
+        ],
+      ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
+      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     },
   ];
 
@@ -103,6 +115,24 @@ const GraphicContainer = ({
   const lastExternalTemp = getLastTemperatureValue("Temperatura");
   const lastInternalTemp = getLastTemperatureValue("Temperatura Interna");
 
+  const getMaxYValue = () => {
+    let maxY = 0;
+
+    Object.keys(visibleLines).forEach((key, index) => {
+      if (visibleLines[key]) {
+        const lineData = lineDatas.find((item) => item.name === line);
+        if (lineData && lineData.data[index]) {
+          const currentMax = Math.max(...lineData.data[index]);
+          maxY = Math.max(maxY, currentMax);
+        }
+      }
+    });
+
+    return maxY;
+  };
+
+  const yMax = getMaxYValue() || 100;
+
   return (
     <section className={styles.graphs}>
       {isModalVisible && (
@@ -110,19 +140,8 @@ const GraphicContainer = ({
           onClose={closeModal}
           isVisible={isModalVisible}
           selectedTemp={selectedTemp}
-        >
-          <LineGraph
-            lines={TempGraph.filter(
-              (lineData) => lineData.name === selectedTemp
-            ).map((lineData) => ({
-              data: lineData.data[0],
-              strokeColor: lineData.color[0],
-              fillColor: lineData.rgba[0],
-            }))}
-            width="100%"
-            height={250}
-          />
-        </TemperatureModal>
+          tempData={TempGraph}
+        ></TemperatureModal>
       )}
 
       <div className={styles.graphsTop}>
@@ -130,29 +149,23 @@ const GraphicContainer = ({
           <LineGraph
             lines={Object.keys(visibleLines)
               .map((key, index) => {
-                if (visibleLines[key]) {
-                  const lineData = lineDatas.find((item) => item.name === line);
-                  return {
-                    data: lineData ? lineData.data[index] : [],
-                    strokeColor:
-                      key === "line1"
-                        ? lineData.color[index]
-                        : key === "line2"
-                        ? lineData.color[index]
-                        : lineData.color[index],
-                    fillColor:
-                      key === "line1"
-                        ? lineData.rgba[index]
-                        : key === "line2"
-                        ? lineData.color[index]
-                        : lineData.color[index],
-                  };
-                }
-                return null;
+                if (!visibleLines[key]) return null;
+
+                const lineData = lineDatas.find((item) => item.name === line);
+                const color = lineData?.color[index] || "";
+                const fillColor = lineData?.rgba[index] || "";
+
+                return {
+                  data: lineData ? lineData.data[index] : [],
+                  strokeColor: color,
+                  fillColor: fillColor || color,
+                };
               })
               .filter(Boolean)}
             width="100%"
             height={250}
+            showDegreeSymbol={activeBtn === "Temperatura"}
+            yMax={yMax}
           />
         </Frame>
         <div className={styles.tempContainer}>

@@ -70,7 +70,7 @@ function Home() {
       name: "Temperatura",
       data: [
         [40, 30, 20],
-        [35, 50, 100],
+        [35, 50, 46],
         [60, 70],
       ],
       color: ["#1ccf08", "#c3d411", "#d41515"],
@@ -148,9 +148,9 @@ function Home() {
       setLine("");
     } else {
       setActiveBtn(buttonName);
-      setActiveOptions([]); // Limpa as opções ativas
-      setVisibleLines({ line1: false, line2: false, line3: false }); // Limpa a visibilidade das linhas
-      setLine(buttonName); // Define a linha ativa
+      setActiveOptions([]);
+      setVisibleLines({ line1: false, line2: false, line3: false });
+      setLine(buttonName);
     }
   };
 
@@ -164,7 +164,6 @@ function Home() {
         }
       });
 
-      // Atualiza a visibilidade das linhas com base no activeBtn
       setVisibleLines((prev) => ({
         ...prev,
         [`line${optionId}`]: shouldActivate,
@@ -258,6 +257,7 @@ function Home() {
               visibleLines={visibleLines}
               line={line}
               lineDatas={lineDatas}
+              activeBtn={activeBtn}
             />
           </div>
         </section>

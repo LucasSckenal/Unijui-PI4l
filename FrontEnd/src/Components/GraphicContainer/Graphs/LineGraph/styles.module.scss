@@ -1,9 +1,9 @@
 .lineGraph {
   display: block;
   margin: 20px auto;
+  width: 100%;
   z-index: 0;
   color: var(--TextGeneral) !important;
-  z-index: 0;
 
   polyline {
     stroke-dasharray: 2000; // Define o tamanho do traço para animação

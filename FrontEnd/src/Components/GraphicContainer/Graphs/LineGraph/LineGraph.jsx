@@ -3,6 +3,8 @@ import styles from "./styles.module.scss";
 
 const LineGraph = ({
   lines = [],
+  xLabels = [],
+  yMax = 100,
   width = "100%",
   height = "100%",
   strokeWidth = 2,
@@ -10,11 +12,10 @@ const LineGraph = ({
   pointBorderWidth = 0.5,
   lineBorderColor = "white",
   lineBorderWidth = 0.001,
-  xLabels = [],
-  yMax = 100,
   yLabel = "",
   xLabel = "",
-  margin = { top: 10, right: 10, bottom: 20, left: 20 },
+  showDegreeSymbol = false,
+  margin = { top: 10, right: 20, bottom: 20, left: 30 },
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -46,7 +47,12 @@ const LineGraph = ({
   const yStep = innerHeight / 5;
 
   const handleMouseEnter = (event, value, x, y) => {
-    setTooltip({ visible: true, x, y, value });
+    setTooltip({
+      visible: true,
+      x,
+      y,
+      value: showDegreeSymbol ? `${value}°C` : value,
+    });
   };
 
   const handleMouseLeave = () => {
@@ -103,7 +109,9 @@ const LineGraph = ({
                 fontSize="10"
                 fill="var(--TextGeneral)"
               >
-                {value}
+                {showDegreeSymbol
+                  ? `${Math.floor(value)}°C`
+                  : Math.floor(value)}{" "}
               </text>
             </g>
           );
@@ -136,11 +144,10 @@ const LineGraph = ({
         })}
 
         {lines.map((line, lineIndex) => {
-          const maxValue = Math.max(...line.data);
           const points = line.data
             .map((value, index) => {
               const x = left + (index / (line.data.length - 1)) * innerWidth;
-              const y = top + innerHeight - (value / maxValue) * innerHeight;
+              const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
               return `${x},${y}`;
             })
             .join(" ");
@@ -170,10 +177,7 @@ const LineGraph = ({
         {lines.map((line, lineIndex) =>
           line.data.map((value, index) => {
             const x = left + (index / (line.data.length - 1)) * innerWidth;
-            const y =
-              top +
-              innerHeight -
-              (value / Math.max(...line.data)) * innerHeight;
+            const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
 
             return (
               <g key={`point-${lineIndex}-${index}`}>
@@ -193,7 +197,7 @@ const LineGraph = ({
         )}
       </svg>
 
-      {/* Tooltip */}
+      {/* Tooltip com símbolo de graus Celsius */}
       {tooltip.visible && (
         <div
           className={styles.tooltip}
@@ -208,6 +212,7 @@ const LineGraph = ({
             pointerEvents: "none",
             transform: "translate(-50%, -100%)",
             color: "black",
+            zIndex: 10,
           }}
         >
           {tooltip.value}
