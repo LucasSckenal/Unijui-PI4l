@@ -1,6 +1,7 @@
 .pageContainer {
   .lines {
-    height: 87vh;
+    min-height: 87vh;
+    height: auto;
     width: 11.25rem;
     background: linear-gradient(var(--Bg), var(--Aside));
     box-shadow: 10px 0px 24px rgba(168, 168, 168, 0.25);
@@ -11,6 +12,7 @@
     gap: 12px;
     padding: 15px;
     justify-content: space-between;
+    
 
 
     .top {

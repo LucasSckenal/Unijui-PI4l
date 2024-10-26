@@ -115,7 +115,7 @@ function Home() {
   useEffect(() => {
     const updateDate = () => {
       const date = selectedDate
-        ? new Date(selectedDate + "T00:00:00Z")
+        ? new Date(selectedDate + "T00:00:00")
         : new Date();
       setCurrentDate(date);
     };
@@ -171,9 +171,9 @@ function Home() {
     }
   };
 
-  const day = currentDate ? currentDate.getUTCDate() : "";
+  const day = currentDate ? currentDate.getDate() : "";
   const month = currentDate
-    ? currentDate.toLocaleString("default", { month: "long", timeZone: "UTC" })
+    ? currentDate.toLocaleString("default", { month: "long", timeZone: "America/Sao_Paulo" })
     : "";
 
   return (

@@ -16,28 +16,6 @@
       gap: 12px;
       text-align: center;
 
-      .TempGraph {
-
-        img {
-          width: 75px;
-          height: 75px;
-          transition: width 0.3s, height 0.3s;
-        }
-
-        .temp {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          gap: 8px;
-
-          span {
-            font-size: 70px;
-            color: var(--TextGeneral);
-            transition: font-size 0.3s;
-          }
-        }
-      }
     }
   }
 
@@ -45,6 +23,14 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+
+    .humidityContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+      margin-right: 0.7%;
+    }
 
     .dropDownBtns {
       display: flex;
@@ -58,6 +44,7 @@
         font-size: 20px;
       }
     }
+
   }
 
   .dropDownBtnsBot {

@@ -8,9 +8,12 @@ import styles from "./styles.module.scss";
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import { useState, useEffect } from "react";
-import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
+import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
+import humidDark from "../../assets/rainIcon.png";
+import humidLight from "../../assets/rainIconDark.png";
+import HumidityModal from "../Modals/HumidityModal/HumidityModal.jsx";
 
 const GraphicContainer = ({
   visibleLines,
@@ -21,7 +24,8 @@ const GraphicContainer = ({
 }) => {
   const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedTemp, setSelectedTemp] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [modalCategory, setModalCategory] = useState(""); 
 
   useEffect(() => {
     const handleHidden = () => {
@@ -96,24 +100,52 @@ const GraphicContainer = ({
     },
   ];
 
-  const openModal = (tempType) => {
-    setSelectedTemp(tempType);
+  const HumidGraph = [
+    {
+      name: "Úmidade",
+      data: [
+        [
+          10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40,
+          35, 30, 25, 20, 15, 10, 5,
+        ],
+      ],
+      color: ["#3a21de"],
+      rgba: ["rgba(74, 33, 222, 0.8)"],
+      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+    },
+    {
+      name: "Úmidade Interna",
+      data: [
+        [
+          30, 32, 31, 33, 34, 36, 35, 34, 33, 31, 29, 28, 27, 25, 26, 28, 30,
+          32, 33, 34, 35, 36, 37, 38,
+        ],
+      ],
+      color: ["#3a21de"],
+      rgba: ["rgba(74, 33, 222, 0.8)"],
+      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+    },
+  ];
+
+  const openModal = (category, valueType) => {
+    setModalCategory(category); 
+    setSelectedType(valueType);
     setModalVisible(true);
+    console.log("Valuetype:" + valueType);
   };
   const closeModal = () => {
     setModalVisible(false);
   };
 
-  const getLastTemperatureValue = (tempName) => {
-    const tempData = TempGraph.find((temp) => temp.name === tempName);
-    if (tempData && tempData.data.length > 0) {
-      return tempData.data[0][tempData.data[0].length - 1];
-    }
-    return null;
+  const getLastValue = (graph, name) => {
+    const data = graph.find((item) => item.name === name);
+    return data?.data[0]?.[data.data[0].length - 1] || null;
   };
 
-  const lastExternalTemp = getLastTemperatureValue("Temperatura");
-  const lastInternalTemp = getLastTemperatureValue("Temperatura Interna");
+  const lastExternalTemp = getLastValue(TempGraph, "Temperatura");
+  const lastInternalTemp = getLastValue(TempGraph, "Temperatura Interna");
+  const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
+  const lastInternalHumid = getLastValue(HumidGraph, "Úmidade Interna");
 
   const getMaxYValue = () => {
     let maxY = 0;
@@ -135,13 +167,21 @@ const GraphicContainer = ({
 
   return (
     <section className={styles.graphs}>
-      {isModalVisible && (
+      {isModalVisible && modalCategory === "temperatura" && (
         <TemperatureModal
           onClose={closeModal}
           isVisible={isModalVisible}
-          selectedTemp={selectedTemp}
+          selectedTemp={selectedType}
           tempData={TempGraph}
-        ></TemperatureModal>
+        />
+      )}
+      {isModalVisible && modalCategory === "umidade" && (
+        <HumidityModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          selectedHumidity={selectedType}
+          humidData={HumidGraph}
+        />
       )}
 
       <div className={styles.graphsTop}>
@@ -170,44 +210,69 @@ const GraphicContainer = ({
         </Frame>
         <div className={styles.tempContainer}>
           <div
-            onClick={() => openModal("Temperatura")}
+            onClick={() => openModal("temperatura", "Temperatura")}
             style={{ cursor: "pointer" }}
           >
             <Frame
               isTitle={true}
               title={"Temperatura"}
               width="105%"
-              height="168px"
+              height="168.5px"
             >
-              <div className={styles.TempGraph}>
-                <div className={styles.temp}>
-                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>{lastExternalTemp}ºC</span>
-                </div>
-              </div>
+              <SmallContainer lastValue={lastExternalTemp} light={tempLight} dark={tempDark} complement={"ºC"}/>
             </Frame>
           </div>
           <div
-            onClick={() => openModal("Temperatura Interna")}
+            onClick={() => openModal("temperatura", "Temperatura Interna")}
             style={{ cursor: "pointer" }}
           >
             <Frame
               isTitle={true}
               title={"Temperatura Interna"}
               width="105%"
-              height="168px"
+              height="168.5px"
             >
-              <div className={styles.TempGraph}>
-                <div className={styles.temp}>
-                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>{lastInternalTemp}ºC</span>
-                </div>
-              </div>
+              <SmallContainer lastValue={lastInternalTemp} light={tempLight} dark={tempDark} complement={"ºC"}/>
             </Frame>
           </div>
         </div>
       </div>
       <div className={styles.graphsBot}>
+  
+          {/*É aqui que começa os gráfico da umidade*/}
+      <div className={styles.humidityContainer}>
+          <div
+            onClick={() => openModal("umidade","Úmidade")}
+            style={{ cursor: "pointer" }}
+          >
+            <Frame
+              isTitle={true}
+              title={"Umidade"}
+              width="105%"
+              height="154px"
+            >
+              <SmallContainer lastValue={lastExternalHumid} light={humidLight} dark={humidDark} complement={"mm"}/>
+            </Frame>
+          </div>
+          <div
+            onClick={() => openModal("umidade", "Úmidade Interna")}
+            style={{ cursor: "pointer" }}
+          >
+            <Frame
+              isTitle={true}
+              title={"Umidade Interna"}
+              width="105%"
+              height="154px"
+            >
+              <SmallContainer lastValue={lastInternalHumid} light={humidLight} dark={humidDark} complement={"mm"}/>
+            </Frame>
+          </div>
+        </div>
+
+        <Frame isTitle={true} title={"Barras"} width="51.7%" height="320px">
+          <HorizontalBarGraph dataBar={dataBar} />
+        </Frame>
+
         {!hidden && (
           <Frame
             isTitle={true}
@@ -218,44 +283,7 @@ const GraphicContainer = ({
             <RadialBarCharts value={100} />
           </Frame>
         )}
-        <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
-          <HorizontalBarGraph dataBar={dataBar} />
-        </Frame>
-        <Frame isTitle={true} title={"Gráficos maneiros"} height="auto">
-          <div className={styles.dropDownBtns}>
-            <DropdownBtn
-              title="AQUI Lindo :3"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            />
-            <DropdownBtn
-              title="Average Wind"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-              atque voluptatibus quisquam quam modi possimus unde deserunt sed
-              error similique fugiat! Rem.
-            </DropdownBtn>
-            <DropdownBtn
-              title="Average Wind"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-              atque voluptatibus quisquam quam modi possimus unde deserunt sed
-              error similique fugiat! Rem.
-            </DropdownBtn>
-          </div>
-        </Frame>
+
       </div>
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn title="Direção do Vento" width={"504px"}>

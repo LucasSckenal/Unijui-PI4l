@@ -2,30 +2,30 @@ import styles from "./styles.module.scss";
 import LineGraph from "../../GraphicContainer/Graphs/LineGraph/LineGraph";
 import { useEffect, useState } from "react";
 
-function TemperatureModal({ onClose, isVisible, selectedTemp, tempData }) {
+function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
   const [maxDataValue, setMaxDataValue] = useState(0);
   const [selectedLineData, setSelectedLineData] = useState(null);
 
   useEffect(() => {
-    if (selectedTemp && tempData) {
-      const temp = tempData.find((temp) => temp.name === selectedTemp);
-      setSelectedLineData(temp);
+    console.log(selectedHumidity + "\n" + humidData);
+    if (selectedHumidity && humidData) {
+      const humid = humidData.find((humid) => humid.name === selectedHumidity);
+      setSelectedLineData(humid);
 
-      if (temp && temp.data.length > 0) {
-        // Assumindo que temp.data[0] é um array
-        setMaxDataValue(Math.max(...temp.data[0]));
+      if (humid && humid.data.length > 0) {
+        // Assumindo que humid.data[0] é um array
+        setMaxDataValue(Math.max(...humid.data[0]));
       } else {
         setMaxDataValue(0); // Reseta o maxDataValue se não houver dados
       }
     }
-  }, [selectedTemp, tempData]);
+  }, [selectedHumidity, humidData]);
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains(styles.modalOverlay)) {
       onClose();
     }
   };
-
 
   return (
     <div
@@ -36,7 +36,7 @@ function TemperatureModal({ onClose, isVisible, selectedTemp, tempData }) {
     >
       <div className={styles.innerModal}>
         <h2>
-          Aqui está alguma informação sobre a {selectedTemp || "indefinida"}
+          Aqui está alguma informação sobre a {selectedHumidity || "indefinida"}
         </h2>
         {selectedLineData && selectedLineData.data.length > 0 && (
           <LineGraph
@@ -60,6 +60,6 @@ function TemperatureModal({ onClose, isVisible, selectedTemp, tempData }) {
   );
 }
 
-export default TemperatureModal;
+export default HumidityModal;
 
-// Funções e lógica para abrir o modal
+// Código FERA, favor não copiar, faça o seu próprio truta.
