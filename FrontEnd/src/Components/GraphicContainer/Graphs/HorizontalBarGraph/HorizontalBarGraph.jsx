@@ -6,9 +6,9 @@ const data = [
 ];
 
 const getBarColor = (value) => {
-  if (value <= 33) return "#3CC27F"; 
-  if (value <= 66) return "#E6FF2B"; 
-  return "#FA3E3E"; 
+  if (value <= 33) return "#3CC27F";
+  if (value <= 66) return "#E6FF2B";
+  return "#FA3E3E";
 };
 
 const HorizontalBarGraph = ({ data }) => {

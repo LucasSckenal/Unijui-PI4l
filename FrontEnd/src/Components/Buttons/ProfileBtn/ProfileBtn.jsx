@@ -2,7 +2,7 @@ import { useState } from "react";
 import LogoutBtn from "../LogoutBtn/Logout";
 import styles from "./styles.module.scss";
 import Divider from "../../Utilities/Divider/Divider";
-import EditProfile from "../../Profile/EditProf/EditProfile";
+import EditProfile from "../../Modals/EditProf/EditProfile";
 import user from "../../../assets/UserDefault.png";
 
 const ProfileBtn = () => {

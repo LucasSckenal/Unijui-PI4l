@@ -4,6 +4,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./styles.module.scss";
 import Times from "../../Components/Time/time.jsx";
 import GraphicsBtn from "../../Components/Buttons/GraphicsBtn/GraphicsBtn.jsx";
+import GraphicsOptions from "../../Components/Buttons/graphicOptionsBtn/GraphicOptionsBtn.jsx";
 import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
 import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 
@@ -12,6 +13,83 @@ function Home() {
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("sensor1");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [activeBtn, setActiveBtn] = useState(null);
+  const [activeOptions, setActiveOptions] = useState([]);
+  const [line, setLine] = useState("");
+  const [visibleLines, setVisibleLines] = useState({
+    line1: false,
+    line2: false,
+    line3: false,
+  });
+
+  const GraphsBtns = [
+    {
+      name: "Vento",
+      id: 1,
+      options: [
+        { id: "1", label: "Avg. Wind Speed" },
+        { id: "2", label: "Gust Wind Speed" },
+        { id: "3", label: "Teste teste" },
+      ],
+    },
+    {
+      name: "Temperatura",
+      id: 2,
+      options: [
+        { id: "1", label: "Temperatura Ext" },
+        { id: "2", label: "Temperatura Int" },
+        { id: "3", label: "Opção 3" },
+      ],
+    },
+    {
+      name: "Diversos",
+      id: 3,
+      options: [
+        { id: "1", label: "Pressão atmosférica" },
+        { id: "2", label: "Radiação solar" },
+      ],
+    },
+  ];
+
+  const lineDatas = [
+    {
+      name: "Vento",
+      data: [
+        [0, 30, 10],
+        [30, 25, 20, 5],
+        [0, 10, 30],
+      ],
+      color: ["#de7c21", "#0e95e3", "#0ecc37"],
+      rgba: [
+        "rgba(222, 124, 33, 0.8)",
+        "rgba(14, 149, 227, 0.2)",
+        "rgba(8, 191, 81, 0.8)",
+      ],
+    },
+    {
+      name: "Temperatura",
+      data: [
+        [40, 30, 20],
+        [35, 50, 46],
+        [60, 70],
+      ],
+      color: ["#1ccf08", "#c3d411", "#d41515"],
+      rgba: [
+        "rgba(29, 150, 15, 0.8)",
+        "rgba(173, 158, 16, 0.8)",
+        "rgba(163, 23, 23, 0.4)",
+      ],
+    },
+    {
+      name: "Diversos",
+      data: [
+        [20, 30],
+        [22, 28, 24],
+      ],
+      color: ["#d40d77", "#6c08cf"],
+      rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
+    },
+  ];
 
   const dateInputRef = useRef(null);
 
@@ -38,15 +116,13 @@ function Home() {
 
   useEffect(() => {
     const updateDate = () => {
-      // Se selectedDate não estiver vazio, use-o; caso contrário, use a data atual
       const date = selectedDate
         ? new Date(selectedDate + "T00:00:00Z")
         : new Date();
       setCurrentDate(date);
     };
 
-    updateDate(); // Atualiza a data inicialmente
-
+    updateDate();
     const intervalId = setInterval(updateDate, 1000);
     return () => clearInterval(intervalId);
   }, [selectedDate]);
@@ -66,23 +142,41 @@ function Home() {
     setSelectedSensor(event.target.value);
   };
 
+  const handleButtonClick = (buttonName) => {
+    if (activeBtn === buttonName) {
+      setActiveBtn(null);
+      setActiveOptions([]);
+      setVisibleLines({ line1: false, line2: false, line3: false });
+      setLine("");
+    } else {
+      setActiveBtn(buttonName);
+      setActiveOptions([]);
+      setVisibleLines({ line1: false, line2: false, line3: false });
+      setLine(buttonName);
+    }
+  };
+
+  const toggleLineVisibility = (optionId, shouldActivate) => {
+    if (activeBtn) {
+      setActiveOptions((prev) => {
+        if (shouldActivate) {
+          return [...prev, optionId];
+        } else {
+          return prev.filter((id) => id !== optionId);
+        }
+      });
+
+      setVisibleLines((prev) => ({
+        ...prev,
+        [`line${optionId}`]: shouldActivate,
+      }));
+    }
+  };
+
   const day = currentDate ? currentDate.getUTCDate() : "";
   const month = currentDate
     ? currentDate.toLocaleString("default", { month: "long", timeZone: "UTC" })
     : "";
-
-  const [visibleLines, setVisibleLines] = useState({
-    line1: true,
-    line2: true,
-    line3: true,
-  });
-
-  const toggleLine = (lineKey) => {
-    setVisibleLines((prev) => ({
-      ...prev,
-      [lineKey]: !prev[lineKey],
-    }));
-  };
 
   return (
     <div className={styles.pageContainer}>
@@ -130,11 +224,24 @@ function Home() {
                 ))}
               </select>
             </div>
-            <div className={styles.divider}></div>
-            <GraphicsBtn name="Linha 1" onClick={() => toggleLine("line1")} />
-            <GraphicsBtn name="Linha 2" onClick={() => toggleLine("line2")} />
-            <GraphicsBtn name="Linha 3" onClick={() => toggleLine("line3")} />
-            <div className={styles.divider}></div>
+            <Divider width={"90px"} />
+            {GraphsBtns.map(({ name, options }) => (
+              <div key={name}>
+                <GraphicsBtn
+                  name={name}
+                  isActive={activeBtn === name}
+                  onClick={() => handleButtonClick(name)}
+                />
+                {activeBtn === name && (
+                  <GraphicsOptions
+                    options={options}
+                    isActiveOptions={activeOptions}
+                    onToggle={toggleLineVisibility}
+                  />
+                )}
+              </div>
+            ))}
+            <Divider width={"90px"} />
           </div>
           <div className={styles.Timer}>
             <Times />
@@ -150,7 +257,9 @@ function Home() {
             </p>
             <GraphicContainer
               visibleLines={visibleLines}
-              sensor={selectedSensor}
+              line={line}
+              lineDatas={lineDatas}
+              activeBtn={activeBtn}
             />
           </div>
         </section>

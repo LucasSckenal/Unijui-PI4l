@@ -48,7 +48,7 @@ const EditProfile = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay}>
+    <div className={styles.modalOverlay} onClick={onClose}>
       <form className={styles.innerModal} onClick={(e) => e.stopPropagation()}>
         <label>Profile</label>
         <div className={styles.inputs}>

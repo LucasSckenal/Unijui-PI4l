@@ -3,24 +3,46 @@ import { useEffect, useRef, useState } from "react";
 const SpeedometerGraph = ({ value = 0 }) => {
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 360, height: 280 });
+  const [animatedValue, setAnimatedValue] = useState(0); // Valor interpolado
 
-  // Atualiza as dimensões do canvas com base no tamanho do contêiner pai
+  // Função para animar o ponteiro
+  useEffect(() => {
+    let animationFrame;
+    const start = performance.now();
+    const initialValue = animatedValue;
+    const duration = 1000; // Duração da animação em ms
+
+    const animate = (time) => {
+      const progress = Math.min((time - start) / duration, 1);
+      const newValue = initialValue + progress * (value - initialValue);
+      setAnimatedValue(newValue); // Atualiza o valor interpolado
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value]);
+
+  // Atualiza as dimensões do canvas
   useEffect(() => {
     const updateDimensions = () => {
       if (canvasRef.current) {
         const { offsetWidth } = canvasRef.current.parentElement;
         const newWidth = offsetWidth;
-        const newHeight = (newWidth / 360) * 280; // Mantém a proporção do gráfico
+        const newHeight = (newWidth / 360) * 280;
         setDimensions({ width: newWidth, height: newHeight });
       }
     };
 
-    updateDimensions(); // Chama ao montar o componente
-    window.addEventListener("resize", updateDimensions); // Atualiza ao redimensionar
-
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
+  // Redesenha o gráfico sempre que o valor ou dimensões mudam
   useEffect(() => {
     const { width, height } = dimensions;
     const canvas = canvasRef.current;
@@ -53,13 +75,14 @@ const SpeedometerGraph = ({ value = 0 }) => {
     ctx.strokeStyle = gradient;
     ctx.stroke();
 
-    // Desenha o ponteiro
-    const angle = Math.PI + (value / 150) * Math.PI;
+    // Calcula o ângulo para o ponteiro com base no valor animado
+    const angle = Math.PI + (animatedValue / 150) * Math.PI;
     const pointerLength = radius;
     const pointerX = centerX + pointerLength * Math.cos(angle);
     const pointerY = centerY + pointerLength * Math.sin(angle);
     const pointerBaseWidth = 18;
 
+    // Desenha o ponteiro
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
@@ -81,13 +104,14 @@ const SpeedometerGraph = ({ value = 0 }) => {
     ctx.fillStyle = "white";
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#2D2D2D";
     ctx.stroke();
 
     ctx.font = "20px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
-    ctx.fillText(`${value}`, centerX, centerY);
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${Math.round(animatedValue)}`, centerX, centerY);
 
     // Função para desenhar retângulos arredondados
     const drawRoundedRect = (
@@ -130,13 +154,33 @@ const SpeedometerGraph = ({ value = 0 }) => {
     const goodCenterX = centerX - radius - 40;
     const centerCoordinate = centerY + 5;
 
-    drawRoundedRect(badCenterX, centerCoordinate, 80, 30, 10, "#F44336", "PERIGO");
-    drawRoundedRect(goodCenterX, centerCoordinate, 80, 30, 10, "#4CAF50", "BOM");
-  }, [value, dimensions]);
+    drawRoundedRect(
+      badCenterX,
+      centerCoordinate,
+      80,
+      30,
+      10,
+      "#F44336",
+      "PERIGO"
+    );
+    drawRoundedRect(
+      goodCenterX,
+      centerCoordinate,
+      80,
+      30,
+      10,
+      "#4CAF50",
+      "BOM"
+    );
+  }, [animatedValue, dimensions]);
 
   return (
     <div style={{ width: "100%", height: "auto" }}>
-      <canvas ref={canvasRef} width={dimensions.width} height={dimensions.height} />
+      <canvas
+        ref={canvasRef}
+        width={dimensions.width}
+        height={dimensions.height}
+      />
     </div>
   );
 };
