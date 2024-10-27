@@ -26,7 +26,6 @@ function TemperatureModal({ onClose, isVisible, selectedTemp, tempData }) {
     }
   };
 
-
   return (
     <div
       className={`${styles.modalOverlay} ${
@@ -62,4 +61,3 @@ function TemperatureModal({ onClose, isVisible, selectedTemp, tempData }) {
 
 export default TemperatureModal;
 
-// Funções e lógica para abrir o modal

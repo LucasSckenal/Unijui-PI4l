@@ -173,7 +173,10 @@ function Home() {
 
   const day = currentDate ? currentDate.getDate() : "";
   const month = currentDate
-    ? currentDate.toLocaleString("default", { month: "long", timeZone: "America/Sao_Paulo" })
+    ? currentDate.toLocaleString("default", {
+        month: "long",
+        timeZone: "America/Sao_Paulo",
+      })
     : "";
 
   return (

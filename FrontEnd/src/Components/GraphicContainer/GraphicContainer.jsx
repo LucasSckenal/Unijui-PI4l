@@ -17,7 +17,6 @@ import HumidityModal from "../Modals/HumidityModal/HumidityModal.jsx";
 
 const GraphicContainer = ({
   visibleLines,
-  setVisibleLines,
   lineDatas = [],
   line,
   activeBtn,
@@ -25,7 +24,7 @@ const GraphicContainer = ({
   const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("");
-  const [modalCategory, setModalCategory] = useState(""); 
+  const [modalCategory, setModalCategory] = useState("");
 
   useEffect(() => {
     const handleHidden = () => {
@@ -37,14 +36,6 @@ const GraphicContainer = ({
     window.addEventListener("resize", handleHidden);
     return () => window.removeEventListener("resize", handleHidden);
   }, []);
-
-  const resetLines = () => {
-    setVisibleLines({
-      1: false,
-      2: false,
-      3: false,
-    });
-  };
 
   const dataBar = [
     {
@@ -73,6 +64,17 @@ const GraphicContainer = ({
     },
   ];
 
+  const generateHourlyLabels = () => {
+    const labels = [];
+    const now = new Date();
+
+    for (let i = 0; i < 24; i++) {
+      const hour = new Date(now.getTime() - i * 60 * 60 * 1000).getHours();
+      labels.unshift(`${hour}:00`);
+    }
+    return labels;
+  };
+
   const TempGraph = [
     {
       name: "Temperatura",
@@ -84,7 +86,7 @@ const GraphicContainer = ({
       ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      xLabels: generateHourlyLabels(),
     },
     {
       name: "Temperatura Interna",
@@ -96,7 +98,7 @@ const GraphicContainer = ({
       ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      xLabels: generateHourlyLabels(),
     },
   ];
 
@@ -111,7 +113,7 @@ const GraphicContainer = ({
       ],
       color: ["#3a21de"],
       rgba: ["rgba(74, 33, 222, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      xLabels: generateHourlyLabels(),
     },
     {
       name: "Úmidade Interna",
@@ -123,12 +125,12 @@ const GraphicContainer = ({
       ],
       color: ["#3a21de"],
       rgba: ["rgba(74, 33, 222, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      xLabels: generateHourlyLabels(),
     },
   ];
 
   const openModal = (category, valueType) => {
-    setModalCategory(category); 
+    setModalCategory(category);
     setSelectedType(valueType);
     setModalVisible(true);
     console.log("Valuetype:" + valueType);
@@ -219,7 +221,12 @@ const GraphicContainer = ({
               width="105%"
               height="168.5px"
             >
-              <SmallContainer lastValue={lastExternalTemp} light={tempLight} dark={tempDark} complement={"ºC"}/>
+              <SmallContainer
+                lastValue={lastExternalTemp}
+                light={tempLight}
+                dark={tempDark}
+                complement={"ºC"}
+              />
             </Frame>
           </div>
           <div
@@ -232,26 +239,30 @@ const GraphicContainer = ({
               width="105%"
               height="168.5px"
             >
-              <SmallContainer lastValue={lastInternalTemp} light={tempLight} dark={tempDark} complement={"ºC"}/>
+              <SmallContainer
+                lastValue={lastInternalTemp}
+                light={tempLight}
+                dark={tempDark}
+                complement={"ºC"}
+              />
             </Frame>
           </div>
         </div>
       </div>
       <div className={styles.graphsBot}>
-  
-          {/*É aqui que começa os gráfico da umidade*/}
-      <div className={styles.humidityContainer}>
+        {/*É aqui que começa os gráfico da umidade*/}
+        <div className={styles.humidityContainer}>
           <div
-            onClick={() => openModal("umidade","Úmidade")}
+            onClick={() => openModal("umidade", "Úmidade")}
             style={{ cursor: "pointer" }}
           >
-            <Frame
-              isTitle={true}
-              title={"Umidade"}
-              width="105%"
-              height="154px"
-            >
-              <SmallContainer lastValue={lastExternalHumid} light={humidLight} dark={humidDark} complement={"mm"}/>
+            <Frame isTitle={true} title={"Umidade"} width="105%" height="154px">
+              <SmallContainer
+                lastValue={lastExternalHumid}
+                light={humidLight}
+                dark={humidDark}
+                complement={"mm"}
+              />
             </Frame>
           </div>
           <div
@@ -264,7 +275,12 @@ const GraphicContainer = ({
               width="105%"
               height="154px"
             >
-              <SmallContainer lastValue={lastInternalHumid} light={humidLight} dark={humidDark} complement={"mm"}/>
+              <SmallContainer
+                lastValue={lastInternalHumid}
+                light={humidLight}
+                dark={humidDark}
+                complement={"mm"}
+              />
             </Frame>
           </div>
         </div>
@@ -283,7 +299,6 @@ const GraphicContainer = ({
             <RadialBarCharts value={100} />
           </Frame>
         )}
-
       </div>
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn title="Direção do Vento" width={"504px"}>

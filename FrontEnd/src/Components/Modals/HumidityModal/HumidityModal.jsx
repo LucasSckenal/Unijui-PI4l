@@ -1,5 +1,5 @@
 import styles from "./styles.module.scss";
-import LineGraph from "../../GraphicContainer/Graphs/LineGraph/LineGraph";
+import VerticalBarGraph from "../../GraphicContainer/Graphs/VerticalBarGraph/VerticalBarGraph";
 import { useEffect, useState } from "react";
 
 function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
@@ -13,10 +13,9 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
       setSelectedLineData(humid);
 
       if (humid && humid.data.length > 0) {
-        // Assumindo que humid.data[0] é um array
         setMaxDataValue(Math.max(...humid.data[0]));
       } else {
-        setMaxDataValue(0); // Reseta o maxDataValue se não houver dados
+        setMaxDataValue(0);
       }
     }
   }, [selectedHumidity, humidData]);
@@ -39,19 +38,18 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
           Aqui está alguma informação sobre a {selectedHumidity || "indefinida"}
         </h2>
         {selectedLineData && selectedLineData.data.length > 0 && (
-          <LineGraph
-            lines={[
-              {
-                data: selectedLineData.data[0],
-                strokeColor: selectedLineData.color[0],
-                fillColor: selectedLineData.rgba[0],
-              },
-            ]}
+          <VerticalBarGraph
+            bars={selectedLineData.data[0].map((value) => ({
+              value,
+              color: selectedLineData.color[0],
+            }))}
             xLabels={selectedLineData.xLabels}
-            yMax={maxDataValue}
+            yMax={100}
             width="100%"
-            height={250}
-            showDegreeSymbol={true}
+            height={300}
+            barWidth={20}
+            barSpacing={10}
+            showDegreeSymbol={false}
           />
         )}
         <button onClick={onClose}>Fechar</button>
