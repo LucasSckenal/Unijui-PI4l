@@ -37,32 +37,38 @@ const GraphicContainer = ({
     return () => window.removeEventListener("resize", handleHidden);
   }, []);
 
-  const dataBar = [
-    {
-      label: "Category 1",
-      value: 80,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 2",
-      value: 50,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 3",
-      value: 70,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 4",
-      value: 25,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-  ];
+  const generateDataBar = () => {
+    const dataBar = [];
+    const today = new Date();
+
+    // Array de valores de radiação solar
+    const values = [350, 150, 300, 200, 220];
+
+    // Loop para os últimos 7 dias
+    for (let i = 0; i < 5; i++) {
+        const pastDate = new Date(today); // Copiar a data atual
+        pastDate.setDate(today.getDate() - i); // Subtrair os dias
+
+        // Formatar a data como 'DD/MM'
+        const label = pastDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
+        // Obter o valor correspondente ao dia (inverte a ordem)
+        const value = values[4 - i]; // Acessa os valores na ordem correta
+
+        dataBar.push({
+            label: label,
+            value: value,
+            backgroundColor:
+                "linear-gradient(90deg, rgba(219, 142, 9, 1) 0%, rgba(255, 238, 0, 1) 100%)",
+        });
+    }
+
+    return dataBar.reverse(); // Inverte para que o dia atual fique na parte superior
+};
+
+  // Chama a função para gerar os dados
+  const dataBar = generateDataBar();
+
 
   const generateHourlyLabels = () => {
     const labels = [];
@@ -111,7 +117,7 @@ const GraphicContainer = ({
           35, 30, 25, 20, 15, 10, 5,
         ],
       ],
-      color: ["#3a21de"],
+      color: ["url(linear-gradient(90deg, rgba(58, 33, 222, 1) 0%, rgba(66, 24, 163, 1) 100%))"],
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
@@ -123,7 +129,7 @@ const GraphicContainer = ({
           32, 33, 34, 35, 36, 37, 38,
         ],
       ],
-      color: ["#3a21de"],
+      color: ["url(linear-gradient(90deg, rgba(58, 33, 222, 1) 0%, rgba(66, 24, 163, 1) 100%))"],
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
@@ -285,8 +291,8 @@ const GraphicContainer = ({
           </div>
         </div>
 
-        <Frame isTitle={true} title={"Barras"} width="51.7%" height="320px">
-          <HorizontalBarGraph dataBar={dataBar} />
+        <Frame isTitle={true} title={"Radiação Solar"} width="51.5%" height="320px">
+          <HorizontalBarGraph dataBar={dataBar} maxValue={350} />
         </Frame>
 
         {!hidden && (
@@ -301,17 +307,17 @@ const GraphicContainer = ({
         )}
       </div>
       <div className={styles.dropDownBtnsBot}>
-        <DropdownBtn title="Direção do Vento" width={"504px"}>
+        <DropdownBtn title="Direção do Vento" width={"31.12%"}>
           <WindRose direction={0} size={300} />{" "}
         </DropdownBtn>
 
-        <DropdownBtn title="Average Wind" width={"504px"}>
+        <DropdownBtn title="Nível de Chuva" width={"31.12%"}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
           aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
           quisquam quam modi possimus unde deserunt sed error similique fugiat!
           Rem.
         </DropdownBtn>
-        <DropdownBtn title="Average Wind" width={"504px"}>
+        <DropdownBtn title="Pressão Atmosférica" width={"31.12%"}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
           aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
           quisquam quam modi possimus unde deserunt sed error similique fugiat!

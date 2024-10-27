@@ -7,8 +7,8 @@ const VerticalBarGraph = ({
   yMax = 100,
   width = "100%",
   height = "100%",
-  barWidth = 10,
-  barSpacing = 5,
+  barColor = "steelblue",
+  barWidth = 30,
   yLabel = "",
   xLabel = "",
   showDegreeSymbol = false,
@@ -16,12 +16,9 @@ const VerticalBarGraph = ({
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [tooltip, setTooltip] = useState({
-    visible: false,
-    x: 0,
-    y: 0,
-    value: null,
-  });
+  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: "" });
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [barHeights, setBarHeights] = useState([]); // Estado para armazenar a altura das barras
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -37,23 +34,31 @@ const VerticalBarGraph = ({
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
+  useEffect(() => {
+    const heights = bars.map(value => (value / yMax) * (dimensions.height - margin.top - margin.bottom));
+    setBarHeights(heights); // Atualiza a altura das barras
+  }, [bars, dimensions.height, yMax]);
+
   const { width: svgWidth, height: svgHeight } = dimensions;
   const { top, right, bottom, left } = margin;
   const innerWidth = svgWidth - left - right;
   const innerHeight = svgHeight - top - bottom;
   const yStep = innerHeight / 5;
 
-  const handleMouseEnter = (event, value, x, y) => {
+  const handleMouseMove = (event, value, index) => {
+    const rect = svgRef.current.getBoundingClientRect();
     setTooltip({
       visible: true,
-      x,
-      y,
-      value: showDegreeSymbol ? `${value}°C` : value,
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top - 10,
+      value,
     });
+    setHoveredIndex(index);
   };
 
   const handleMouseLeave = () => {
-    setTooltip({ ...tooltip, visible: false });
+    setTooltip({ visible: false, x: 0, y: 0, value: "" });
+    setHoveredIndex(null);
   };
 
   return (
@@ -62,12 +67,19 @@ const VerticalBarGraph = ({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${svgWidth - 10} ${svgHeight}`}
-        className={styles.barGraph}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        className={styles.verticalBarGraph}
       >
+        <defs>
+          <linearGradient id="bar-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(58, 33, 222, 1)" />
+            <stop offset="100%" stopColor="rgba(66, 24, 163, 1)" />
+          </linearGradient>
+        </defs>
+
         {/* Eixo Y */}
         {[...Array(6)].map((_, index) => {
-          const y = top + index * yStep;
+          const y = top + index * (innerHeight / 5);
           const value = yMax - (yMax / 5) * index;
           return (
             <g key={`y-label-${index}`}>
@@ -86,9 +98,7 @@ const VerticalBarGraph = ({
                 fontSize="10"
                 fill="var(--TextGeneral)"
               >
-                {showDegreeSymbol
-                  ? `${Math.floor(value)}°C`
-                  : Math.floor(value)}{" "}
+                {showDegreeSymbol ? `${Math.floor(value)}°C` : Math.floor(value)}
               </text>
             </g>
           );
@@ -96,17 +106,9 @@ const VerticalBarGraph = ({
 
         {/* Eixo X */}
         {xLabels.map((label, index) => {
-          const x = left + (index / (xLabels.length - 1)) * innerWidth;
+          const x = left + index * (innerWidth / xLabels.length) + barWidth / 2;
           return (
             <g key={`x-label-${index}`}>
-              <line
-                x1={x}
-                y1={top}
-                x2={x}
-                y2={top + innerHeight}
-                stroke="var(--TextGeneral)"
-                strokeWidth={0.5}
-              />
               <text
                 x={x}
                 y={top + innerHeight + 15}
@@ -120,31 +122,30 @@ const VerticalBarGraph = ({
           );
         })}
 
-        {/* Barras */}
-        {bars.map((bar, barIndex) => {
-          const x = left + barIndex * (barWidth + barSpacing);
-          const barHeight = (bar.value / yMax) * innerHeight;
-          const y = top + innerHeight - barHeight;
+        {/* Barras Verticais */}
+        {bars.map((value, index) => {
+          const x = left + index * (innerWidth / bars.length);
+          const y = top + innerHeight - (barHeights[index] || 0);
 
           return (
-            <g key={`bar-${barIndex}`}>
-              <rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={barHeight}
-                fill={bar.color}
-                onMouseEnter={(event) =>
-                  handleMouseEnter(event, bar.value, x, y)
-                }
-                onMouseLeave={handleMouseLeave}
-              />
-            </g>
+            <rect
+              key={`bar-${index}`}
+              x={x}
+              y={y}
+              width={barWidth}
+              height={barHeights[index] || 0} // Usando a altura animada
+              fill="url(#bar-gradient)"
+              stroke={hoveredIndex === index ? 'var(--TextGeneralAlt)' : 'transparent'}
+              strokeWidth={hoveredIndex === index ? 1 : 0}
+              onMouseMove={(e) => handleMouseMove(e, value, index)}
+              onMouseLeave={handleMouseLeave}
+              className={styles.bar} // Classe para a animação
+            />
           );
         })}
       </svg>
 
-      {/* Tooltip com símbolo de graus Celsius */}
+      {/* Tooltip */}
       {tooltip.visible && (
         <div
           className={styles.tooltip}
@@ -160,6 +161,7 @@ const VerticalBarGraph = ({
             transform: "translate(-50%, -100%)",
             color: "black",
             zIndex: 10,
+            whiteSpace: "nowrap",
           }}
         >
           {tooltip.value}

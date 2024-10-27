@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 
 function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
   const [maxDataValue, setMaxDataValue] = useState(0);
-  const [selectedLineData, setSelectedLineData] = useState(null);
+  const [selectedBarData, setSelectedBarData] = useState(null);
 
   useEffect(() => {
     console.log(selectedHumidity + "\n" + humidData);
     if (selectedHumidity && humidData) {
       const humid = humidData.find((humid) => humid.name === selectedHumidity);
-      setSelectedLineData(humid);
+      setSelectedBarData(humid);
 
       if (humid && humid.data.length > 0) {
         setMaxDataValue(Math.max(...humid.data[0]));
@@ -37,19 +37,16 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
         <h2>
           Aqui está alguma informação sobre a {selectedHumidity || "indefinida"}
         </h2>
-        {selectedLineData && selectedLineData.data.length > 0 && (
+        {selectedBarData && selectedBarData.data.length > 0 && (
           <VerticalBarGraph
-            bars={selectedLineData.data[0].map((value) => ({
-              value,
-              color: selectedLineData.color[0],
-            }))}
-            xLabels={selectedLineData.xLabels}
+            bars={selectedBarData.data[0]}
+            xLabels={selectedBarData.xLabels}
             yMax={100}
             width="100%"
             height={300}
             barWidth={20}
             barSpacing={10}
-            showDegreeSymbol={false}
+            barColor={selectedBarData.color[0]}
           />
         )}
         <button onClick={onClose}>Fechar</button>
