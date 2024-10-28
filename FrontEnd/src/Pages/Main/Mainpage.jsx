@@ -94,10 +94,22 @@ function Home() {
   const dateInputRef = useRef(null);
 
   useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0];
-    setSelectedDate(formattedDate);
-  }, []);
+    const updateDate = () => {
+      // Verifique se selectedDate é uma data válida
+      const date = selectedDate
+        ? new Date(selectedDate)
+        : new Date(); // Use a data atual se selectedDate não for válido
+      if (!isNaN(date)) {
+        setCurrentDate(date);
+      } else {
+        setCurrentDate(new Date()); // Garantir que currentDate sempre seja uma data válida
+      }
+    };
+
+    updateDate();
+    const intervalId = setInterval(updateDate, 1000);
+    return () => clearInterval(intervalId);
+  }, [selectedDate]);
 
   const mockUser = {
     name: localStorage.getItem("nome"),

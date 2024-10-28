@@ -1,5 +1,5 @@
 .verticalBarGraph rect {
-  transition: height 0.5s ease-in-out, y 0.5s ease-in-out; // Adiciona transição para altura e posição Y
+  
   &:hover {
     border: 1px solid var(--TextGeneral);
   }

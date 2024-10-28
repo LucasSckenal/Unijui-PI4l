@@ -13,6 +13,7 @@ const VerticalBarGraph = ({
   xLabel = "",
   showDegreeSymbol = false,
   margin = { top: 10, right: 20, bottom: 20, left: 30 },
+  
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -125,7 +126,7 @@ const VerticalBarGraph = ({
         {/* Barras Verticais */}
         {bars.map((value, index) => {
           const x = left + index * (innerWidth / bars.length);
-          const y = top + innerHeight - (barHeights[index] || 0);
+          const y = top - 1 + innerHeight - (barHeights[index] || 0);
 
           return (
             <rect

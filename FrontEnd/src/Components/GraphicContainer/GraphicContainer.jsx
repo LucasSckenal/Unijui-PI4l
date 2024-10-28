@@ -14,6 +14,8 @@ import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
 import humidDark from "../../assets/rainIcon.png";
 import humidLight from "../../assets/rainIconDark.png";
 import HumidityModal from "../Modals/HumidityModal/HumidityModal.jsx";
+import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
+import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
 
 const GraphicContainer = ({
   visibleLines,
@@ -42,7 +44,7 @@ const GraphicContainer = ({
     const today = new Date();
 
     // Array de valores de radiação solar
-    const values = [350, 150, 300, 200, 220];
+    const values = [350, 150, 300, 200, 0];
 
     // Loop para os últimos 7 dias
     for (let i = 0; i < 5; i++) {
@@ -133,6 +135,20 @@ const GraphicContainer = ({
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
+  ];
+
+  const rainData = [
+    {
+      name: "Chuva",
+      data: 
+        [
+          10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40,
+          35, 30, 25, 20, 15, 10, 5,
+        ],
+      
+      color: ["url(linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%))"],
+      xLabels: generateHourlyLabels(),
+    }
   ];
 
   const openModal = (category, valueType) => {
@@ -312,16 +328,19 @@ const GraphicContainer = ({
         </DropdownBtn>
 
         <DropdownBtn title="Nível de Chuva" width={"31.12%"}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-          aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
-          quisquam quam modi possimus unde deserunt sed error similique fugiat!
-          Rem.
+        <VerticalBarGraph
+      bars={rainData[0].data} // Acessa o primeiro objeto do array
+      xLabels={rainData[0].xLabels} // Acessa o primeiro objeto do array
+      yMax={100}
+      width="100%"
+      height={300}
+      barWidth={20}
+      barSpacing={10}
+      barColor={rainData.color} // Acessa o primeiro objeto do array
+  />
         </DropdownBtn>
         <DropdownBtn title="Pressão Atmosférica" width={"31.12%"}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-          aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
-          quisquam quam modi possimus unde deserunt sed error similique fugiat!
-          Rem.
+        <Barometer value={80}/>
         </DropdownBtn>
       </div>
     </section>

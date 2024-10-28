@@ -1,18 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 
 const HorizontalBarGraph = ({ dataBar, maxValue }) => {
   const [barData, setBarData] = useState(dataBar);
 
   useEffect(() => {
-    // Atualiza os dados da barra e aciona animação ao receber novos dados
-    setBarData(dataBar);
+    setBarData(dataBar); // Atualiza e anima quando os dados mudam
   }, [dataBar]);
+
+  const generateXLabels = () => {
+    const labels = [];
+    const step = maxValue / 5; // 5 divisões no eixo X
+    for (let i = 0; i <= 5; i++) {
+      labels.push(Math.round(step * i));
+    }
+    return labels;
+  };
 
   return (
     <div className={styles.barchart}>
       {barData.map((item, index) => {
-        const percentage = Math.min((item.value / maxValue) * 100, 100); // Limita a 100%
+        const percentage = Math.min((item.value / maxValue) * 100, 100); // Calcula a largura
 
         return (
           <div key={index} className={styles.barContainer}>
@@ -31,6 +39,15 @@ const HorizontalBarGraph = ({ dataBar, maxValue }) => {
           </div>
         );
       })}
+
+      {/* Eixo X com rótulos */}
+      <div className={styles.xAxis}>
+        {generateXLabels().map((label, index) => (
+          <span key={index} className={styles.xLabel}>
+            {label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

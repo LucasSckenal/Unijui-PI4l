@@ -32,7 +32,8 @@
       max-height: 0; // Inicialmente escondido
       opacity: 0; // Inicialmente escondido
       transition: max-height 0.5s ease, opacity 0.5s ease; // Adiciona a transição
-  
+      padding-bottom: 10px;
+
       &.show {
         max-height: 500px; // Define um valor máximo para quando for exibido (ajuste conforme necessário)
         opacity: 1; // Torna visível
