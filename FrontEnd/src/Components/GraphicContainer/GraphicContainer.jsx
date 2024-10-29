@@ -16,6 +16,9 @@ import humidLight from "../../assets/rainIconDark.png";
 import HumidityModal from "../Modals/HumidityModal/HumidityModal.jsx";
 import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
 import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
+import { PiWindDuotone } from "react-icons/pi";
+import { IoRainyOutline } from "react-icons/io5";
+import { GiOppression } from "react-icons/gi";
 
 const GraphicContainer = ({
   visibleLines,
@@ -116,8 +119,8 @@ const GraphicContainer = ({
           35, 30, 25, 20, 15, 10, 5,
         ],
       ],
-      gradientStartColor: "rgba(58, 33, 222, 1)", // Cor de início do gradiente
-      gradientEndColor: "rgba(66, 24, 163, 1)", // Cor de fim do gradiente
+      gradientStartColor: "rgba(58, 33, 222, 1)",
+      gradientEndColor: "rgba(66, 24, 163, 1)",
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
@@ -130,8 +133,8 @@ const GraphicContainer = ({
           32, 33, 34, 35, 36, 37, 38,
         ],
       ],
-      gradientStartColor: "rgba(58, 33, 222, 1)", // Cor de início do gradiente
-      gradientEndColor: "rgba(66, 24, 163, 1)", // Cor de fim do gradiente
+      gradientStartColor: "rgba(58, 33, 222, 1)",
+      gradientEndColor: "rgba(66, 24, 163, 1)",
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
@@ -145,8 +148,8 @@ const GraphicContainer = ({
         10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
         30, 25, 20, 15, 10, 5,
       ],
-      gradientStartColor: "rgba(0, 123, 255, 1)", // Cor de início do gradiente
-      gradientEndColor: "rgba(0, 213, 255, 1)", // Cor de fim do gradiente
+      gradientStartColor: "rgba(0, 123, 255, 1)",
+      gradientEndColor: "rgba(0, 213, 255, 1)",
       xLabels: generateHourlyLabels(),
     },
   ];
@@ -327,11 +330,19 @@ const GraphicContainer = ({
         )}
       </div>
       <div className={styles.dropDownBtnsBot}>
-        <DropdownBtn title="Direção do Vento" width={"31.12%"}>
+        <DropdownBtn
+          title="Direção do Vento"
+          icon={PiWindDuotone}
+          width={"31.12%"}
+        >
           <WindRose direction={0} size={300} />{" "}
         </DropdownBtn>
 
-        <DropdownBtn title="Nível de Chuva" width={"31.12%"}>
+        <DropdownBtn
+          title="Nível de Chuva"
+          icon={IoRainyOutline}
+          width={"31.12%"}
+        >
           <VerticalBarGraph
             bars={rainData[0].data}
             xLabels={rainData[0].xLabels}
@@ -345,7 +356,11 @@ const GraphicContainer = ({
             gradientId={rainData[0].id}
           />
         </DropdownBtn>
-        <DropdownBtn title="Pressão Atmosférica" width={"31.12%"}>
+        <DropdownBtn
+          title="Pressão Atmosférica"
+          icon={GiOppression}
+          width={"31.12%"}
+        >
           <Barometer value={80} />
         </DropdownBtn>
       </div>
