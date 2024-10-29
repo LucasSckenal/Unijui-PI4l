@@ -25,6 +25,12 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
       onClose();
     }
   };
+  // Exemplo para acessar id com proteção
+  if (selectedBarData && selectedBarData.id) {
+    console.log(selectedBarData.id); // Acesso seguro ao id
+  } else {
+    console.error("selectedBarData ou id não está definido");
+  }
 
   return (
     <div
@@ -41,12 +47,14 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
           <VerticalBarGraph
             bars={selectedBarData.data[0]}
             xLabels={selectedBarData.xLabels}
-            yMax={100}
+            yMax={maxDataValue}
             width="100%"
             height={300}
             barWidth={20}
             barSpacing={10}
-            barColor={selectedBarData.color[0]}
+            gradientStartColor={selectedBarData.gradientStartColor}
+            gradientEndColor={selectedBarData.gradientEndColor}
+            gradientId={selectedBarData.id[0]}
           />
         )}
         <button onClick={onClose}>Fechar</button>

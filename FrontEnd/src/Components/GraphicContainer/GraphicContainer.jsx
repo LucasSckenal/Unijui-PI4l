@@ -43,34 +43,30 @@ const GraphicContainer = ({
     const dataBar = [];
     const today = new Date();
 
-    // Array de valores de radiação solar
     const values = [350, 150, 300, 200, 0];
 
-    // Loop para os últimos 7 dias
     for (let i = 0; i < 5; i++) {
-        const pastDate = new Date(today); // Copiar a data atual
-        pastDate.setDate(today.getDate() - i); // Subtrair os dias
+      const pastDate = new Date(today);
+      pastDate.setDate(today.getDate() - i);
 
-        // Formatar a data como 'DD/MM'
-        const label = pastDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      const label = pastDate.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+      });
+      const value = values[4 - i];
 
-        // Obter o valor correspondente ao dia (inverte a ordem)
-        const value = values[4 - i]; // Acessa os valores na ordem correta
-
-        dataBar.push({
-            label: label,
-            value: value,
-            backgroundColor:
-                "linear-gradient(90deg, rgba(219, 142, 9, 1) 0%, rgba(255, 238, 0, 1) 100%)",
-        });
+      dataBar.push({
+        label: label,
+        value: value,
+        backgroundColor:
+          "linear-gradient(90deg, rgba(219, 142, 9, 1) 0%, rgba(255, 238, 0, 1) 100%)",
+      });
     }
 
-    return dataBar.reverse(); // Inverte para que o dia atual fique na parte superior
-};
+    return dataBar.reverse();
+  };
 
-  // Chama a função para gerar os dados
   const dataBar = generateDataBar();
-
 
   const generateHourlyLabels = () => {
     const labels = [];
@@ -112,6 +108,7 @@ const GraphicContainer = ({
 
   const HumidGraph = [
     {
+      id: "humidity",
       name: "Úmidade",
       data: [
         [
@@ -119,11 +116,13 @@ const GraphicContainer = ({
           35, 30, 25, 20, 15, 10, 5,
         ],
       ],
-      color: ["url(linear-gradient(90deg, rgba(58, 33, 222, 1) 0%, rgba(66, 24, 163, 1) 100%))"],
+      gradientStartColor: "rgba(58, 33, 222, 1)", // Cor de início do gradiente
+      gradientEndColor: "rgba(66, 24, 163, 1)", // Cor de fim do gradiente
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
     {
+      id: "humidity",
       name: "Úmidade Interna",
       data: [
         [
@@ -131,7 +130,8 @@ const GraphicContainer = ({
           32, 33, 34, 35, 36, 37, 38,
         ],
       ],
-      color: ["url(linear-gradient(90deg, rgba(58, 33, 222, 1) 0%, rgba(66, 24, 163, 1) 100%))"],
+      gradientStartColor: "rgba(58, 33, 222, 1)", // Cor de início do gradiente
+      gradientEndColor: "rgba(66, 24, 163, 1)", // Cor de fim do gradiente
       rgba: ["rgba(74, 33, 222, 0.8)"],
       xLabels: generateHourlyLabels(),
     },
@@ -139,16 +139,16 @@ const GraphicContainer = ({
 
   const rainData = [
     {
+      id: "rain",
       name: "Chuva",
-      data: 
-        [
-          10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40,
-          35, 30, 25, 20, 15, 10, 5,
-        ],
-      
-      color: ["url(linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%))"],
+      data: [
+        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
+        30, 25, 20, 15, 10, 5,
+      ],
+      gradientStartColor: "rgba(0, 123, 255, 1)", // Cor de início do gradiente
+      gradientEndColor: "rgba(0, 213, 255, 1)", // Cor de fim do gradiente
       xLabels: generateHourlyLabels(),
-    }
+    },
   ];
 
   const openModal = (category, valueType) => {
@@ -272,7 +272,6 @@ const GraphicContainer = ({
         </div>
       </div>
       <div className={styles.graphsBot}>
-        {/*É aqui que começa os gráfico da umidade*/}
         <div className={styles.humidityContainer}>
           <div
             onClick={() => openModal("umidade", "Úmidade")}
@@ -307,7 +306,12 @@ const GraphicContainer = ({
           </div>
         </div>
 
-        <Frame isTitle={true} title={"Radiação Solar"} width="51.5%" height="320px">
+        <Frame
+          isTitle={true}
+          title={"Radiação Solar"}
+          width="51.5%"
+          height="320px"
+        >
           <HorizontalBarGraph dataBar={dataBar} maxValue={350} />
         </Frame>
 
@@ -328,19 +332,21 @@ const GraphicContainer = ({
         </DropdownBtn>
 
         <DropdownBtn title="Nível de Chuva" width={"31.12%"}>
-        <VerticalBarGraph
-      bars={rainData[0].data} // Acessa o primeiro objeto do array
-      xLabels={rainData[0].xLabels} // Acessa o primeiro objeto do array
-      yMax={100}
-      width="100%"
-      height={300}
-      barWidth={20}
-      barSpacing={10}
-      barColor={rainData.color} // Acessa o primeiro objeto do array
-  />
+          <VerticalBarGraph
+            bars={rainData[0].data}
+            xLabels={rainData[0].xLabels}
+            yMax={100}
+            width="100%"
+            height={300}
+            barWidth={20}
+            barSpacing={10}
+            gradientStartColor={rainData[0].gradientStartColor}
+            gradientEndColor={rainData[0].gradientEndColor}
+            gradientId={rainData[0].id}
+          />
         </DropdownBtn>
         <DropdownBtn title="Pressão Atmosférica" width={"31.12%"}>
-        <Barometer value={80}/>
+          <Barometer value={80} />
         </DropdownBtn>
       </div>
     </section>

@@ -7,19 +7,23 @@ const VerticalBarGraph = ({
   yMax = 100,
   width = "100%",
   height = "100%",
-  barColor = "steelblue",
   barWidth = 30,
-  yLabel = "",
-  xLabel = "",
   showDegreeSymbol = false,
   margin = { top: 10, right: 20, bottom: 20, left: 30 },
-  
+  gradientStartColor = "rgba(58, 33, 222, 1)",
+  gradientEndColor = "rgba(66, 24, 163, 1)",
+  gradientId,
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: "" });
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    value: "",
+  });
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [barHeights, setBarHeights] = useState([]); // Estado para armazenar a altura das barras
+  const [barHeights, setBarHeights] = useState([]);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -36,15 +40,17 @@ const VerticalBarGraph = ({
   }, []);
 
   useEffect(() => {
-    const heights = bars.map(value => (value / yMax) * (dimensions.height - margin.top - margin.bottom));
-    setBarHeights(heights); // Atualiza a altura das barras
+    const heights = bars.map(
+      (value) =>
+        (value / yMax) * (dimensions.height - margin.top - margin.bottom)
+    );
+    setBarHeights(heights);
   }, [bars, dimensions.height, yMax]);
 
   const { width: svgWidth, height: svgHeight } = dimensions;
   const { top, right, bottom, left } = margin;
   const innerWidth = svgWidth - left - right;
   const innerHeight = svgHeight - top - bottom;
-  const yStep = innerHeight / 5;
 
   const handleMouseMove = (event, value, index) => {
     const rect = svgRef.current.getBoundingClientRect();
@@ -72,9 +78,9 @@ const VerticalBarGraph = ({
         className={styles.verticalBarGraph}
       >
         <defs>
-          <linearGradient id="bar-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(58, 33, 222, 1)" />
-            <stop offset="100%" stopColor="rgba(66, 24, 163, 1)" />
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={gradientStartColor} />
+            <stop offset="100%" stopColor={gradientEndColor} />
           </linearGradient>
         </defs>
 
@@ -99,7 +105,9 @@ const VerticalBarGraph = ({
                 fontSize="10"
                 fill="var(--TextGeneral)"
               >
-                {showDegreeSymbol ? `${Math.floor(value)}°C` : Math.floor(value)}
+                {showDegreeSymbol
+                  ? `${Math.floor(value)}°C`
+                  : Math.floor(value)}
               </text>
             </g>
           );
@@ -134,13 +142,15 @@ const VerticalBarGraph = ({
               x={x}
               y={y}
               width={barWidth}
-              height={barHeights[index] || 0} // Usando a altura animada
-              fill="url(#bar-gradient)"
-              stroke={hoveredIndex === index ? 'var(--TextGeneralAlt)' : 'transparent'}
+              height={barHeights[index] || 0}
+              fill={`url(#${gradientId})`}
+              stroke={
+                hoveredIndex === index ? "var(--TextGeneralAlt)" : "transparent"
+              }
               strokeWidth={hoveredIndex === index ? 1 : 0}
               onMouseMove={(e) => handleMouseMove(e, value, index)}
               onMouseLeave={handleMouseLeave}
-              className={styles.bar} // Classe para a animação
+              className={styles.bar}
             />
           );
         })}
