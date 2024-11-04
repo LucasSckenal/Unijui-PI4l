@@ -5,12 +5,12 @@ const HorizontalBarGraph = ({ dataBar, maxValue }) => {
   const [barData, setBarData] = useState(dataBar);
 
   useEffect(() => {
-    setBarData(dataBar); // Atualiza e anima quando os dados mudam
+    setBarData(dataBar); 
   }, [dataBar]);
 
   const generateXLabels = () => {
     const labels = [];
-    const step = maxValue / 5; // 5 divisões no eixo X
+    const step = maxValue / 5; 
     for (let i = 0; i <= 5; i++) {
       labels.push(Math.round(step * i));
     }
@@ -20,7 +20,7 @@ const HorizontalBarGraph = ({ dataBar, maxValue }) => {
   return (
     <div className={styles.barchart}>
       {barData.map((item, index) => {
-        const percentage = Math.min((item.value / maxValue) * 100, 100); // Calcula a largura
+        const percentage = Math.min((item.value / maxValue) * 100, 100); 
 
         return (
           <div key={index} className={styles.barContainer}>

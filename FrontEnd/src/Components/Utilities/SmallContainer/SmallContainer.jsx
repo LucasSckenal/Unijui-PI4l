@@ -1,18 +1,18 @@
-import ThemeSwap from "../../ThemeSwap/themeSwap"
-import styles from "./styles.module.scss"
+import ThemeSwap from "../../ThemeSwap/themeSwap";
+import styles from "./styles.module.scss";
 
-function SmallContainer( { lastValue, light, dark, complement } ) {
-
-
-
+function SmallContainer({ lastValue, light, dark, complement }) {
   return (
     <div className={styles.Container}>
-        <div className={styles.innerC}>
-            <ThemeSwap darkImage={light} lightImage={dark} />
-            <span>{lastValue}{complement}</span>
-        </div>
+      <div className={styles.innerC}>
+        <ThemeSwap darkImage={light} lightImage={dark} />
+        <span>
+          {lastValue}
+          {complement}
+        </span>
+      </div>
     </div>
-  )
+  );
 }
 
-export default SmallContainer
+export default SmallContainer;

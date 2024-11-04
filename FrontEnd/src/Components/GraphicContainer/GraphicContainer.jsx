@@ -285,7 +285,7 @@ const GraphicContainer = ({
                 lastValue={lastExternalHumid}
                 light={humidLight}
                 dark={humidDark}
-                complement={"mm"}
+                complement={"%"}
               />
             </Frame>
           </div>
@@ -303,7 +303,7 @@ const GraphicContainer = ({
                 lastValue={lastInternalHumid}
                 light={humidLight}
                 dark={humidDark}
-                complement={"mm"}
+                complement={"%"}
               />
             </Frame>
           </div>
@@ -312,7 +312,7 @@ const GraphicContainer = ({
         <Frame
           isTitle={true}
           title={"Radiação Solar"}
-          width="51.5%"
+          width="54.9%"
           height="320px"
         >
           <HorizontalBarGraph dataBar={dataBar} maxValue={350} />
