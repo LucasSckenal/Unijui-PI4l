@@ -2,13 +2,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function App() {
+function Axios() {
   const [dados, setDados] = useState([]);
 
   useEffect(() => {
     // Fazer a requisição para a API que retorna os dados do RDS
     axios
-      .get("http://localhost:5173")
+      .get("/dados")
       .then((response) => {
         setDados(response.data); // Atualiza o estado com os dados recebidos
       })
@@ -20,9 +20,9 @@ function App() {
   return (
     <div>
       <h1>Dados do RDS:</h1>
-      <pre>{JSON.stringify(dados, null, 2)}</pre>
+      <h2>{JSON.stringify(dados, null, 2)}</h2>
     </div>
   );
 }
 
-export default App;
+export default Axios;

@@ -2,11 +2,10 @@ const mysql = require("mysql2");
 
 // Criar a conexão com o banco RDS
 const connection = mysql.createConnection({
-  host: "",
-  port: "",
-  user: "",
-  password: "",
-  database: "",
+  host: "db-pi4l.c5262ow66s9k.us-east-1.rds.amazonaws.com",
+  user: "QuatroLMaster",
+  password: "4LsenhaTOP",
+  database: "DBPI4L_SantaRosa",
 });
 
 // Conectar e buscar dados
@@ -19,7 +18,7 @@ connection.connect((err) => {
   console.log("Conectado ao RDS!");
 
   // Fazer uma consulta
-  connection.query("SELECT * FROM your_table", (err, results) => {
+  connection.query("SELECT * k72623_lo", (err, results) => {
     if (err) throw err;
 
     // Transformar os dados em JSON
