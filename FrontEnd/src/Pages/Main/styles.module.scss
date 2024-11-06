@@ -2,7 +2,7 @@
   .lines {
     min-height: 87vh;
     height: auto;
-    width: 11.25rem;
+    width: 11.5rem;
     background: linear-gradient(var(--Bg), var(--Aside));
     box-shadow: 10px 0px 24px rgba(168, 168, 168, 0.25);
     display: flex;
@@ -76,7 +76,7 @@
       padding: 0px;
       gap: 15px;
 
-      width: 11.25rem;
+      width: 11.5rem;
       height: 51px;
 
       h1 {
@@ -96,7 +96,7 @@
       }
 
       h2 {
-        width: 11.25rem;
+        width: 100%;
         height: 1.25rem;
         font-weight: 400;
         font-size: 19px;
