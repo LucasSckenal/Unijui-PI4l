@@ -333,7 +333,7 @@ const GraphicContainer = ({
         <DropdownBtn
           title="Direção do Vento"
           icon={PiWindDuotone}
-          width={"32%"}
+          width={"26.8vw"}
         >
           <WindRose direction={0} size={300} />{" "}
         </DropdownBtn>
@@ -341,7 +341,7 @@ const GraphicContainer = ({
         <DropdownBtn
           title="Nível de Chuva"
           icon={IoRainyOutline}
-          width={"32%"}
+          width={"26.8vw"}
         >
           <VerticalBarGraph
             bars={rainData[0].data}
@@ -359,7 +359,7 @@ const GraphicContainer = ({
         <DropdownBtn
           title="Pressão Atmosférica"
           icon={GiOppression}
-          width={"32%"}
+          width={"26.8vw"}
         >
           <Barometer value={80} />
         </DropdownBtn>
