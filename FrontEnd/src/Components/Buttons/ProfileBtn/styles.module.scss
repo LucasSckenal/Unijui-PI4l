@@ -10,12 +10,12 @@
   height: 50px;
   border-radius: 50%;
 
-
   img {
    width: 100%;
    height: 100%;
    border-radius: 50%;
    border: 1px solid var(--TextGeneral);
+   object-fit: cover; //Pode ser trocado para fill ou scale-down para outros efeitos
   }
 
   &:hover {
