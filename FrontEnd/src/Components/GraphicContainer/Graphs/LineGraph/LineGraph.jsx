@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
@@ -17,6 +18,7 @@ const LineGraph = ({
   showDegreeSymbol = false,
   margin = { top: 10, right: 20, bottom: 20, left: 30 },
   degreeSymbol,
+  tooltipStyle = "style1",
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -210,22 +212,15 @@ const LineGraph = ({
       {/* Tooltip com símbolo de graus Celsius */}
       {tooltip.visible && (
         <div
-          className={styles.tooltip}
-          style={{
-            position: "absolute",
-            left: tooltip.x,
-            top: tooltip.y,
-            background: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "4px 8px",
-            pointerEvents: "none",
-            transform: "translate(-50%, -100%)",
-            color: "black",
-            zIndex: 10,
-          }}
-        >
-          {tooltip.value}
+        className={`${styles.tooltip} ${
+          tooltipStyle === "style1" ? styles["tooltip-style1"] : styles["tooltip-style2"]
+        }`}
+        style={{
+          left: tooltip.x,
+          top: tooltip.y,
+        }}
+      >
+        {tooltip.value}
         </div>
       )}
     </div>

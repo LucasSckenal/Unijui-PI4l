@@ -34,7 +34,8 @@
 
 .tooltip-style2 {
   position: absolute;
-  width: 40px;
+  min-width: 40px;
+  width: auto;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 4px 8px;

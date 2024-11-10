@@ -298,6 +298,7 @@ const GraphicContainer = ({
                 : ""
             }
             yMax={yMax}
+            tooltipStyle="style2"
           />
         </Frame>
         <div className={styles.tempContainer}>
@@ -379,7 +380,7 @@ const GraphicContainer = ({
           </Frame>
         )}
 
-        <Frame isTitle={true} title={"Rajada de Vento"} width={"15.2%"}>
+        <Frame isTitle={true} title={"Rajada de Vento"} width={"15%"} height="320px">
           <div
             onClick={() => openModal("Rajada de Vento", "Rajada de Vento")}
             style={{ cursor: "pointer" }}

@@ -1,6 +1,6 @@
 .lineGraph {
   display: block;
-  margin: 20px auto;
+  margin: 10px auto;
   width: 100%;
   z-index: 0;
   color: var(--TextGeneral) !important;
@@ -36,6 +36,35 @@
     fill: #333;
     font-weight: bold;
   }
+}
+
+.tooltip-style1 {
+  width: 15%;
+  margin: 0 auto;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  background: var(--ModalBtn);
+  border-radius: 4px;
+  pointer-events: none;
+  border: 1px solid var(--TextGeneral);
+  white-space: nowrap;
+}
+
+.tooltip-style2 {
+  position: absolute;
+  min-width: 40px;
+  width: auto;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 4px 8px;
+  background: var(--ModalBtn);
+  border-radius: 4px;
+  pointer-events: none;
+  border: 1px solid var(--TextGeneral);
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  color: var(--TextGeneral);
 }
 
 /* Animações */
