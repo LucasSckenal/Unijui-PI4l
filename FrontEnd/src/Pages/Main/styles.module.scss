@@ -66,6 +66,7 @@
         }
       }
 
+
     }
 
     .Timer {
@@ -279,4 +280,19 @@
     scrollbar-width: none
   }
 
+}
+
+@media screen and (max-height: 720px) {
+  .pageContainer {
+    .lines {
+      .top {
+        gap: 10px;
+
+        .graphBtnsMp {
+          height: 40%;
+          overflow: scroll;
+        }
+      }
+    }
+  }
 }

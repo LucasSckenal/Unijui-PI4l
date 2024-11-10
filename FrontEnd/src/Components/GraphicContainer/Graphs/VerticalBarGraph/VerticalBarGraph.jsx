@@ -66,7 +66,8 @@ const VerticalBarGraph = ({
   // Calcular a posição de cada barra para distribuí-las igualmente
   const totalBarWidth = adjustedBarWidth * xLabels.length + totalSpacing;
 
-  const xOffset = totalBarWidth < innerWidth ? (innerWidth - totalBarWidth) / 2 : 0;
+  const xOffset =
+    totalBarWidth < innerWidth ? (innerWidth - totalBarWidth) / 2 : 0;
 
   const handleMouseMove = (event, value, index) => {
     const rect = svgRef.current.getBoundingClientRect();
@@ -90,7 +91,7 @@ const VerticalBarGraph = ({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        viewBox={`-10 0 ${svgWidth} ${svgHeight}`}
         className={styles.verticalBarGraph}
       >
         <defs>
@@ -131,7 +132,11 @@ const VerticalBarGraph = ({
 
         {/* Eixo X (agora com as labels abaixo das barras) */}
         {xLabels.map((label, index) => {
-          const x = left + xOffset + index * (adjustedBarWidth + minSpacing) + adjustedBarWidth / 2;
+          const x =
+            left +
+            xOffset +
+            index * (adjustedBarWidth + minSpacing) +
+            adjustedBarWidth / 2;
           const y = top + innerHeight + 15; // Ajustando a posição Y para estar abaixo das barras
           return (
             <g key={`x-label-${index}`}>
@@ -178,7 +183,9 @@ const VerticalBarGraph = ({
       {tooltip.visible && (
         <div
           className={`${styles.tooltip} ${
-            tooltipStyle === "style1" ? styles["tooltip-style1"] : styles["tooltip-style2"]
+            tooltipStyle === "style1"
+              ? styles["tooltip-style1"]
+              : styles["tooltip-style2"]
           }`}
           style={{
             left: tooltip.x,

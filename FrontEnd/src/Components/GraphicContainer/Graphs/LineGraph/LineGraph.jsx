@@ -15,7 +15,7 @@ const LineGraph = ({
   yLabel = "",
   xLabel = "",
   showDegreeSymbol = false,
-  margin = { top: 10, right: 20, bottom: 20, left: 30 },
+  margin = { top: 10, right: 25, bottom: 20, left: 30 },
   degreeSymbol,
 }) => {
   const svgRef = useRef(null);
@@ -66,7 +66,7 @@ const LineGraph = ({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${svgWidth - 10} ${svgHeight}`}
+        viewBox={`-5 0 ${svgWidth - 10} ${svgHeight}`}
         className={styles.lineGraph}
       >
         <defs>

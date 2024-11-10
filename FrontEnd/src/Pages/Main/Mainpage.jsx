@@ -16,7 +16,7 @@ function Home() {
   const [selectedSensor, setSelectedSensor] = useState(1);
   const [selectedInterval, setSelectedInterval] = useState({
     value: "24h",
-    label: "24 horas",
+    label: "24 horas minutos",
     duration: 24,
   });
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,6 +29,34 @@ function Home() {
     line2: false,
     line3: false,
   });
+  const defaultIntervalOptions = [
+    { value: "0", label: "Selecione um intervalo ▼" },
+    { value: "30m", label: "30 minutos", duration: 0.5 },
+    { value: "1h", label: "1 hora", duration: 1 },
+    { value: "3h", label: "3 horas", duration: 3 },
+    { value: "6h", label: "6 horas", duration: 6 },
+    { value: "24h", label: "24 horas", duration: 24 },
+  ];
+
+  const [intervalOptions, setIntervalOptions] = useState(
+    defaultIntervalOptions
+  );
+
+  const updateIntervalOptions = () => {
+    const isSmallScreen = window.innerWidth < 1020;
+    setIntervalOptions(
+      isSmallScreen
+        ? defaultIntervalOptions.filter((option) => option.duration <= 3)
+        : defaultIntervalOptions
+    );
+  };
+
+  useEffect(() => {
+    // Executa ao carregar o componente e ao redimensionar a tela
+    updateIntervalOptions();
+    window.addEventListener("resize", updateIntervalOptions);
+    return () => window.removeEventListener("resize", updateIntervalOptions);
+  }, []);
 
   const GraphsBtns = [
     {
@@ -96,15 +124,6 @@ function Home() {
       color: ["#d40d77", "#6c08cf"],
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
     },
-  ];
-
-  const intervalOptions = [
-    { value: "0", label: "Selecione um intervalo ▼" },
-    { value: "30m", label: "30 minutos", duration: 0.5 },
-    { value: "1h", label: "1 hora", duration: 1 },
-    { value: "3h", label: "3 horas", duration: 3 },
-    { value: "6h", label: "6 horas", duration: 6 },
-    { value: "24h", label: "24 horas", duration: 24 },
   ];
 
   const dateInputRef = useRef(null);
@@ -240,6 +259,17 @@ function Home() {
       })
     : "";
 
+  const graphicsOptionsRef = useRef(null);
+
+  useEffect(() => {
+    if (graphicsOptionsRef.current && activeBtn) {
+      graphicsOptionsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [activeBtn]);
+
   return (
     <div className={styles.pageContainer}>
       <Header />
@@ -288,22 +318,26 @@ function Home() {
               </select>
             </div>
             <Divider width={"90px"} />
-            {GraphsBtns.map(({ name, options }) => (
-              <div key={name}>
-                <GraphicsBtn
-                  name={name}
-                  isActive={activeBtn === name}
-                  onClick={() => handleButtonClick(name)}
-                />
-                {activeBtn === name && (
-                  <GraphicsOptions
-                    options={options}
-                    isActiveOptions={activeOptions}
-                    onToggle={toggleLineVisibility}
+            <div className={styles.graphBtnsMp}>
+              {GraphsBtns.map(({ name, options }) => (
+                <div key={name}>
+                  <GraphicsBtn
+                    name={name}
+                    isActive={activeBtn === name}
+                    onClick={() => handleButtonClick(name)}
                   />
-                )}
-              </div>
-            ))}
+                  {activeBtn === name && (
+                    <div ref={graphicsOptionsRef}>
+                      <GraphicsOptions
+                        options={options}
+                        isActiveOptions={activeOptions}
+                        onToggle={toggleLineVisibility}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
             <Divider width={"90px"} />
             <select
               name="interval"

@@ -378,15 +378,15 @@ const GraphicContainer = ({
             </div>
           </Frame>
         )}
-
-        <Frame isTitle={true} title={"Rajada de Vento"} width={"15.2%"}>
-          <div
-            onClick={() => openModal("Rajada de Vento", "Rajada de Vento")}
-            style={{ cursor: "pointer" }}
-          >
+        <div
+          onClick={() => openModal("Rajada de Vento", "Rajada de Vento")}
+          style={{ cursor: "pointer" }}
+          className={styles.gustWind}
+        >
+          <Frame isTitle={true} title={"Rajada de Vento"} height={"100%"}>
             <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
-          </div>
-        </Frame>
+          </Frame>
+        </div>
       </div>
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn
@@ -396,7 +396,7 @@ const GraphicContainer = ({
         >
           <div
             onClick={() => openModal("Direção do Vento", "Direção do Vento")}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", width: "90%" }}
           >
             <WindRose direction={0} size={300} />
           </div>

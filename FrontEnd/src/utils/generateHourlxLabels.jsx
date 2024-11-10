@@ -38,8 +38,6 @@ export const generateHourlyLabels = (interval) => {
       }`;
       labels.unshift(hourLabel);
     }
-
-    console.log(labels);
   };
 
   generateLabels();
