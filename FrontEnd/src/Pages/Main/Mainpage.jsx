@@ -13,8 +13,12 @@ import { generateHourlyLabels } from "../../utils/generateHour/generateHourlxLab
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
-  const [selectedSensor, setSelectedSensor] = useState("");
-  const [selectedInterval, setSelectedInterval] = useState("");
+  const [selectedSensor, setSelectedSensor] = useState(1);
+  const [selectedInterval, setSelectedInterval] = useState({
+    value: "24h",
+    label: "24 horas",
+    duration: 24,
+  });
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeBtn, setActiveBtn] = useState(null);
   const [activeOptions, setActiveOptions] = useState([]);
