@@ -1,21 +1,25 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
+import styles from "./styles.module.scss";
+
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
 import tempDark from "../../assets/thermometer-temperature.svg";
 import tempLight from "../../assets/thermometer-temperature-white.png";
-import styles from "./styles.module.scss";
+
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
-import { useState, useEffect } from "react";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
-import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
+import GraphModal from "../Modals/GraphsModal/graphModal.jsx";
 import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
 import humidDark from "../../assets/rainIcon.png";
 import humidLight from "../../assets/rainIconDark.png";
-import HumidityModal from "../Modals/HumidityModal/HumidityModal.jsx";
 import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
 import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
+
+import useWindowResize from "../../Hooks/useWindowResize.jsx";
+
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
 import { GiOppression } from "react-icons/gi";
@@ -27,21 +31,11 @@ const GraphicContainer = ({
   activeBtn,
   labels,
 }) => {
-  const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [modalCategory, setModalCategory] = useState("");
 
-  useEffect(() => {
-    const handleHidden = () => {
-      setHidden(window.innerWidth <= 720);
-    };
-
-    handleHidden();
-
-    window.addEventListener("resize", handleHidden);
-    return () => window.removeEventListener("resize", handleHidden);
-  }, []);
+  const isHidden = useWindowResize(926);
 
   const generateDataGustWindBar = () => {
     const dataGustWindBar = [];
@@ -132,12 +126,60 @@ const GraphicContainer = ({
     },
   ];
 
+  const WindDirectionGraph = [
+    {
+      name: "Direção do Vento",
+      data: [
+        [
+          10, 30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
+          310, 330, 350, 10, 30, 50, 70, 90, 110,
+        ],
+      ],
+      color: ["#5eff00"],
+      rgba: ["rgba(115, 255, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindSpeedGraph = [
+    {
+      name: "Velocidade do Vento",
+      data: [
+        [
+          7, 10, 14, 13, 11, 9, 8, 10, 12, 14, 16, 18, 19, 20, 19, 18, 16, 14,
+          13, 12, 11, 9, 8, 7,
+        ],
+      ],
+      color: ["#3399ff"],
+      rgba: ["rgba(51, 153, 255, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindGustGraph = [
+    {
+      id: "windGust",
+      name: "Rajada de Vento",
+      data: [
+        [
+          5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 55, 50, 45, 40, 35, 30,
+          25, 20, 15, 10, 5, 10,
+        ],
+      ],
+      gradientStartColor: "rgba(255, 99, 71, 1)",
+      gradientEndColor: "rgba(255, 69, 0, 1)",
+      rgba: ["rgba(255, 99, 71, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
   const openModal = (category, valueType) => {
     setModalCategory(category);
     setSelectedType(valueType);
     setModalVisible(true);
     console.log("Valuetype:" + valueType);
   };
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -171,19 +213,56 @@ const GraphicContainer = ({
   return (
     <section className={styles.graphs}>
       {isModalVisible && modalCategory === "temperatura" && (
-        <TemperatureModal
+        <GraphModal
           onClose={closeModal}
           isVisible={isModalVisible}
-          selectedTemp={selectedType}
-          tempData={TempGraph}
+          title="Temperatura"
+          graphType="line"
+          graphData={TempGraph[0]}
+          degreeSymbol={"°C"}
         />
       )}
+
       {isModalVisible && modalCategory === "umidade" && (
-        <HumidityModal
+        <GraphModal
           onClose={closeModal}
           isVisible={isModalVisible}
-          selectedHumidity={selectedType}
-          humidData={HumidGraph}
+          title="Umidade"
+          graphType="bar"
+          graphData={HumidGraph[0]}
+          degreeSymbol={"%"}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Direção do Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Direção do Vento"
+          graphType="line"
+          graphData={WindDirectionGraph[0]}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Velocidade do Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Velocidade do Vento"
+          graphType="line"
+          graphData={WindSpeedGraph[0]}
+          degreeSymbol={"km/h"}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Rajada de Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Rajada de Vento"
+          graphType="bar"
+          graphData={WindGustGraph[0]}
+          degreeSymbol={"km/h"}
         />
       )}
 
@@ -208,7 +287,16 @@ const GraphicContainer = ({
             width="100%"
             height={250}
             xLabels={labels}
-            showDegreeSymbol={activeBtn === "Temperatura"}
+            showDegreeSymbol={
+              activeBtn === "Temperatura" || activeBtn === "Vento"
+            }
+            degreeSymbol={
+              activeBtn === "Temperatura"
+                ? "°C"
+                : activeBtn === "Vento"
+                ? "km/h"
+                : ""
+            }
             yMax={yMax}
           />
         </Frame>
@@ -273,19 +361,31 @@ const GraphicContainer = ({
           />
         </Frame>
 
-        {!hidden && (
+        {!isHidden && (
           <Frame
             isTitle={true}
             title={"Velocidade do Vento"}
             width="23%"
             height="320px"
           >
-            <RadialBarCharts value={100} />
+            <div
+              onClick={() =>
+                openModal("Velocidade do Vento", "Velocidade do Vento")
+              }
+              style={{ cursor: "pointer" }}
+            >
+              <RadialBarCharts value={100} />
+            </div>
           </Frame>
         )}
 
         <Frame isTitle={true} title={"Rajada de Vento"} width={"15.2%"}>
-          <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
+          <div
+            onClick={() => openModal("Rajada de Vento", "Rajada de Vento")}
+            style={{ cursor: "pointer" }}
+          >
+            <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
+          </div>
         </Frame>
       </div>
       <div className={styles.dropDownBtnsBot}>
@@ -294,7 +394,12 @@ const GraphicContainer = ({
           icon={PiWindDuotone}
           width={"26.8vw"}
         >
-          <WindRose direction={0} size={300} />
+          <div
+            onClick={() => openModal("Direção do Vento", "Direção do Vento")}
+            style={{ cursor: "pointer" }}
+          >
+            <WindRose direction={0} size={300} />
+          </div>
         </DropdownBtn>
 
         <DropdownBtn

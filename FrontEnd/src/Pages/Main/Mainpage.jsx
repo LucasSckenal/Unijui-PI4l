@@ -8,7 +8,7 @@ import GraphicsOptions from "../../Components/Buttons/graphicOptionsBtn/GraphicO
 import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
 import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 import { toast } from "react-toastify";
-import { generateHourlyLabels } from "../../utils/generateHour/generateHourlxLabels.jsx";
+import { generateHourlyLabels } from "../../utils/generateHourlxLabels.jsx";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -165,7 +165,7 @@ function Home() {
     const { value, name } = event.target;
 
     if (value === "0") {
-      toast.warn("Selecione um intervalo válido");
+      toast.warn("Selecione um intervalo ou um sensor válido");
       return;
     }
 
