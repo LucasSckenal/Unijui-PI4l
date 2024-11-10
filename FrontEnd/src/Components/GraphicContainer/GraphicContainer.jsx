@@ -298,6 +298,7 @@ const GraphicContainer = ({
                 : ""
             }
             yMax={yMax}
+            tooltipStyle="style2"
           />
         </Frame>
         <div className={styles.tempContainer}>
