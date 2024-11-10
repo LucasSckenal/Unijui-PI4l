@@ -7,15 +7,19 @@ import GraphicsBtn from "../../Components/Buttons/GraphicsBtn/GraphicsBtn.jsx";
 import GraphicsOptions from "../../Components/Buttons/graphicOptionsBtn/GraphicOptionsBtn.jsx";
 import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer.jsx";
 import Divider from "../../Components/Utilities/Divider/Divider.jsx";
+import { toast } from "react-toastify";
+import { generateHourlyLabels } from "../../utils/generateHour/generateHourlxLabels.jsx";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
+  const [selectedInterval, setSelectedInterval] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeBtn, setActiveBtn] = useState(null);
   const [activeOptions, setActiveOptions] = useState([]);
   const [line, setLine] = useState("");
+  const [labels, setLabels] = useState([]);
   const [visibleLines, setVisibleLines] = useState({
     line1: false,
     line2: false,
@@ -29,17 +33,12 @@ function Home() {
       options: [
         { id: "1", label: "Avg. Wind Speed" },
         { id: "2", label: "Gust Wind Speed" },
-        { id: "3", label: "Teste teste" },
       ],
     },
     {
       name: "Temperatura",
       id: 2,
-      options: [
-        { id: "1", label: "Temperatura Ext" },
-        { id: "2", label: "Temperatura Int" },
-        { id: "3", label: "Opção 3" },
-      ],
+      options: [{ id: "1", label: "Temperatura" }],
     },
     {
       name: "Diversos",
@@ -55,54 +54,64 @@ function Home() {
     {
       name: "Vento",
       data: [
-        [0, 30, 10],
-        [30, 25, 20, 5],
-        [0, 10, 30],
+        [
+          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
+          10, 11, 25, 32, 12, 11, 2,
+        ],
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
       ],
-      color: ["#de7c21", "#0e95e3", "#0ecc37"],
-      rgba: [
-        "rgba(222, 124, 33, 0.8)",
-        "rgba(14, 149, 227, 0.2)",
-        "rgba(8, 191, 81, 0.8)",
-      ],
+      color: ["#0e95e3", "#0ecc37"],
+      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)"],
     },
     {
       name: "Temperatura",
       data: [
-        [40, 30, 20],
-        [35, 50, 46],
-        [60, 70],
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
       ],
-      color: ["#1ccf08", "#c3d411", "#d41515"],
-      rgba: [
-        "rgba(29, 150, 15, 0.8)",
-        "rgba(173, 158, 16, 0.8)",
-        "rgba(163, 23, 23, 0.4)",
-      ],
+      color: ["#d41515"],
+      rgba: ["rgba(163, 23, 23, 0.4)"],
     },
     {
       name: "Diversos",
       data: [
-        [20, 30],
-        [22, 28, 24],
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
+        [
+          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
+          10, 11, 25, 32, 12, 11, 2,
+        ],
       ],
       color: ["#d40d77", "#6c08cf"],
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
     },
   ];
 
+  const intervalOptions = [
+    { value: "0", label: "Selecione um intervalo ▼" },
+    { value: "30m", label: "30 minutos", duration: 0.5 },
+    { value: "1h", label: "1 hora", duration: 1 },
+    { value: "3h", label: "3 horas", duration: 3 },
+    { value: "6h", label: "6 horas", duration: 6 },
+    { value: "24h", label: "24 horas", duration: 24 },
+  ];
+
   const dateInputRef = useRef(null);
 
   useEffect(() => {
     const updateDate = () => {
-      // Verifique se selectedDate é uma data válida
-      const date = selectedDate
-        ? new Date(selectedDate)
-        : new Date(); // Use a data atual se selectedDate não for válido
+      const date = selectedDate ? new Date(selectedDate) : new Date();
       if (!isNaN(date)) {
         setCurrentDate(date);
       } else {
-        setCurrentDate(new Date()); // Garantir que currentDate sempre seja uma data válida
+        setCurrentDate(new Date());
       }
     };
 
@@ -149,8 +158,44 @@ function Home() {
   };
 
   const handleChange = (event) => {
-    setSelectedSensor(event.target.value);
+    const { value, name } = event.target;
+
+    if (value === "0") {
+      toast.warn("Selecione um intervalo válido");
+      return;
+    }
+
+    if (name === "interval") {
+      const selectedInterval = intervalOptions.find(
+        (option) => option.value === value
+      );
+
+      if (!selectedInterval) {
+        toast.warn("Selecione um intervalo válido");
+        return;
+      }
+
+      setSelectedInterval(selectedInterval);
+    }
+
+    if (name === "sensor") {
+      const selectedSensor = sensors.find(
+        (sensor) => sensor.id === parseInt(value)
+      );
+      if (!selectedSensor) {
+        toast.warn("Selecione um sensor válido");
+      } else {
+        setSelectedSensor(selectedSensor.id);
+      }
+    }
   };
+
+  useEffect(() => {
+    if (selectedInterval) {
+      const newLabels = generateHourlyLabels(selectedInterval);
+      setLabels(newLabels);
+    }
+  }, [selectedInterval]);
 
   const handleButtonClick = (buttonName) => {
     if (activeBtn === buttonName) {
@@ -219,11 +264,12 @@ function Home() {
             <div className={styles.Sensor}>
               <select
                 id="sensorSelect"
+                name="sensor"
                 value={selectedSensor}
                 onChange={handleChange}
                 className={styles.selectSensor}
               >
-                <option value="" className={styles.options}>
+                <option value="0" className={styles.options}>
                   Selecione um sensor ▼
                 </option>
                 {sensors.map((sensor) => (
@@ -255,6 +301,18 @@ function Home() {
               </div>
             ))}
             <Divider width={"90px"} />
+            <select
+              name="interval"
+              value={selectedInterval.value}
+              onChange={handleChange}
+            >
+              {intervalOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <Divider width={"90px"} />
           </div>
           <div className={styles.Timer}>
             <Times />
@@ -273,6 +331,7 @@ function Home() {
               line={line}
               lineDatas={lineDatas}
               activeBtn={activeBtn}
+              labels={labels}
             />
           </div>
         </section>

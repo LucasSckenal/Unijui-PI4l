@@ -10,7 +10,7 @@
     padding: 16px;
     background-color: var(--DropButton);
     color: var(--TextGeneralAlt);
-    border-radius: 8px;
+    border-radius: var(--BorderRadius);
     border: 1px solid var(--TextGeneral);
 
     span {

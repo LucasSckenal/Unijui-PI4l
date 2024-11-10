@@ -92,7 +92,7 @@ a {
 button {
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease;
-  border-radius: 8px;
+  border-radius: var(--BorderRadius);
   border: none;
   min-height: 20px;
   height: auto;
@@ -102,6 +102,29 @@ button {
 
 input {
   color: var(--TextGeneral)
+}
+
+select {
+  color: var(--TextGeneral);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--TextGeneral);
+  text-align: center;
+  border-radius: 4px;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  option {
+    background-color: var(--Modal);
+  }
+
+  &:hover {
+    background: rgba(168, 168, 168, 0.25);
+    box-shadow: 10px 0px 24px rgba(168, 168, 168, 0.25);
+    cursor: pointer;
+  }
 }
 
 body {

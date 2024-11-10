@@ -7,12 +7,15 @@ const VerticalBarGraph = ({
   yMax = 100,
   width = "100%",
   height = "100%",
-  barWidth = 30,
+  barWidth = 30, // Largura inicial da barra
+  degreeSymbol = "",
   showDegreeSymbol = false,
   margin = { top: 10, right: 20, bottom: 20, left: 30 },
   gradientStartColor = "rgba(58, 33, 222, 1)",
   gradientEndColor = "rgba(66, 24, 163, 1)",
   gradientId,
+  tooltipStyle = "style1",
+  minSpacing = 5, // Espaço mínimo entre as barras
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -52,13 +55,26 @@ const VerticalBarGraph = ({
   const innerWidth = svgWidth - left - right;
   const innerHeight = svgHeight - top - bottom;
 
+  // Espaço total necessário para todas as barras com espaçamento mínimo
+  const totalSpacing = minSpacing * (xLabels.length - 1); // Ajustado para xLabels.length
+  const totalBarsWidth = xLabels.length * barWidth; // Ajustado para xLabels.length
+  const availableWidth = innerWidth - totalSpacing; // Espaço disponível para as barras
+
+  // Calcular a largura das barras para preencher o espaço disponível
+  const adjustedBarWidth = availableWidth / xLabels.length;
+
+  // Calcular a posição de cada barra para distribuí-las igualmente
+  const totalBarWidth = adjustedBarWidth * xLabels.length + totalSpacing;
+
+  const xOffset = totalBarWidth < innerWidth ? (innerWidth - totalBarWidth) / 2 : 0;
+
   const handleMouseMove = (event, value, index) => {
     const rect = svgRef.current.getBoundingClientRect();
     setTooltip({
       visible: true,
       x: event.clientX - rect.left,
       y: event.clientY - rect.top - 10,
-      value,
+      value: showDegreeSymbol ? `${value}${degreeSymbol}` : value,
     });
     setHoveredIndex(index);
   };
@@ -106,21 +122,22 @@ const VerticalBarGraph = ({
                 fill="var(--TextGeneral)"
               >
                 {showDegreeSymbol
-                  ? `${Math.floor(value)}°C`
+                  ? `${Math.floor(value)}${degreeSymbol}`
                   : Math.floor(value)}
               </text>
             </g>
           );
         })}
 
-        {/* Eixo X */}
+        {/* Eixo X (agora com as labels abaixo das barras) */}
         {xLabels.map((label, index) => {
-          const x = left + index * (innerWidth / xLabels.length) + barWidth / 2;
+          const x = left + xOffset + index * (adjustedBarWidth + minSpacing) + adjustedBarWidth / 2;
+          const y = top + innerHeight + 15; // Ajustando a posição Y para estar abaixo das barras
           return (
             <g key={`x-label-${index}`}>
               <text
                 x={x}
-                y={top + innerHeight + 15}
+                y={y}
                 textAnchor="middle"
                 fontSize="10"
                 fill="var(--TextGeneral)"
@@ -131,9 +148,10 @@ const VerticalBarGraph = ({
           );
         })}
 
-        {/* Barras Verticais */}
-        {bars.map((value, index) => {
-          const x = left + index * (innerWidth / bars.length);
+        {/* Barras Verticais (renderizando apenas conforme xLabels.length) */}
+        {xLabels.map((_, index) => {
+          const value = bars[index] || 0; // Garantir que o valor da barra seja usado corretamente
+          const x = left + xOffset + index * (adjustedBarWidth + minSpacing);
           const y = top - 1 + innerHeight - (barHeights[index] || 0);
 
           return (
@@ -141,7 +159,7 @@ const VerticalBarGraph = ({
               key={`bar-${index}`}
               x={x}
               y={y}
-              width={barWidth}
+              width={adjustedBarWidth}
               height={barHeights[index] || 0}
               fill={`url(#${gradientId})`}
               stroke={
@@ -159,20 +177,12 @@ const VerticalBarGraph = ({
       {/* Tooltip */}
       {tooltip.visible && (
         <div
-          className={styles.tooltip}
+          className={`${styles.tooltip} ${
+            tooltipStyle === "style1" ? styles["tooltip-style1"] : styles["tooltip-style2"]
+          }`}
           style={{
-            position: "absolute",
             left: tooltip.x,
             top: tooltip.y,
-            background: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "4px 8px",
-            pointerEvents: "none",
-            transform: "translate(-50%, -100%)",
-            color: "black",
-            zIndex: 10,
-            whiteSpace: "nowrap",
           }}
         >
           {tooltip.value}

@@ -55,6 +55,8 @@ function HumidityModal({ onClose, isVisible, selectedHumidity, humidData }) {
             gradientStartColor={selectedBarData.gradientStartColor}
             gradientEndColor={selectedBarData.gradientEndColor}
             gradientId={selectedBarData.id[0]}
+            degreeSymbol="%"
+            showDegreeSymbol={true}
           />
         )}
         <button onClick={onClose}>Fechar</button>

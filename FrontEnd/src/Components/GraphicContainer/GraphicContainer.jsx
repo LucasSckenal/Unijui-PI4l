@@ -25,6 +25,7 @@ const GraphicContainer = ({
   lineDatas = [],
   line,
   activeBtn,
+  labels,
 }) => {
   const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -42,11 +43,11 @@ const GraphicContainer = ({
     return () => window.removeEventListener("resize", handleHidden);
   }, []);
 
-  const generateDataBar = () => {
-    const dataBar = [];
+  const generateDataGustWindBar = () => {
+    const dataGustWindBar = [];
     const today = new Date();
 
-    const values = [350, 150, 300, 200, 0];
+    const values = [116, 100, 50, 20, 80];
 
     for (let i = 0; i < 5; i++) {
       const pastDate = new Date(today);
@@ -58,29 +59,18 @@ const GraphicContainer = ({
       });
       const value = values[4 - i];
 
-      dataBar.push({
+      dataGustWindBar.push({
         label: label,
         value: value,
         backgroundColor:
-          "linear-gradient(90deg, rgba(219, 142, 9, 1) 0%, rgba(255, 238, 0, 1) 100%)",
+          "linear-gradient(90deg, rgba(88, 209, 175, 1) 0%, rgba(131, 238, 247, 1) 100%)",
       });
     }
 
-    return dataBar.reverse();
+    return dataGustWindBar.reverse();
   };
 
-  const dataBar = generateDataBar();
-
-  const generateHourlyLabels = () => {
-    const labels = [];
-    const now = new Date();
-
-    for (let i = 0; i < 24; i++) {
-      const hour = new Date(now.getTime() - i * 60 * 60 * 1000).getHours();
-      labels.unshift(`${hour}:00`);
-    }
-    return labels;
-  };
+  const dataGustWindBar = generateDataGustWindBar();
 
   const TempGraph = [
     {
@@ -93,19 +83,7 @@ const GraphicContainer = ({
       ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: generateHourlyLabels(),
-    },
-    {
-      name: "Temperatura Interna",
-      data: [
-        [
-          25, 24, 24, 23, 23, 22, 23, 24, 26, 28, 29, 31, 33, 34, 34, 33, 32,
-          30, 29, 28, 27, 26, 25, 25,
-        ],
-      ],
-      color: ["#de7c21"],
-      rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: generateHourlyLabels(),
+      xLabels: labels,
     },
   ];
 
@@ -122,21 +100,7 @@ const GraphicContainer = ({
       gradientStartColor: "rgba(58, 33, 222, 1)",
       gradientEndColor: "rgba(66, 24, 163, 1)",
       rgba: ["rgba(74, 33, 222, 0.8)"],
-      xLabels: generateHourlyLabels(),
-    },
-    {
-      id: "humidity",
-      name: "Úmidade Interna",
-      data: [
-        [
-          30, 32, 31, 33, 34, 36, 35, 34, 33, 31, 29, 28, 27, 25, 26, 28, 30,
-          32, 33, 34, 35, 36, 37, 38,
-        ],
-      ],
-      gradientStartColor: "rgba(58, 33, 222, 1)",
-      gradientEndColor: "rgba(66, 24, 163, 1)",
-      rgba: ["rgba(74, 33, 222, 0.8)"],
-      xLabels: generateHourlyLabels(),
+      xLabels: labels,
     },
   ];
 
@@ -149,8 +113,22 @@ const GraphicContainer = ({
         30, 25, 20, 15, 10, 5,
       ],
       gradientStartColor: "rgba(0, 123, 255, 1)",
-      gradientEndColor: "rgba(0, 213, 255, 1)",
-      xLabels: generateHourlyLabels(),
+      gradientEndColor: "rgba(0, 180, 255, 1)",
+      xLabels: labels,
+    },
+  ];
+
+  const solarRadiationData = [
+    {
+      id: "solar",
+      name: "Radiação Solar",
+      data: [
+        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
+        30, 25, 20, 15, 10, 5,
+      ],
+      gradientStartColor: "rgba(219, 142, 9, 1)",
+      gradientEndColor: "rgba(255, 238, 0, 1)",
+      xLabels: labels,
     },
   ];
 
@@ -170,9 +148,7 @@ const GraphicContainer = ({
   };
 
   const lastExternalTemp = getLastValue(TempGraph, "Temperatura");
-  const lastInternalTemp = getLastValue(TempGraph, "Temperatura Interna");
   const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
-  const lastInternalHumid = getLastValue(HumidGraph, "Úmidade Interna");
 
   const getMaxYValue = () => {
     let maxY = 0;
@@ -231,6 +207,7 @@ const GraphicContainer = ({
               .filter(Boolean)}
             width="100%"
             height={250}
+            xLabels={labels}
             showDegreeSymbol={activeBtn === "Temperatura"}
             yMax={yMax}
           />
@@ -255,32 +232,15 @@ const GraphicContainer = ({
             </Frame>
           </div>
           <div
-            onClick={() => openModal("temperatura", "Temperatura Interna")}
+            onClick={() => openModal("umidade", "Úmidade")}
             style={{ cursor: "pointer" }}
           >
             <Frame
               isTitle={true}
-              title={"Temperatura Interna"}
+              title={"Umidade"}
               width="105%"
               height="168.5px"
             >
-              <SmallContainer
-                lastValue={lastInternalTemp}
-                light={tempLight}
-                dark={tempDark}
-                complement={"ºC"}
-              />
-            </Frame>
-          </div>
-        </div>
-      </div>
-      <div className={styles.graphsBot}>
-        <div className={styles.humidityContainer}>
-          <div
-            onClick={() => openModal("umidade", "Úmidade")}
-            style={{ cursor: "pointer" }}
-          >
-            <Frame isTitle={true} title={"Umidade"} width="105%" height="154px">
               <SmallContainer
                 lastValue={lastExternalHumid}
                 light={humidLight}
@@ -289,33 +249,28 @@ const GraphicContainer = ({
               />
             </Frame>
           </div>
-          <div
-            onClick={() => openModal("umidade", "Úmidade Interna")}
-            style={{ cursor: "pointer" }}
-          >
-            <Frame
-              isTitle={true}
-              title={"Umidade Interna"}
-              width="105%"
-              height="154px"
-            >
-              <SmallContainer
-                lastValue={lastInternalHumid}
-                light={humidLight}
-                dark={humidDark}
-                complement={"%"}
-              />
-            </Frame>
-          </div>
         </div>
-
+      </div>
+      <div className={styles.graphsBot}>
         <Frame
           isTitle={true}
           title={"Radiação Solar"}
-          width="54.9%"
+          width="54%"
           height="320px"
         >
-          <HorizontalBarGraph dataBar={dataBar} maxValue={350} />
+          <VerticalBarGraph
+            bars={solarRadiationData[0].data}
+            xLabels={solarRadiationData[0].xLabels}
+            yMax={100}
+            width="100%"
+            height={300}
+            barWidth={20}
+            barSpacing={10}
+            gradientStartColor={solarRadiationData[0].gradientStartColor}
+            gradientEndColor={solarRadiationData[0].gradientEndColor}
+            gradientId={solarRadiationData[0].id}
+            tooltipStyle="style2"
+          />
         </Frame>
 
         {!hidden && (
@@ -328,6 +283,10 @@ const GraphicContainer = ({
             <RadialBarCharts value={100} />
           </Frame>
         )}
+
+        <Frame isTitle={true} title={"Rajada de Vento"} width={"15.2%"}>
+          <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
+        </Frame>
       </div>
       <div className={styles.dropDownBtnsBot}>
         <DropdownBtn
@@ -335,7 +294,7 @@ const GraphicContainer = ({
           icon={PiWindDuotone}
           width={"26.8vw"}
         >
-          <WindRose direction={0} size={300} />{" "}
+          <WindRose direction={0} size={300} />
         </DropdownBtn>
 
         <DropdownBtn
@@ -354,6 +313,7 @@ const GraphicContainer = ({
             gradientStartColor={rainData[0].gradientStartColor}
             gradientEndColor={rainData[0].gradientEndColor}
             gradientId={rainData[0].id}
+            tooltipStyle="style2"
           />
         </DropdownBtn>
         <DropdownBtn

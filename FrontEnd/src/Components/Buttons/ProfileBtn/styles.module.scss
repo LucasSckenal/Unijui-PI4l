@@ -32,7 +32,7 @@
   background-color: var(--Bg);
   color: var(--TextGeneral);
   width: 150px;
-  border-radius: 8px;
+  border-radius: var(--BorderRadius);
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--TextGeneral);
@@ -52,7 +52,7 @@
 
    &:hover {
     border: 1px solid var(--TextGeneral);
-    border-radius: 8px;
+    border-radius: var(--BorderRadius);
     box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
    }
   }

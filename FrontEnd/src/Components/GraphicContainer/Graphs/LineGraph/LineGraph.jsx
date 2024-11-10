@@ -143,58 +143,61 @@ const LineGraph = ({
           );
         })}
 
-        {lines.map((line, lineIndex) => {
-          const points = line.data
-            .map((value, index) => {
-              const x = left + (index / (line.data.length - 1)) * innerWidth;
-              const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
-              return `${x},${y}`;
-            })
-            .join(" ");
+{lines.map((line, lineIndex) => {
+  // Limitar a quantidade de pontos com base no número de xLabels
+  const numPoints = Math.min(line.data.length, xLabels.length);
 
-          const fillPoints = `${left},${top + innerHeight} ${points} ${
-            left + innerWidth
-          },${top + innerHeight}`;
+  // Gerar os pontos com base no número de xLabels
+  const points = line.data
+    .slice(0, numPoints) // Exibe apenas até o número de xLabels
+    .map((value, index) => {
+      const x = left + (index / (numPoints - 1)) * innerWidth; // Ajuste de escala para os pontos
+      const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
+      return `${x},${y}`;
+    })
+    .join(" ");
 
-          return (
-            <g key={`line-${lineIndex}`}>
-              <polygon
-                points={fillPoints}
-                fill={`url(#gradient-${lineIndex})`}
-              />
-              <polyline
-                points={points}
-                fill="none"
-                stroke={line.strokeColor}
-                strokeWidth={strokeWidth}
-                strokeLinejoin="round"
-              />
-            </g>
-          );
-        })}
+  const fillPoints = `${left},${top + innerHeight} ${points} ${left + innerWidth},${top + innerHeight}`;
 
-        {/* Pontos com borda */}
-        {lines.map((line, lineIndex) =>
-          line.data.map((value, index) => {
-            const x = left + (index / (line.data.length - 1)) * innerWidth;
-            const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
+  return (
+    <g key={`line-${lineIndex}`}>
+      <polygon points={fillPoints} fill={`url(#gradient-${lineIndex})`} />
+      <polyline
+        points={points}
+        fill="none"
+        stroke={line.strokeColor}
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+      />
+    </g>
+  );
+})}
 
-            return (
-              <g key={`point-${lineIndex}-${index}`}>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r={4}
-                  fill={line.strokeColor}
-                  stroke={pointBorderColor}
-                  strokeWidth={pointBorderWidth}
-                  onMouseEnter={(event) => handleMouseEnter(event, value, x, y)}
-                  onMouseLeave={handleMouseLeave}
-                />
-              </g>
-            );
-          })
-        )}
+{/* Pontos com borda */}
+{lines.map((line, lineIndex) =>
+  line.data
+    .slice(0, Math.min(line.data.length, xLabels.length)) // Limitar os pontos aqui também
+    .map((value, index) => {
+      const x = left + (index / (xLabels.length - 1)) * innerWidth; // Ajustar a escala dos pontos com base no número de xLabels
+      const y = top + innerHeight - (value / yMax) * innerHeight; // Ajustar a escala y com base no yMax
+
+      return (
+        <g key={`point-${lineIndex}-${index}`}>
+          <circle
+            cx={x}
+            cy={y}
+            r={4}
+            fill={line.strokeColor}
+            stroke={pointBorderColor}
+            strokeWidth={pointBorderWidth}
+            onMouseEnter={(event) => handleMouseEnter(event, value, x, y)}
+            onMouseLeave={handleMouseLeave}
+          />
+        </g>
+      );
+    })
+)}
+
       </svg>
 
       {/* Tooltip com símbolo de graus Celsius */}
