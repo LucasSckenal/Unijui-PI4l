@@ -39,6 +39,7 @@
       justify-content: space-evenly;
       gap: 8px;
 
+
       p {
         color: var(--TextGeneral);
         font-size: 20px;
@@ -53,7 +54,7 @@
 
   .dropDownBtnsBot {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
   }
 

@@ -3,22 +3,25 @@ import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
+
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
+import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
+import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
+
 import tempDark from "../../assets/thermometer-temperature.svg";
 import tempLight from "../../assets/thermometer-temperature-white.png";
+import humidDark from "../../assets/rainIcon.png";
+import humidLight from "../../assets/rainIconDark.png";
 
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 import GraphModal from "../Modals/GraphsModal/graphModal.jsx";
 import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
-import humidDark from "../../assets/rainIcon.png";
-import humidLight from "../../assets/rainIconDark.png";
-import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
-import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
 
 import useWindowResize from "../../Hooks/useWindowResize.jsx";
+import { getMaxDataValue } from "../../utils/MaxDataValue.jsx";
 
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
@@ -34,6 +37,10 @@ const GraphicContainer = ({
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [modalCategory, setModalCategory] = useState("");
+  const [maxDataValue, setMaxDataValue] = useState({
+    UVGraph: 0,
+    LuminosityGraph: 0,
+  });
 
   const isHidden = useWindowResize(926);
 
@@ -172,6 +179,33 @@ const GraphicContainer = ({
       xLabels: labels,
     },
   ];
+  const UVGraph = [
+    {
+      name: "UV",
+      data: [
+        1, 2, 3, 4, 5, 4, 3, 4, 6, 8, 10, 12, 11, 10, 9, 8, 6, 5, 4, 3, 2, 1, 0,
+        0,
+      ],
+      color: ["#FFA500"],
+      rgba: ["rgba(255, 165, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const LuminosityGraph = [
+    {
+      name: "Luminosidade",
+      data: [
+        [
+          100, 150, 200, 250, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120,
+          100, 80, 60, 40, 20, 30, 50, 70, 90, 110,
+        ],
+      ],
+      color: ["#FFD700"],
+      rgba: ["rgba(255, 215, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
 
   const openModal = (category, valueType) => {
     setModalCategory(category);
@@ -209,6 +243,24 @@ const GraphicContainer = ({
   };
 
   const yMax = getMaxYValue() || 100;
+
+  useEffect(() => {
+    if (UVGraph && UVGraph[0] && UVGraph[0].data) {
+      const calculatedMaxValue = Math.max(...UVGraph[0].data);
+      setMaxDataValue((prevMax) => ({
+        ...prevMax,
+        UVGraph: calculatedMaxValue,
+      }));
+    }
+
+    if (LuminosityGraph && LuminosityGraph[0] && LuminosityGraph[0].data) {
+      const calculatedMaxValue = Math.max(...LuminosityGraph[0].data[0]);
+      setMaxDataValue((prevMax) => ({
+        ...prevMax,
+        LuminosityGraph: calculatedMaxValue,
+      }));
+    }
+  }, [UVGraph, LuminosityGraph]);
 
   return (
     <section className={styles.graphs}>
@@ -390,45 +442,92 @@ const GraphicContainer = ({
         </div>
       </div>
       <div className={styles.dropDownBtnsBot}>
-        <DropdownBtn
-          title="Direção do Vento"
-          icon={PiWindDuotone}
-          width={"26.8vw"}
-        >
-          <div
-            onClick={() => openModal("Direção do Vento", "Direção do Vento")}
-            style={{ cursor: "pointer", width: "90%" }}
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <DropdownBtn
+            title="Direção do Vento"
+            icon={PiWindDuotone}
+            width={"26.8vw"}
           >
-            <WindRose direction={0} size={300} />
-          </div>
-        </DropdownBtn>
+            <div
+              onClick={() => openModal("Direção do Vento", "Direção do Vento")}
+              style={{ cursor: "pointer", width: "90%" }}
+            >
+              <WindRose direction={0} size={300} />
+            </div>
+          </DropdownBtn>
 
-        <DropdownBtn
-          title="Nível de Chuva"
-          icon={IoRainyOutline}
-          width={"26.8vw"}
+          <DropdownBtn title="UV" width={"26.8vw"}>
+            <LineGraph
+              lines={[
+                {
+                  data: UVGraph[0].data,
+                  strokeColor: UVGraph[0].color,
+                  fillColor: UVGraph[0].rgba,
+                },
+              ]}
+              xLabels={UVGraph[0].xLabels}
+              yMax={maxDataValue.UVGraph}
+              showDegreeSymbol={false}
+            />
+          </DropdownBtn>
+          <DropdownBtn
+            title="Pressão Atmosférica"
+            icon={GiOppression}
+            width={"26.8vw"}
+          >
+            <Barometer value={80} />
+          </DropdownBtn>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <DropdownBtn title="PM2_5" width={"26.8vw"}>
+            Heatmap
+          </DropdownBtn>
+          <DropdownBtn title="Luminosidade" width={"26.8vw"}>
+            <LineGraph
+              lines={[
+                {
+                  data: LuminosityGraph[0].data[0],
+                  strokeColor: LuminosityGraph[0].color,
+                  fillColor: LuminosityGraph[0].rgba,
+                },
+              ]}
+              xLabels={LuminosityGraph[0].xLabels}
+              yMax={maxDataValue.LuminosityGraph}
+              showDegreeSymbol={false}
+            />
+          </DropdownBtn>
+          <DropdownBtn title="Ruido" width={"26.8vw"}>
+            gráfico de área
+          </DropdownBtn>
+        </div>
+        <div
+          style={{
+            minWidth: "95%",
+            display: "flex",
+            margin: "0 auto",
+          }}
         >
-          <VerticalBarGraph
-            bars={rainData[0].data}
-            xLabels={rainData[0].xLabels}
-            yMax={100}
-            width="100%"
-            height={300}
-            barWidth={20}
-            barSpacing={10}
-            gradientStartColor={rainData[0].gradientStartColor}
-            gradientEndColor={rainData[0].gradientEndColor}
-            gradientId={rainData[0].id}
-            tooltipStyle="style2"
-          />
-        </DropdownBtn>
-        <DropdownBtn
-          title="Pressão Atmosférica"
-          icon={GiOppression}
-          width={"26.8vw"}
-        >
-          <Barometer value={80} />
-        </DropdownBtn>
+          <DropdownBtn
+            title="Nível de Chuva"
+            icon={IoRainyOutline}
+            width={"95%"}
+          >
+            {" "}
+            <VerticalBarGraph
+              bars={rainData[0].data}
+              xLabels={rainData[0].xLabels}
+              yMax={100}
+              width="100%"
+              height={300}
+              barWidth={20}
+              barSpacing={10}
+              gradientStartColor={rainData[0].gradientStartColor}
+              gradientEndColor={rainData[0].gradientEndColor}
+              gradientId={rainData[0].id}
+              tooltipStyle="style2"
+            />
+          </DropdownBtn>
+        </div>
       </div>
     </section>
   );
