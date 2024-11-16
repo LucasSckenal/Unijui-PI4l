@@ -28,6 +28,7 @@ const LineGraph = ({
     y: 0,
     value: null,
   });
+  const colorId = `id-${Math.random().toString(36).substr(2, 9)}`;
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -74,8 +75,8 @@ const LineGraph = ({
         <defs>
           {lines.map((line, index) => (
             <linearGradient
-              key={`gradient-${index}`}
-              id={`gradient-${index}`}
+              key={`gradient-${colorId}-${index}`}
+              id={`gradient-${colorId}-${index}`}
               x1="0"
               y1="0"
               x2="0"
@@ -168,7 +169,7 @@ const LineGraph = ({
             <g key={`line-${lineIndex}`}>
               <polygon
                 points={fillPoints}
-                fill={`url(#gradient-${lineIndex})`}
+                fill={`url(#gradient-${colorId}-${lineIndex})`}
               />
               <polyline
                 points={points}

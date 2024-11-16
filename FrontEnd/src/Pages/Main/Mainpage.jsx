@@ -56,6 +56,7 @@ function Home() {
     updateIntervalOptions();
     window.addEventListener("resize", updateIntervalOptions);
     return () => window.removeEventListener("resize", updateIntervalOptions);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const GraphsBtns = [
@@ -216,9 +217,18 @@ function Home() {
   useEffect(() => {
     if (selectedInterval) {
       const newLabels = generateHourlyLabels(selectedInterval);
-      setLabels(newLabels);
+      if (selectedInterval.value === defaultIntervalOptions[5].value) {
+        const newLabels6h = generateHourlyLabels(defaultIntervalOptions[4]);
+        setLabels([newLabels, newLabels6h]); // Agora passa ambos os conjuntos de labels em um array
+        console.log(newLabels);
+        console.log(newLabels6h);
+      } else {
+        const newLabels6h = newLabels;
+        setLabels([newLabels, newLabels6h]); // Para outros intervalos, ainda passa o conjunto único
+      }
     }
   }, [selectedInterval]);
+  
 
   const handleButtonClick = (buttonName) => {
     if (activeBtn === buttonName) {
@@ -369,7 +379,8 @@ function Home() {
               line={line}
               lineDatas={lineDatas}
               activeBtn={activeBtn}
-              labels={labels}
+              labels={labels[0]}
+              labels6h={labels[1]}
             />
           </div>
         </section>
