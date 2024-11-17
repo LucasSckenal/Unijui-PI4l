@@ -25,22 +25,18 @@ let StatisticsService = class StatisticsService {
     async getTemperatureHourlyStatistics_K72623Lo(deviceName, time) {
         const timestamp = new Date(time);
         timestamp.setHours(timestamp.getHours() - 24);
-        let result = await this.k72623LoRepository.find({
+        const result = await this.k72623LoRepository.find({
             select: ['temperature', 'time'],
             where: {
                 deviceName,
                 time: (0, typeorm_2.MoreThan)(timestamp),
             },
-            order: {
-                time: 'DESC',
-            },
+            order: { time: 'ASC' },
         });
-        const resultVector = result.map(item => ({
-            temperature: item.temperature,
-            time: item.time
-        }));
-        const temperatureAverage = this.getHourAverages(resultVector);
-        return { deviceName: deviceName, averagePerHour: temperatureAverage };
+        if (result.length === 0)
+            return null;
+        const groupedByHour = this.groupByHour(result);
+        return { deviceName, dataPerHour: groupedByHour };
     }
     async getTemperatureHourlyStatistics_nit2xli(deviceName, time) {
         const timestamp = new Date(time);
@@ -51,36 +47,33 @@ let StatisticsService = class StatisticsService {
                 deviceName,
                 time: (0, typeorm_2.MoreThan)(timestamp),
             },
-            order: {
-                time: 'DESC',
-            },
+            order: { time: 'ASC' },
         });
-        const resultVector = result.map(item => ({
+        if (result.length === 0)
+            return null;
+        const groupedByHour = this.groupByHour(result.map(item => ({
             temperature: item.emw_temperature,
-            time: item.time
-        }));
-        const temperatureAverage = this.getHourAverages(resultVector);
-        return { deviceName: deviceName, averagePerHour: temperatureAverage };
+            time: item.time,
+        })));
+        return { deviceName, dataPerHour: groupedByHour };
     }
-    getHourAverages(last24h) {
-        const hourlyTemperatureStatistics = [];
-        let sum = 0;
-        let count = 0;
-        let hourRef = last24h[0].time.getHours();
-        const k_length = last24h.length;
-        for (let i = 0; i < k_length; i++) {
-            if (last24h[i].time.getHours() === hourRef) {
-                sum += last24h[i].temperature;
-                count++;
+    groupByHour(data) {
+        const grouped = {};
+        for (const item of data) {
+            const hour = item.time.getHours();
+            if (!grouped[hour]) {
+                grouped[hour] = [];
             }
-            else {
-                hourlyTemperatureStatistics.push({ hour: hourRef, average: sum / count });
-                hourRef = last24h[i].time.getHours();
-                count = 1;
-                sum = last24h[i].temperature;
-            }
+            grouped[hour].push(item.temperature);
         }
-        return hourlyTemperatureStatistics;
+        const result = [];
+        for (let i = 0; i < 24; i++) {
+            result.push({
+                hour: i,
+                values: grouped[i] || [],
+            });
+        }
+        return result;
     }
 };
 StatisticsService = __decorate([
