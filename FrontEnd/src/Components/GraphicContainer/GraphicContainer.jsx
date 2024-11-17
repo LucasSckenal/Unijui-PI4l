@@ -251,7 +251,6 @@ const GraphicContainer = ({
     setModalCategory(category);
     setSelectedType(valueType);
     setModalVisible(true);
-    console.log("Valuetype:" + valueType);
   };
 
   const closeModal = () => {
@@ -344,8 +343,6 @@ const GraphicContainer = ({
 
 const currentModal = modalData[modalCategory];
 const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
-console.log("isSmallScreen:", isSmallScreen);
-console.log("Largura da tela:", window.innerWidth);
 
   return (
     <section className={styles.graphs}>

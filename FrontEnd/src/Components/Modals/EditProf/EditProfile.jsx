@@ -12,30 +12,38 @@ const EditProfile = ({ isOpen, onClose }) => {
   const handleFile = (e) => {
     if (e.target.files[0]) {
       const image = e.target.files[0];
-
+  
       if (image.type === "image/jpeg" || image.type === "image/png") {
         const reader = new FileReader();
-
+  
         reader.onloadend = () => {
-          setAvatar(reader.result);
-          localStorage.setItem("imagem", reader.result);
+          const imageResult = reader.result;
+          setAvatar(imageResult);
+          localStorage.setItem("imagem", imageResult); // Salvando a imagem
         };
-
+  
         reader.readAsDataURL(image);
       } else {
         alert("Please upload a valid PNG or JPEG image.");
-        setAvatar(null);
+        setAvatar(user); // Definindo a imagem padrão em caso de erro
+        localStorage.setItem("imagem", user); // Salvando a imagem padrão no localStorage
         return;
       }
+    } else {
+      setAvatar(user); // Garantindo que a imagem padrão seja usada caso não haja upload
+      localStorage.setItem("imagem", user); // Salvando a imagem padrão no localStorage
     }
   };
+  
 
   useEffect(() => {
     setName(localStorage.getItem("nome"));
-    setAvatar(localStorage.getItem("imagem"));
+    const storedAvatar = localStorage.getItem("imagem");
+    setAvatar(storedAvatar ? storedAvatar : user); // Se não tiver imagem, usa o avatar padrão
     setEmail(localStorage.getItem("email"));
     setPassword(localStorage.getItem("password"));
   }, [isOpen]);
+  
 
   const handleSave = () => {
     localStorage.setItem("imagem", avatar);
