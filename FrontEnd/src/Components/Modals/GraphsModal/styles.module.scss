@@ -25,9 +25,9 @@
 
 .innerModal {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    width: 50%;
+    width: 55%;
     max-width: 1200px;
     height: 500px;
     flex-direction: column;
@@ -44,7 +44,7 @@
 
         &:hover {
             border: 1px solid var(--TextGeneral);
-            box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+            box-shadow: var(--BoxShadow);
         }
     }
 

@@ -1,51 +1,57 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  color: var(--TextGeneral);
+
+  .button {
     display: flex;
-    flex-direction: column;
-    color: var(--TextGeneral);
-  
-    .button {
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: var(--DropButton);
+    color: var(--TextGeneralAlt);
+    border-radius: var(--BorderRadius);
+    border: 1px solid var(--TextGeneral);
+
+    span {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px;
-      background-color: var(--DropButton);
       color: var(--TextGeneralAlt);
-      border-radius: 8px;
-      border: 1px solid var(--TextGeneral);
-  
-      span {
-        color: var(--TextGeneralAlt);
-        font-size: clamp(14px, 2.65vw, 18px);
-        font-weight: 600;
-        line-height: clamp(16px, 3.43vw, 20px);
-      }
-  
-      img {
-        width: 24px;
-        height: 24px;
-      }
+      font-size: clamp(14px, 2.65vw, 18px);
+      font-weight: 600;
+      line-height: clamp(16px, 3.43vw, 20px);
+      gap: 8px
     }
-  
-    .content {
-      display: block;
-      overflow: hidden; // Garante que o conteúdo oculto não seja exibido
-      max-height: 0; // Inicialmente escondido
-      opacity: 0; // Inicialmente escondido
-      transition: max-height 0.5s ease, opacity 0.5s ease; // Adiciona a transição
-  
-      &.show {
-        max-height: 500px; // Define um valor máximo para quando for exibido (ajuste conforme necessário)
-        opacity: 1; // Torna visível
-      }
-  
-      &.hide {
-        max-height: 0; // Esconde o conteúdo
-        opacity: 0; // Torna invisível
-      }
-    }
-  
-    .contentFooter {
-      padding-top: 150px;
+
+    img {
+      width: 24px;
+      height: 24px;
     }
   }
-  
+
+  .content {
+    display: block;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    padding-bottom: 10px;
+
+    &.show {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    &.hide {
+      max-height: 0;
+      opacity: 0;
+    }
+  }
+
+  .contentFooter {
+    padding-top: 150px;
+    display: flex;
+    align-items: center;
+
+
+  }
+}

@@ -1,73 +1,77 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
+import styles from "./styles.module.scss";
+
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
+
 import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.jsx";
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
+import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
+import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
+
 import tempDark from "../../assets/thermometer-temperature.svg";
 import tempLight from "../../assets/thermometer-temperature-white.png";
-import styles from "./styles.module.scss";
+import humidDark from "../../assets/rainIcon.png";
+import humidLight from "../../assets/rainIconDark.png";
+
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
-import { useState, useEffect, useContext } from "react";
-import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
-import TemperatureModal from "../Modals/TemperatureModal/TemperatureModal.jsx";
+import GraphModal from "../Modals/GraphsModal/graphModal.jsx";
+import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
+
+import useWindowResize from "../../Hooks/useWindowResize.jsx";
+import { getMaxDataValue } from "../../utils/MaxDataValue.jsx";
+
+import { PiWindDuotone } from "react-icons/pi";
+import { IoRainyOutline } from "react-icons/io5";
+import { GiOppression } from "react-icons/gi";
 
 const GraphicContainer = ({
   visibleLines,
-  setVisibleLines,
   lineDatas = [],
   line,
   activeBtn,
+  labels,
 }) => {
-  const [hidden, setHidden] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedTemp, setSelectedTemp] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [modalCategory, setModalCategory] = useState("");
+  const [maxDataValue, setMaxDataValue] = useState({
+    UVGraph: 0,
+    LuminosityGraph: 0,
+  });
 
-  useEffect(() => {
-    const handleHidden = () => {
-      setHidden(window.innerWidth <= 720);
-    };
+  const isHidden = useWindowResize(926);
 
-    handleHidden();
+  const generateDataGustWindBar = () => {
+    const dataGustWindBar = [];
+    const today = new Date();
 
-    window.addEventListener("resize", handleHidden);
-    return () => window.removeEventListener("resize", handleHidden);
-  }, []);
+    const values = [116, 100, 50, 20, 80];
 
-  const resetLines = () => {
-    setVisibleLines({
-      1: false,
-      2: false,
-      3: false,
-    });
+    for (let i = 0; i < 5; i++) {
+      const pastDate = new Date(today);
+      pastDate.setDate(today.getDate() - i);
+
+      const label = pastDate.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+      });
+      const value = values[4 - i];
+
+      dataGustWindBar.push({
+        label: label,
+        value: value,
+        backgroundColor:
+          "linear-gradient(90deg, rgba(88, 209, 175, 1) 0%, rgba(131, 238, 247, 1) 100%)",
+      });
+    }
+
+    return dataGustWindBar.reverse();
   };
 
-  const dataBar = [
-    {
-      label: "Category 1",
-      value: 80,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 2",
-      value: 50,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 3",
-      value: 70,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-    {
-      label: "Category 4",
-      value: 25,
-      backgroundColor:
-        "linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(0, 213, 255, 1) 100%)",
-    },
-  ];
+  const dataGustWindBar = generateDataGustWindBar();
 
   const TempGraph = [
     {
@@ -80,40 +84,147 @@ const GraphicContainer = ({
       ],
       color: ["#de7c21"],
       rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-    },
-    {
-      name: "Temperatura Interna",
-      data: [
-        [
-          25, 24, 24, 23, 23, 22, 23, 24, 26, 28, 29, 31, 33, 34, 34, 33, 32,
-          30, 29, 28, 27, 26, 25, 25,
-        ],
-      ],
-      color: ["#de7c21"],
-      rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      xLabels: labels,
     },
   ];
 
-  const openModal = (tempType) => {
-    setSelectedTemp(tempType);
+  const HumidGraph = [
+    {
+      id: "humidity",
+      name: "Úmidade",
+      data: [
+        [
+          10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40,
+          35, 30, 25, 20, 15, 10, 5,
+        ],
+      ],
+      gradientStartColor: "rgba(58, 33, 222, 1)",
+      gradientEndColor: "rgba(66, 24, 163, 1)",
+      rgba: ["rgba(74, 33, 222, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const rainData = [
+    {
+      id: "rain",
+      name: "Chuva",
+      data: [
+        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
+        30, 25, 20, 15, 10, 5,
+      ],
+      gradientStartColor: "rgba(0, 123, 255, 1)",
+      gradientEndColor: "rgba(0, 180, 255, 1)",
+      xLabels: labels,
+    },
+  ];
+
+  const solarRadiationData = [
+    {
+      id: "solar",
+      name: "Radiação Solar",
+      data: [
+        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
+        30, 25, 20, 15, 10, 5,
+      ],
+      gradientStartColor: "rgba(219, 142, 9, 1)",
+      gradientEndColor: "rgba(255, 238, 0, 1)",
+      xLabels: labels,
+    },
+  ];
+
+  const WindDirectionGraph = [
+    {
+      name: "Direção do Vento",
+      data: [
+        [
+          10, 30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
+          310, 330, 350, 10, 30, 50, 70, 90, 110,
+        ],
+      ],
+      color: ["#5eff00"],
+      rgba: ["rgba(115, 255, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindSpeedGraph = [
+    {
+      name: "Velocidade do Vento",
+      data: [
+        [
+          7, 10, 14, 13, 11, 9, 8, 10, 12, 14, 16, 18, 19, 20, 19, 18, 16, 14,
+          13, 12, 11, 9, 8, 7,
+        ],
+      ],
+      color: ["#3399ff"],
+      rgba: ["rgba(51, 153, 255, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindGustGraph = [
+    {
+      id: "windGust",
+      name: "Rajada de Vento",
+      data: [
+        [
+          5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 55, 50, 45, 40, 35, 30,
+          25, 20, 15, 10, 5, 10,
+        ],
+      ],
+      gradientStartColor: "rgba(255, 99, 71, 1)",
+      gradientEndColor: "rgba(255, 69, 0, 1)",
+      rgba: ["rgba(255, 99, 71, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+  const UVGraph = [
+    {
+      name: "UV",
+      data: [
+        1, 2, 3, 4, 5, 4, 3, 4, 6, 8, 10, 12, 11, 10, 9, 8, 6, 5, 4, 3, 2, 1, 0,
+        0,
+      ],
+      color: ["#FFA500"],
+      rgba: ["rgba(255, 165, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const LuminosityGraph = [
+    {
+      name: "Luminosidade",
+      data: [
+        [
+          100, 150, 200, 250, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120,
+          100, 80, 60, 40, 20, 30, 50, 70, 90, 110,
+        ],
+      ],
+      color: ["#FFD700"],
+      rgba: ["rgba(255, 215, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const openModal = (category, valueType) => {
+    setModalCategory(category);
+    setSelectedType(valueType);
     setModalVisible(true);
+    console.log("Valuetype:" + valueType);
   };
+
   const closeModal = () => {
     setModalVisible(false);
   };
 
-  const getLastTemperatureValue = (tempName) => {
-    const tempData = TempGraph.find((temp) => temp.name === tempName);
-    if (tempData && tempData.data.length > 0) {
-      return tempData.data[0][tempData.data[0].length - 1];
-    }
-    return null;
+  const getLastValue = (graph, name) => {
+    const data = graph.find((item) => item.name === name);
+    return data?.data[0]?.[data.data[0].length - 1] || null;
   };
 
-  const lastExternalTemp = getLastTemperatureValue("Temperatura");
-  const lastInternalTemp = getLastTemperatureValue("Temperatura Interna");
+  const lastExternalTemp = getLastValue(TempGraph, "Temperatura");
+  const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
 
   const getMaxYValue = () => {
     let maxY = 0;
@@ -133,15 +244,78 @@ const GraphicContainer = ({
 
   const yMax = getMaxYValue() || 100;
 
+  useEffect(() => {
+    if (UVGraph && UVGraph[0] && UVGraph[0].data) {
+      const calculatedMaxValue = Math.max(...UVGraph[0].data);
+      setMaxDataValue((prevMax) => ({
+        ...prevMax,
+        UVGraph: calculatedMaxValue,
+      }));
+    }
+
+    if (LuminosityGraph && LuminosityGraph[0] && LuminosityGraph[0].data) {
+      const calculatedMaxValue = Math.max(...LuminosityGraph[0].data[0]);
+      setMaxDataValue((prevMax) => ({
+        ...prevMax,
+        LuminosityGraph: calculatedMaxValue,
+      }));
+    }
+  }, [UVGraph, LuminosityGraph]);
+
   return (
     <section className={styles.graphs}>
-      {isModalVisible && (
-        <TemperatureModal
+      {isModalVisible && modalCategory === "temperatura" && (
+        <GraphModal
           onClose={closeModal}
           isVisible={isModalVisible}
-          selectedTemp={selectedTemp}
-          tempData={TempGraph}
-        ></TemperatureModal>
+          title="Temperatura"
+          graphType="line"
+          graphData={TempGraph[0]}
+          degreeSymbol={"°C"}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "umidade" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Umidade"
+          graphType="bar"
+          graphData={HumidGraph[0]}
+          degreeSymbol={"%"}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Direção do Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Direção do Vento"
+          graphType="line"
+          graphData={WindDirectionGraph[0]}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Velocidade do Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Velocidade do Vento"
+          graphType="line"
+          graphData={WindSpeedGraph[0]}
+          degreeSymbol={"km/h"}
+        />
+      )}
+
+      {isModalVisible && modalCategory === "Rajada de Vento" && (
+        <GraphModal
+          onClose={closeModal}
+          isVisible={isModalVisible}
+          title="Rajada de Vento"
+          graphType="bar"
+          graphData={WindGustGraph[0]}
+          degreeSymbol={"km/h"}
+        />
       )}
 
       <div className={styles.graphsTop}>
@@ -164,116 +338,196 @@ const GraphicContainer = ({
               .filter(Boolean)}
             width="100%"
             height={250}
-            showDegreeSymbol={activeBtn === "Temperatura"}
+            xLabels={labels}
+            showDegreeSymbol={
+              activeBtn === "Temperatura" || activeBtn === "Vento"
+            }
+            degreeSymbol={
+              activeBtn === "Temperatura"
+                ? "°C"
+                : activeBtn === "Vento"
+                ? "km/h"
+                : ""
+            }
             yMax={yMax}
+            tooltipStyle="style2"
           />
         </Frame>
         <div className={styles.tempContainer}>
           <div
-            onClick={() => openModal("Temperatura")}
+            onClick={() => openModal("temperatura", "Temperatura")}
             style={{ cursor: "pointer" }}
           >
             <Frame
               isTitle={true}
               title={"Temperatura"}
               width="105%"
-              height="168px"
+              height="168.5px"
             >
-              <div className={styles.TempGraph}>
-                <div className={styles.temp}>
-                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>{lastExternalTemp}ºC</span>
-                </div>
-              </div>
+              <SmallContainer
+                lastValue={lastExternalTemp}
+                light={tempLight}
+                dark={tempDark}
+                complement={"ºC"}
+              />
             </Frame>
           </div>
           <div
-            onClick={() => openModal("Temperatura Interna")}
+            onClick={() => openModal("umidade", "Úmidade")}
             style={{ cursor: "pointer" }}
           >
             <Frame
               isTitle={true}
-              title={"Temperatura Interna"}
+              title={"Umidade"}
               width="105%"
-              height="168px"
+              height="168.5px"
             >
-              <div className={styles.TempGraph}>
-                <div className={styles.temp}>
-                  <ThemeSwap darkImage={tempLight} lightImage={tempDark} />
-                  <span>{lastInternalTemp}ºC</span>
-                </div>
-              </div>
+              <SmallContainer
+                lastValue={lastExternalHumid}
+                light={humidLight}
+                dark={humidDark}
+                complement={"%"}
+              />
             </Frame>
           </div>
         </div>
       </div>
       <div className={styles.graphsBot}>
-        {!hidden && (
+        <Frame
+          isTitle={true}
+          title={"Radiação Solar"}
+          width="54%"
+          height="320px"
+        >
+          <VerticalBarGraph
+            bars={solarRadiationData[0].data}
+            xLabels={solarRadiationData[0].xLabels}
+            yMax={100}
+            width="100%"
+            height={300}
+            barWidth={20}
+            barSpacing={10}
+            gradientStartColor={solarRadiationData[0].gradientStartColor}
+            gradientEndColor={solarRadiationData[0].gradientEndColor}
+            gradientId={solarRadiationData[0].id}
+            tooltipStyle="style2"
+          />
+        </Frame>
+
+        {!isHidden && (
           <Frame
             isTitle={true}
             title={"Velocidade do Vento"}
             width="23%"
             height="320px"
           >
-            <RadialBarCharts value={100} />
+            <div
+              onClick={() =>
+                openModal("Velocidade do Vento", "Velocidade do Vento")
+              }
+              style={{ cursor: "pointer" }}
+            >
+              <RadialBarCharts value={100} />
+            </div>
           </Frame>
         )}
-        <Frame isTitle={true} title={"Barras"} width="54%" height="320px">
-          <HorizontalBarGraph dataBar={dataBar} />
-        </Frame>
-        <Frame isTitle={true} title={"Gráficos maneiros"} height="auto">
-          <div className={styles.dropDownBtns}>
-            <DropdownBtn
-              title="AQUI Lindo :3"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            />
-            <DropdownBtn
-              title="Average Wind"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-              atque voluptatibus quisquam quam modi possimus unde deserunt sed
-              error similique fugiat! Rem.
-            </DropdownBtn>
-            <DropdownBtn
-              title="Average Wind"
-              width={"230px"}
-              onClick={() => {
-                resetLines();
-              }}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Molestiae, aut nam soluta libero ut quidem voluptatum nostrum
-              atque voluptatibus quisquam quam modi possimus unde deserunt sed
-              error similique fugiat! Rem.
-            </DropdownBtn>
-          </div>
-        </Frame>
+        <div
+          onClick={() => openModal("Rajada de Vento", "Rajada de Vento")}
+          style={{ cursor: "pointer" }}
+          className={styles.gustWind}
+        >
+          <Frame isTitle={true} title={"Rajada de Vento"} height={"100%"}>
+            <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
+          </Frame>
+        </div>
       </div>
       <div className={styles.dropDownBtnsBot}>
-        <DropdownBtn title="Direção do Vento" width={"504px"}>
-          <WindRose direction={0} size={300} />{" "}
-        </DropdownBtn>
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <DropdownBtn
+            title="Direção do Vento"
+            icon={PiWindDuotone}
+            width={"26.8vw"}
+          >
+            <div
+              onClick={() => openModal("Direção do Vento", "Direção do Vento")}
+              style={{ cursor: "pointer", width: "90%" }}
+            >
+              <WindRose direction={0} size={300} />
+            </div>
+          </DropdownBtn>
 
-        <DropdownBtn title="Average Wind" width={"504px"}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-          aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
-          quisquam quam modi possimus unde deserunt sed error similique fugiat!
-          Rem.
-        </DropdownBtn>
-        <DropdownBtn title="Average Wind" width={"504px"}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-          aut nam soluta libero ut quidem voluptatum nostrum atque voluptatibus
-          quisquam quam modi possimus unde deserunt sed error similique fugiat!
-          Rem.
-        </DropdownBtn>
+          <DropdownBtn title="UV" width={"26.8vw"}>
+            <LineGraph
+              lines={[
+                {
+                  data: UVGraph[0].data,
+                  strokeColor: UVGraph[0].color,
+                  fillColor: UVGraph[0].rgba,
+                },
+              ]}
+              xLabels={UVGraph[0].xLabels}
+              yMax={maxDataValue.UVGraph}
+              showDegreeSymbol={false}
+            />
+          </DropdownBtn>
+          <DropdownBtn
+            title="Pressão Atmosférica"
+            icon={GiOppression}
+            width={"26.8vw"}
+          >
+            <Barometer value={80} />
+          </DropdownBtn>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <DropdownBtn title="PM2_5" width={"26.8vw"}>
+            Heatmap
+          </DropdownBtn>
+          <DropdownBtn title="Luminosidade" width={"26.8vw"}>
+            <LineGraph
+              lines={[
+                {
+                  data: LuminosityGraph[0].data[0],
+                  strokeColor: LuminosityGraph[0].color,
+                  fillColor: LuminosityGraph[0].rgba,
+                },
+              ]}
+              xLabels={LuminosityGraph[0].xLabels}
+              yMax={maxDataValue.LuminosityGraph}
+              showDegreeSymbol={false}
+            />
+          </DropdownBtn>
+          <DropdownBtn title="Ruido" width={"26.8vw"}>
+            gráfico de área
+          </DropdownBtn>
+        </div>
+        <div
+          style={{
+            minWidth: "95%",
+            display: "flex",
+            margin: "0 auto",
+          }}
+        >
+          <DropdownBtn
+            title="Nível de Chuva"
+            icon={IoRainyOutline}
+            width={"95%"}
+          >
+            {" "}
+            <VerticalBarGraph
+              bars={rainData[0].data}
+              xLabels={rainData[0].xLabels}
+              yMax={100}
+              width="100%"
+              height={300}
+              barWidth={20}
+              barSpacing={10}
+              gradientStartColor={rainData[0].gradientStartColor}
+              gradientEndColor={rainData[0].gradientEndColor}
+              gradientId={rainData[0].id}
+              tooltipStyle="style2"
+            />
+          </DropdownBtn>
+        </div>
       </div>
     </section>
   );

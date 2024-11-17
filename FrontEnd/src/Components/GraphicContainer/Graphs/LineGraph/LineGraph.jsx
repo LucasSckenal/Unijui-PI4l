@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
@@ -15,7 +16,9 @@ const LineGraph = ({
   yLabel = "",
   xLabel = "",
   showDegreeSymbol = false,
-  margin = { top: 10, right: 20, bottom: 20, left: 30 },
+  margin = { top: 10, right: 25, bottom: 20, left: 30 },
+  degreeSymbol,
+  tooltipStyle = "style1",
 }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -51,7 +54,7 @@ const LineGraph = ({
       visible: true,
       x,
       y,
-      value: showDegreeSymbol ? `${value}°C` : value,
+      value: showDegreeSymbol ? `${value}${degreeSymbol}` : value,
     });
   };
 
@@ -65,7 +68,7 @@ const LineGraph = ({
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${svgWidth - 10} ${svgHeight}`}
+        viewBox={`-5 0 ${svgWidth - 10} ${svgHeight}`}
         className={styles.lineGraph}
       >
         <defs>
@@ -110,7 +113,7 @@ const LineGraph = ({
                 fill="var(--TextGeneral)"
               >
                 {showDegreeSymbol
-                  ? `${Math.floor(value)}°C`
+                  ? `${Math.floor(value)}${degreeSymbol}`
                   : Math.floor(value)}{" "}
               </text>
             </g>
@@ -144,9 +147,14 @@ const LineGraph = ({
         })}
 
         {lines.map((line, lineIndex) => {
+          // Limitar a quantidade de pontos com base no número de xLabels
+          const numPoints = Math.min(line.data.length, xLabels.length);
+
+          // Gerar os pontos com base no número de xLabels
           const points = line.data
+            .slice(0, numPoints) // Exibe apenas até o número de xLabels
             .map((value, index) => {
-              const x = left + (index / (line.data.length - 1)) * innerWidth;
+              const x = left + (index / (numPoints - 1)) * innerWidth; // Ajuste de escala para os pontos
               const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
               return `${x},${y}`;
             })
@@ -175,47 +183,44 @@ const LineGraph = ({
 
         {/* Pontos com borda */}
         {lines.map((line, lineIndex) =>
-          line.data.map((value, index) => {
-            const x = left + (index / (line.data.length - 1)) * innerWidth;
-            const y = top + innerHeight - (value / yMax) * innerHeight; // Alterado para usar yMax
+          line.data
+            .slice(0, Math.min(line.data.length, xLabels.length)) // Limitar os pontos aqui também
+            .map((value, index) => {
+              const x = left + (index / (xLabels.length - 1)) * innerWidth; // Ajustar a escala dos pontos com base no número de xLabels
+              const y = top + innerHeight - (value / yMax) * innerHeight; // Ajustar a escala y com base no yMax
 
-            return (
-              <g key={`point-${lineIndex}-${index}`}>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r={4}
-                  fill={line.strokeColor}
-                  stroke={pointBorderColor}
-                  strokeWidth={pointBorderWidth}
-                  onMouseEnter={(event) => handleMouseEnter(event, value, x, y)}
-                  onMouseLeave={handleMouseLeave}
-                />
-              </g>
-            );
-          })
+              return (
+                <g key={`point-${lineIndex}-${index}`}>
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={4}
+                    fill={line.strokeColor}
+                    stroke={pointBorderColor}
+                    strokeWidth={pointBorderWidth}
+                    onMouseEnter={(event) =>
+                      handleMouseEnter(event, value, x, y)
+                    }
+                    onMouseLeave={handleMouseLeave}
+                  />
+                </g>
+              );
+            })
         )}
       </svg>
 
       {/* Tooltip com símbolo de graus Celsius */}
       {tooltip.visible && (
         <div
-          className={styles.tooltip}
-          style={{
-            position: "absolute",
-            left: tooltip.x,
-            top: tooltip.y,
-            background: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "4px 8px",
-            pointerEvents: "none",
-            transform: "translate(-50%, -100%)",
-            color: "black",
-            zIndex: 10,
-          }}
-        >
-          {tooltip.value}
+        className={`${styles.tooltip} ${
+          tooltipStyle === "style1" ? styles["tooltip-style1"] : styles["tooltip-style2"]
+        }`}
+        style={{
+          left: tooltip.x,
+          top: tooltip.y,
+        }}
+      >
+        {tooltip.value}
         </div>
       )}
     </div>

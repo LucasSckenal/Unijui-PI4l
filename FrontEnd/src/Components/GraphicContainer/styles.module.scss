@@ -16,28 +16,6 @@
       gap: 12px;
       text-align: center;
 
-      .TempGraph {
-
-        img {
-          width: 75px;
-          height: 75px;
-          transition: width 0.3s, height 0.3s;
-        }
-
-        .temp {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          gap: 8px;
-
-          span {
-            font-size: 70px;
-            color: var(--TextGeneral);
-            transition: font-size 0.3s;
-          }
-        }
-      }
     }
   }
 
@@ -46,6 +24,14 @@
     flex-direction: row;
     gap: 20px;
 
+    .humidityContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+      margin-right: 0.7%;
+    }
+
     .dropDownBtns {
       display: flex;
       flex-direction: column;
@@ -53,16 +39,22 @@
       justify-content: space-evenly;
       gap: 8px;
 
+
       p {
         color: var(--TextGeneral);
         font-size: 20px;
       }
     }
+
+    .gustWind {
+      width: 15.2%;
+      min-height: 270px;
+    }
   }
 
   .dropDownBtnsBot {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
   }
 
@@ -76,6 +68,15 @@
       gap: 16px;
     }
 
+    .tempContainer {
+      display: flex;
+      flex-direction: row !important;
+
+      div {
+        margin-right: 10px;
+      }
+    }
+
     .tempContainer .TempGraph img {
       width: 60px;
       height: 60px;
@@ -85,12 +86,28 @@
       font-size: 50px;
     }
 
+    .graphsBot {
+      .gustWind {
+        width: 90%;
+      }
+    }
+
     .dropDownBtns p {
       font-size: 18px;
     }
   }
 
   @media (max-width: 768px) {
+
+
+    .tempContainer {
+      display: flex;
+      flex-direction: column !important;
+    }
+
+
+
+
     .tempContainer .TempGraph img {
       width: 50px;
       height: 50px;

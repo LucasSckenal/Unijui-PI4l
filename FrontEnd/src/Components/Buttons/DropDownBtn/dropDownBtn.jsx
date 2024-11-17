@@ -8,14 +8,14 @@ const DropdownBtn = ({
   title,
   divisor,
   footer,
+  icon: Icon,
   iconType,
   width,
   height,
 }) => {
   const [show, setShow] = useState(false);
   const [image, setImage] = useState();
-  const contentRef = useRef(null); // Referência para o conteúdo
-
+  const contentRef = useRef(null);
   useEffect(() => {
     if (iconType === "Plus") {
       setImage(Plus);
@@ -25,7 +25,7 @@ const DropdownBtn = ({
   }, []);
 
   function handleClick() {
-    setShow((prev) => !prev); // Alterna o estado de show
+    setShow((prev) => !prev);
     if (iconType === "Plus") {
       setImage((prev) => (prev === Plus ? Minus : Plus));
     } else {
@@ -33,7 +33,6 @@ const DropdownBtn = ({
     }
 
     if (!show && contentRef.current) {
-      // Rola a tela para o conteúdo se estiver sendo aberto
       contentRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }
@@ -45,19 +44,16 @@ const DropdownBtn = ({
       style={{ width: `${width}`, height: `${height}` }}
     >
       <button onClick={handleClick} className={styles.button}>
-        <span className={contentFooter ? styles.textFooter : ""}>{title}</span>
+        <span className={contentFooter ? styles.textFooter : ""}>
+          {title} {Icon && <Icon />}{" "}
+        </span>
         <img src={image} alt="Dropdown Button" />
       </button>
       <div
-
         className={`${styles.content} ${show ? styles.show : styles.hide}`}
         style={{ paddingTop: "20px" }}
       >
-        <div
-          ref={contentRef} // Adiciona a referência aqui
-        >
-          {children}
-        </div>
+        <div ref={contentRef}>{children}</div>
       </div>
     </div>
   );

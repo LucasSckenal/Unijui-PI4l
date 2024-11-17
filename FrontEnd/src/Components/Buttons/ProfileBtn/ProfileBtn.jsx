@@ -34,7 +34,7 @@ const ProfileBtn = () => {
           <li onClick={openModal}>Edit profile</li>
           <EditProfile isOpen={isModalOpen} onClose={closeModal} />
           <Divider width={90} />
-          <LogoutBtn hasText={true} text={"logout"} />
+          <LogoutBtn hasText={true} text={"Logout"} />
         </ul>
       )}
     </div>
