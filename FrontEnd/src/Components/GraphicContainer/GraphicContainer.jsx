@@ -20,13 +20,18 @@ import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
 import WindRose from "./Graphs/WindRoseGraph/WindRoseGraph.jsx";
 import GraphModal from "../Modals/GraphsModal/graphModal.jsx";
 import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
+import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 
 import useWindowResize from "../../Hooks/useWindowResize.jsx";
-import { getMaxDataValue } from "../../utils/MaxDataValue.jsx";
 
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
 import { GiOppression } from "react-icons/gi";
+import { BsLampFill, BsTrash3, BsTrash3Fill } from "react-icons/bs";
+import { MdNoiseControlOff } from "react-icons/md";
+import { FaRegSun, FaSun } from "react-icons/fa6";
+
+
 
 const GraphicContainer = ({
   visibleLines,
@@ -48,31 +53,34 @@ const GraphicContainer = ({
   const isHidden = useWindowResize(926);
 
   const generateDataGustWindBar = () => {
-    const dataGustWindBar = [];
-    const today = new Date();
+  const dataGustWindBar = [];
+  const values = [116, 100, 50, 20, 80];
 
-    const values = [116, 100, 50, 20, 80];
+  const labels = [];
+  const currentHour = new Date();
+  
+  // Adiciona a hora atual e as 4 anteriores
+  for (let i = 0; i < 5; i++) {
+    const label = new Date(currentHour);
+    label.setHours(currentHour.getHours() - i); // Subtrai as horas para pegar as horas anteriores
+    labels.push(label.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+  }
 
-    for (let i = 0; i < 5; i++) {
-      const pastDate = new Date(today);
-      pastDate.setDate(today.getDate() - i);
+  for (let i = 0; i < 5; i++) {
+    const label = labels[i];
+    const value = values[4 - i];
 
-      const label = pastDate.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-      });
-      const value = values[4 - i];
+    dataGustWindBar.push({
+      label: label,
+      value: value,
+      backgroundColor:
+        "linear-gradient(90deg, rgba(88, 209, 175, 1) 0%, rgba(131, 238, 247, 1) 100%)",
+    });
+  }
 
-      dataGustWindBar.push({
-        label: label,
-        value: value,
-        backgroundColor:
-          "linear-gradient(90deg, rgba(88, 209, 175, 1) 0%, rgba(131, 238, 247, 1) 100%)",
-      });
-    }
+  return dataGustWindBar.reverse();
+};
 
-    return dataGustWindBar.reverse();
-  };
 
   const dataGustWindBar = generateDataGustWindBar();
 
@@ -224,18 +232,18 @@ const GraphicContainer = ({
   ], [labels6h]); // Se "labels" for uma dependência que muda com o tempo
 
   const dataPM25 = [
-    [5, 15, 25, 35, 45],
-    [10, 20, 30, 40, 50],
-    [15, 25, 35, 45, 55],
-    [20, 30, 40, 50, 60],
-    [25, 35, 45, 55, 65],
+    [5, 15, 25, 35, 45, 25],
+    [10, 20, 30, 40, 50, 35],
+    [15, 25, 35, 45, 55, 45],
+    [20, 30, 40, 50, 60, 55],
+    
   ];
   const datesPM25 = [
-    ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"],
-    ["2024-01-06", "2024-01-07", "2024-01-08", "2024-01-09", "2024-01-10"],
-    ["2024-01-11", "2024-01-12", "2024-01-13", "2024-01-14", "2024-01-15"],
-    ["2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19", "2024-01-20"],
-    ["2024-01-21", "2024-01-22", "2024-01-23", "2024-01-24", "2024-01-25"],
+    ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05", "2024-01-21"],
+    ["2024-01-06", "2024-01-07", "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-22"],
+    ["2024-01-11", "2024-01-12", "2024-01-13", "2024-01-14", "2024-01-15", "2024-01-23"],
+    ["2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19", "2024-01-20", "2024-01-24"],
+    
   ];
 
   const openModal = (category, valueType) => {
@@ -484,7 +492,14 @@ const GraphicContainer = ({
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
           <DropdownBtn
             title="Direção do Vento"
-            icon={PiWindDuotone}
+            icon={() => <ThemeSwap lightImage={{
+              component: PiWindDuotone,
+              props: { color: "#000", size: "1.3em" },
+            }}
+            darkImage={{
+              component: PiWindDuotone,
+              props: { color: "#fff", size: "1.3em" },
+            }}/>} 
             width={"26.8vw"}
           >
             <div
@@ -494,19 +509,43 @@ const GraphicContainer = ({
               <WindRose direction={0} size={300} />
             </div>
           </DropdownBtn>
-          <DropdownBtn title="PM2_5" width={"26.8vw"}>
+          <DropdownBtn
+            title="PM2_5"
+            icon={() => <ThemeSwap lightImage={{
+              component: BsTrash3,
+              props: { color: "#000", size: "1.2em" },
+            }}
+            darkImage={{
+              component: BsTrash3Fill,
+              props: { color: "#fff", size: "1.2em" },
+            }}/>} 
+            width={"26.8vw"}>
             <Heatmap data={dataPM25} dates={datesPM25} width={250} height={250} />
           </DropdownBtn>
           <DropdownBtn
             title="Pressão Atmosférica"
-            icon={GiOppression}
+            icon={() => <ThemeSwap lightImage={{
+            component: GiOppression,
+            props: { color: "#000", size: "1.3em" },
+          }}
+          darkImage={{
+            component: GiOppression,
+            props: { color: "#fff", size: "1.3em" },
+          }}/>} 
             width={"26.8vw"}
           >
-            <Barometer value={80} />
+            <Barometer pressure={6} minPressure={0} maxPressure={100} />
           </DropdownBtn>
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-        <DropdownBtn title="UV" width={"26.8vw"}>
+        <DropdownBtn title="UV" icon={() => <ThemeSwap lightImage={{
+            component: FaRegSun,
+            props: { color: "#000", size: "1.3em" },
+          }}
+          darkImage={{
+            component: FaSun,
+            props: { color: "#fff", size: "1.3em" },
+          }}/>}  width={"26.8vw"}>
             <LineGraph
               lines={[
                 {
@@ -521,7 +560,17 @@ const GraphicContainer = ({
               tooltipStyle="style2"
             />
           </DropdownBtn>
-          <DropdownBtn title="Luminosidade" width={"26.8vw"}>
+          <DropdownBtn
+          title="Luminosidade"
+          icon={() => <ThemeSwap lightImage={{
+            component: BsLampFill,
+            props: { color: "#000", size: "1.2em" },
+          }}
+          darkImage={{
+            component: BsLampFill,
+            props: { color: "#fff", size: "1.2em" },
+          }}/>} 
+          width={"26.8vw"}>
             <LineGraph
               lines={[
                 {
@@ -536,7 +585,17 @@ const GraphicContainer = ({
               tooltipStyle="style2"
             />
           </DropdownBtn>
-          <DropdownBtn title="Ruido" width={"26.8vw"}>
+          <DropdownBtn
+          title="Ruido"
+          icon={() => <ThemeSwap lightImage={{
+            component: MdNoiseControlOff,
+            props: { color: "#000", size: "1.3em" },
+          }}
+          darkImage={{
+            component: MdNoiseControlOff,
+            props: { color: "#fff", size: "1.3em" },
+          }}/>} 
+          width={"26.8vw"}>
           <LineGraph
               lines={[
                 {

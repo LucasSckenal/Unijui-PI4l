@@ -28,8 +28,46 @@ const Heatmap = ({ data, dates, width, height }) => {
     setHoveredCell(null); // Limpa a célula em hover
   };
 
+  // Função para calcular a posição do valor de cada cor na legenda
+  const getColorForValue = (value) => {
+    if (value < 10) return "#f7fbff";
+    if (value < 30) return "#6baed6";
+    if (value < 50) return "#3182bd";
+    return "#08306b";
+  };
+
+  // Valores mínimo, máximo e intermediário
+  const minValue = Math.min(...data.flat());
+  const maxValue = Math.max(...data.flat());
+  const midValue = (minValue + maxValue) / 2;
+
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative"}}>
+      {/* Barra de Legenda acima */}
+      <div style={{ width: "100%", height: "20px", marginBottom: "30px" }}>
+        <svg width="100%" height="100%">
+          <defs>
+            <linearGradient id="colorGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+              <stop offset="0%" stopColor={getColorForValue(minValue)} />
+              <stop offset="50%" stopColor={getColorForValue(midValue)} />
+              <stop offset="100%" stopColor={getColorForValue(maxValue)} />
+            </linearGradient>
+          </defs>
+          <rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            fill="url(#colorGradient)"
+          />
+        </svg>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
+          <span>{minValue}</span>
+          <span>{midValue}</span>
+          <span>{maxValue}</span>
+        </div>
+      </div>
+
       {/* Heatmap em SVG */}
       <svg
         width={width}

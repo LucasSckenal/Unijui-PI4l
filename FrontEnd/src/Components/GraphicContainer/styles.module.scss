@@ -119,6 +119,7 @@
 
     .dropDownBtns {
       min-height: 200px;
+      flex-direction: column !important;
     }
 
     .dropDownBtns p {

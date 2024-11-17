@@ -1,0 +1,31 @@
+.barometer-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+  
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  
+    .barometer-value,
+    .barometer-min,
+    .barometer-max {
+      position: absolute;
+    }
+  
+    .barometer-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: var(--TextGeneral, black); // Variável CSS com fallback
+    }
+  
+    .barometer-min,
+    .barometer-max {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--TextGeneral, black);
+    }
+  }
+  

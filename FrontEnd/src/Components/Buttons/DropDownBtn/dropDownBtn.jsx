@@ -1,6 +1,9 @@
 import styles from "./styles.module.scss";
 import ChevronUp from "../../../assets/chevron-up-white.png";
 import ChevronBottom from "../../../assets/chevron-bottom-white.png";
+import ChevronUpLight from "../../../assets/chevron-up.svg";
+import ChevronBottomLight from "../../../assets/chevron-bottom.svg";
+import ThemeSwap from "../../ThemeSwap/themeSwap";
 import { useEffect, useState, useRef } from "react";
 
 const DropdownBtn = ({
@@ -9,28 +12,14 @@ const DropdownBtn = ({
   divisor,
   footer,
   icon: Icon,
-  iconType,
   width,
   height,
 }) => {
   const [show, setShow] = useState(false);
-  const [image, setImage] = useState();
   const contentRef = useRef(null);
-  useEffect(() => {
-    if (iconType === "Plus") {
-      setImage(Plus);
-    } else {
-      setImage(ChevronBottom);
-    }
-  }, []);
 
   function handleClick() {
     setShow((prev) => !prev);
-    if (iconType === "Plus") {
-      setImage((prev) => (prev === Plus ? Minus : Plus));
-    } else {
-      setImage((prev) => (prev === ChevronBottom ? ChevronUp : ChevronBottom));
-    }
 
     if (!show && contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: "smooth" });
@@ -38,6 +27,7 @@ const DropdownBtn = ({
   }
 
   const contentFooter = footer === "footer";
+
   return (
     <div
       className={styles.wrapper}
@@ -47,7 +37,10 @@ const DropdownBtn = ({
         <span className={contentFooter ? styles.textFooter : ""}>
           {title} {Icon && <Icon />}{" "}
         </span>
-        <img src={image} alt="Dropdown Button" />
+        <ThemeSwap
+          lightImage={show ? ChevronUpLight : ChevronBottomLight}
+          darkImage={show ? ChevronUp : ChevronBottom}
+        />
       </button>
       <div
         className={`${styles.content} ${show ? styles.show : styles.hide}`}
