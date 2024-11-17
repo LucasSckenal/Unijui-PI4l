@@ -22,7 +22,7 @@ let CurrentDataService = class CurrentDataService {
         this.k72623LoRepository = k72623LoRepository;
         this.nit2xliRepository = nit2xliRepository;
     }
-    async getLastRegByDevive_K72623Lo(deviceName) {
+    async getLastRegByDevice_K72623Lo(deviceName) {
         const latestRecord = await this.k72623LoRepository.findOne({
             where: { deviceName },
             order: {
@@ -44,7 +44,7 @@ let CurrentDataService = class CurrentDataService {
             return null;
         }
     }
-    async getLastRegByDevive_nit2xli(deviceName) {
+    async getLastRegByDevice_nit2xli(deviceName) {
         const latestRecord = await this.nit2xliRepository.findOne({
             where: { deviceName },
             order: {

@@ -14,44 +14,31 @@ export class StatisticsService {
 
         @InjectRepository(nit2xli)
         private readonly nit2xliRepository: Repository<nit2xli>,
-    ) { }
+    ) {}
 
-    // Método para retornar o historico das 24 horas tabela k72623_lo - apenas temperatura
-    async getTemperatureHourlyStatistics_K72623Lo(deviceName: string, time: string): Promise<HourlyStatisticsDTO | null> {
-
+    async getTemperatureHourlyStatistics_K72623Lo(deviceName: string, time: string): Promise<any | null> {
         const timestamp = new Date(time);
         timestamp.setHours(timestamp.getHours() - 24);
 
-        let result = await this.k72623LoRepository.find({
+        const result = await this.k72623LoRepository.find({
             select: ['temperature', 'time'],
             where: {
                 deviceName,
                 time: MoreThan(timestamp),
             },
-            order: {
-                time: 'DESC',
-            },
+            order: { time: 'ASC' }, // Ordenar por tempo crescente para agrupar facilmente
         });
 
+        if (result.length === 0) return null;
 
-        // Converter 'result' para um vetor de objetos compostos com 'temperature' e 'time'
-        const resultVector: { time: Date; temperature: number }[] = result.map(item => ({
-            temperature: item.temperature,  // Renomeando 'emw_temperature' para 'temperature'
-            time: item.time
-        }));
+        const groupedByHour = this.groupByHour(result);
 
-        const temperatureAverage = this.getHourAverages(resultVector)
-
-        return { deviceName: deviceName, averagePerHour: temperatureAverage };
+        return { deviceName, dataPerHour: groupedByHour };
     }
 
-    // Método para retornar o historico das 24 horas tabela nit2xli - apenas temperatura
-    async getTemperatureHourlyStatistics_nit2xli(deviceName: string, time: string): Promise<HourlyStatisticsDTO | null> {
-
+    async getTemperatureHourlyStatistics_nit2xli(deviceName: string, time: string): Promise<any | null> {
         const timestamp = new Date(time);
-        // console.log("hora atual: "+timestamp.getHours())
         timestamp.setHours(timestamp.getHours() - 24);
-        // console.log("24h ago: "+timestamp.getHours())
 
         const result = await this.nit2xliRepository.find({
             select: ['emw_temperature', 'time'],
@@ -59,45 +46,40 @@ export class StatisticsService {
                 deviceName,
                 time: MoreThan(timestamp),
             },
-            order: {
-                time: 'DESC',
-            },
+            order: { time: 'ASC' }, // Ordenar por tempo crescente para agrupar facilmente
         });
 
-        // Converter 'result' para um vetor de objetos compostos com 'temperature' e 'time'
-        const resultVector: { time: Date; temperature: number }[] = result.map(item => ({
-            temperature: item.emw_temperature,  // Renomeando 'emw_temperature' para 'temperature'
-            time: item.time
-        }));
+        if (result.length === 0) return null;
 
-        const temperatureAverage = this.getHourAverages(resultVector)
+        const groupedByHour = this.groupByHour(
+            result.map(item => ({
+                temperature: item.emw_temperature,
+                time: item.time,
+            }))
+        );
 
-        return { deviceName: deviceName, averagePerHour: temperatureAverage };
-
+        return { deviceName, dataPerHour: groupedByHour };
     }
 
+    groupByHour(data: { temperature: number; time: Date }[]): { hour: number; values: number[] }[] {
+        const grouped: { [hour: number]: number[] } = {};
 
-    getHourAverages(last24h: { time: Date; temperature: number }[]): { hour: number; average: number }[] | null {
-
-        const hourlyTemperatureStatistics: { hour: number; average: number }[] = [];
-
-        let sum: number = 0;
-        let count: number = 0;
-        let hourRef: number = last24h[0].time.getHours();
-
-        const k_length = last24h.length;
-        for (let i = 0; i < k_length; i++) {
-            if (last24h[i].time.getHours() === hourRef) {
-                sum += last24h[i].temperature
-                count++;
-            } else {
-                hourlyTemperatureStatistics.push({ hour: hourRef, average: sum / count })
-
-                hourRef = last24h[i].time.getHours();
-                count = 1;
-                sum = last24h[i].temperature;
+        for (const item of data) {
+            const hour = item.time.getHours();
+            if (!grouped[hour]) {
+                grouped[hour] = [];
             }
-        }        
-        return hourlyTemperatureStatistics;
+            grouped[hour].push(item.temperature);
+        }
+
+        const result: { hour: number; values: number[] }[] = [];
+        for (let i = 0; i < 24; i++) {
+            result.push({
+                hour: i,
+                values: grouped[i] || [], // Preenche com um array vazio caso não haja dados para a hora
+            });
+        }
+
+        return result;
     }
 }

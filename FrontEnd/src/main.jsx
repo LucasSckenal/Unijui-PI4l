@@ -6,7 +6,6 @@ import Rotas from "./Routes/routes";
 import "./global.scss";
 import { ToastContainer } from "react-toastify";
 import { DataProvider } from "./Contexts/DataContext";
-import Axios from "../../backend/API/Axios";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -36,7 +35,6 @@ createRoot(document.getElementById("root")).render(
       <BrowserRouter>
         <DataProvider>
           <App />
-          <Axios/>
         </DataProvider>
       </BrowserRouter>
     </ThemeProvider>

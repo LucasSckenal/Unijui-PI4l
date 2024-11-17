@@ -22,11 +22,11 @@ let CurrentDataController = class CurrentDataController {
     async getLastRegister(device) {
         const [deviceName, prefixTable] = device.split('_');
         if (prefixTable === "k") {
-            return await this.sensor.getLastRegByDevive_K72623Lo(deviceName);
+            return await this.sensor.getLastRegByDevice_K72623Lo(deviceName);
             ;
         }
         else if (prefixTable === "n") {
-            return await this.sensor.getLastRegByDevive_nit2xli(deviceName);
+            return await this.sensor.getLastRegByDevice_nit2xli(deviceName);
             ;
         }
     }
