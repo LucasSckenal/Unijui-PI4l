@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useMemo } from "react";
+import { useMediaQuery } from "react-responsive";
 import styles from "./styles.module.scss";
 
 import DropdownBtn from "../../Components/Buttons/DropDownBtn/dropDownBtn.jsx";
@@ -342,6 +343,9 @@ const GraphicContainer = ({
 };
 
 const currentModal = modalData[modalCategory];
+const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
+console.log("isSmallScreen:", isSmallScreen);
+console.log("Largura da tela:", window.innerWidth);
 
   return (
     <section className={styles.graphs}>
@@ -399,7 +403,7 @@ const currentModal = modalData[modalCategory];
             <Frame
               isTitle={true}
               title={"Temperatura"}
-              width="105%"
+              width={isSmallScreen ? "100%" : "105%"}
               height="168.5px"
             >
               <SmallContainer
@@ -417,7 +421,7 @@ const currentModal = modalData[modalCategory];
             <Frame
               isTitle={true}
               title={"Umidade"}
-              width="105%"
+              width={isSmallScreen ? "100%" : "105%"}
               height="168.5px"
             >
               <SmallContainer
@@ -434,7 +438,7 @@ const currentModal = modalData[modalCategory];
         <Frame
           isTitle={true}
           title={"Radiação Solar"}
-          width="54%"
+          width={isSmallScreen ? "53.5%" : "54%"}
           height="320px"
         >
           <VerticalBarGraph
@@ -474,7 +478,7 @@ const currentModal = modalData[modalCategory];
           style={{ cursor: "pointer" }}
           className={styles.gustWind}
         >
-          <Frame isTitle={true} title={"Rajada de Vento"} height={"100%"}>
+          <Frame isTitle={true} title={"Rajada de Vento"} width={"100%"} height={"100%"}>
             <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
           </Frame>
         </div>
@@ -511,7 +515,7 @@ const currentModal = modalData[modalCategory];
               props: { color: "#fff", size: "1.2em" },
             }}/>} 
             width={"26.8vw"}>
-            <Heatmap data={dataPM25} dates={datesPM25} width={250} height={250} />
+            <Heatmap data={dataPM25} dates={datesPM25} width={250} height={250}/>
           </DropdownBtn>
           <DropdownBtn
             title="Pressão Atmosférica"

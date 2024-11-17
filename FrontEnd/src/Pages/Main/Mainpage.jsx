@@ -61,29 +61,94 @@ function Home() {
 
   const GraphsBtns = [
     {
-      name: "Vento",
+      name: "K72623_lo",
       id: 1,
       options: [
-        { id: "1", label: "Avg. Wind Speed" },
-        { id: "2", label: "Gust Wind Speed" },
+        { id: "1", label: "Temperatura" },
+        { id: "2", label: "Umidade" },
       ],
     },
     {
-      name: "Temperatura",
+      name: "Diversos K",
       id: 2,
-      options: [{ id: "1", label: "Temperatura" }],
+      options: [
+        { id: "1", label: "Ruido" },
+        { id: "2", label: "PM2.5"},
+    ],
     },
     {
-      name: "Diversos",
+      name: "Nit2xli",
       id: 3,
       options: [
+        { id: "1", label: "Temperatura" },
+        { id: "2", label: "Nível da chuva" },
+        { id: "3", label: "Radiação solar"},
+      ],
+    },
+    {
+      name: "Vento",
+      id: 4,
+      options: [
+        { id: "1", label: "Velocidade do vento" },
+        { id: "2", label: "Direção do vento" },
+        { id: "3", label: "Rajada de vento"},
+      ],
+    },
+    {
+      name: "Diversos N",
+      id: 5,
+      options: [
         { id: "1", label: "Pressão atmosférica" },
-        { id: "2", label: "Radiação solar" },
+        { id: "2", label: "Ultra Violeta" },
+        { id: "3", label: "Luminosidade"},
       ],
     },
   ];
 
+  const filteredGraphs = GraphsBtns.filter(graphBtn => {
+    if (selectedSensor === 1) { // k72623_lo
+      return graphBtn.id !== 3 && graphBtn.id !== 4 && graphBtn.id !== 5;
+    } else if (selectedSensor === 2) { // nit2xli
+      return graphBtn.id !== 1 && graphBtn.id !== 2;
+    }
+    return true; // Para outros sensores, mostre todos
+  });
+
   const lineDatas = [
+    {
+      name: "Nit2xli",
+      data: [
+        [
+          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
+          10, 11, 25, 32, 12, 11, 2,
+        ],
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
+        [
+          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
+          8, 10, 12, 6, 8, 10, 15,
+        ],
+      ],
+      color: ["#0e95e3", "#0ecc37", "#0ecc40"],
+      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
+    },
+    {
+      name: "K72623_lo",
+      data: [
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
+        [
+          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
+          10, 11, 25, 32, 12, 11, 2,
+        ],
+      ],
+      color: ["#d40d77", "#6c08cf"],
+      rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
+    },
     {
       name: "Vento",
       data: [
@@ -95,9 +160,13 @@ function Home() {
           40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
           23, 30, 35, 36, 38, 40, 27,
         ],
+        [
+          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
+          8, 10, 12, 6, 8, 10, 15,
+        ],
       ],
-      color: ["#0e95e3", "#0ecc37"],
-      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)"],
+      color: ["#0e95e3", "#0ecc37", "#0ecc40"],
+      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
     },
     {
       name: "Temperatura",
@@ -111,7 +180,7 @@ function Home() {
       rgba: ["rgba(163, 23, 23, 0.4)"],
     },
     {
-      name: "Diversos",
+      name: "Diversos K",
       data: [
         [
           40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
@@ -124,6 +193,25 @@ function Home() {
       ],
       color: ["#d40d77", "#6c08cf"],
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
+    },
+    {
+      name: "Diversos N",
+      data: [
+        [
+          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
+          10, 11, 25, 32, 12, 11, 2,
+        ],
+        [
+          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
+          23, 30, 35, 36, 38, 40, 27,
+        ],
+        [
+          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
+          8, 10, 12, 6, 8, 10, 15,
+        ],
+      ],
+      color: ["#0e95e3", "#0ecc37", "#0ecc40"],
+      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
     },
   ];
 
@@ -152,7 +240,6 @@ function Home() {
     const mockSensors = [
       { id: 1, name: "Sensor A" },
       { id: 2, name: "Sensor B" },
-      { id: 3, name: "Sensor C" },
     ];
     setSensors(mockSensors);
   }, []);
@@ -329,7 +416,7 @@ function Home() {
             </div>
             <Divider width={"90px"} />
             <div className={styles.graphBtnsMp}>
-              {GraphsBtns.map(({ name, options }) => (
+              {filteredGraphs.map(({ name, options }) => (
                 <div key={name}>
                   <GraphicsBtn
                     name={name}
