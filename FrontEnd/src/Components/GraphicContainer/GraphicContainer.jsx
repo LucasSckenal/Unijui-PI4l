@@ -309,61 +309,52 @@ const GraphicContainer = ({
     }
   }, [UVGraph, LuminosityGraph, NoiseGraph]);
 
+  const modalData = {
+  temperatura: {
+    title: "Temperatura",
+    graphType: "line",
+    graphData: TempGraph[0],
+    degreeSymbol: "°C",
+  },
+  umidade: {
+    title: "Umidade",
+    graphType: "bar",
+    graphData: HumidGraph[0],
+    degreeSymbol: "%",
+  },
+  "Direção do Vento": {
+    title: "Direção do Vento",
+    graphType: "line",
+    graphData: WindDirectionGraph[0],
+  },
+  "Velocidade do Vento": {
+    title: "Velocidade do Vento",
+    graphType: "line",
+    graphData: WindSpeedGraph[0],
+    degreeSymbol: "km/h",
+  },
+  "Rajada de Vento": {
+    title: "Rajada de Vento",
+    graphType: "bar",
+    graphData: WindGustGraph[0],
+    degreeSymbol: "km/h",
+  },
+};
+
+const currentModal = modalData[modalCategory];
+
   return (
     <section className={styles.graphs}>
-      {isModalVisible && modalCategory === "temperatura" && (
-        <GraphModal
-          onClose={closeModal}
-          isVisible={isModalVisible}
-          title="Temperatura"
-          graphType="line"
-          graphData={TempGraph[0]}
-          degreeSymbol={"°C"}
-        />
-      )}
-
-      {isModalVisible && modalCategory === "umidade" && (
-        <GraphModal
-          onClose={closeModal}
-          isVisible={isModalVisible}
-          title="Umidade"
-          graphType="bar"
-          graphData={HumidGraph[0]}
-          degreeSymbol={"%"}
-        />
-      )}
-
-      {isModalVisible && modalCategory === "Direção do Vento" && (
-        <GraphModal
-          onClose={closeModal}
-          isVisible={isModalVisible}
-          title="Direção do Vento"
-          graphType="line"
-          graphData={WindDirectionGraph[0]}
-        />
-      )}
-
-      {isModalVisible && modalCategory === "Velocidade do Vento" && (
-        <GraphModal
-          onClose={closeModal}
-          isVisible={isModalVisible}
-          title="Velocidade do Vento"
-          graphType="line"
-          graphData={WindSpeedGraph[0]}
-          degreeSymbol={"km/h"}
-        />
-      )}
-
-      {isModalVisible && modalCategory === "Rajada de Vento" && (
-        <GraphModal
-          onClose={closeModal}
-          isVisible={isModalVisible}
-          title="Rajada de Vento"
-          graphType="bar"
-          graphData={WindGustGraph[0]}
-          degreeSymbol={"km/h"}
-        />
-      )}
+      {isModalVisible && currentModal && (
+      <GraphModal
+        onClose={closeModal}
+        isVisible={isModalVisible}
+        title={currentModal.title}
+        graphType={currentModal.graphType}
+        graphData={currentModal.graphData}
+        degreeSymbol={currentModal.degreeSymbol}
+      />
+    )}
 
       <div className={styles.graphsTop}>
         <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
