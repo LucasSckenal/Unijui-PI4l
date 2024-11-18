@@ -9,27 +9,19 @@ export const DataProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         // Realizando as requisições em paralelo
-        const [data1, data2] = await Promise.all([
+        const [tabelaCombinada] = await Promise.all([
           fetch(
-            "http://localhost:3000/sensors/current-data/Estação%20Cruzeiro_n"
+            "http://localhost:3000/sensors/all-data/Micropartículas%20Rótula%20do%20Taffarel_k/2024-10-30"
           ).then((response) => {
             if (!response.ok)
-              throw new Error(`Erro na requisição 1: ${response.statusText}`);
-            return response.json();
-          }),
-          fetch(
-            "http://localhost:3000/sensors/current-data/Micropartículas%20Rótula%20do%20Taffarel_k"
-          ).then((response) => {
-            if (!response.ok)
-              throw new Error(`Erro na requisição 2: ${response.statusText}`);
+              throw new Error(`Erro na requisição: ${response.statusText}`);
             return response.json();
           }),
         ]);
 
         // Consolidando os dados em um único JSON
         const consolidated = {
-          nit: data1,
-          k7: data2,
+          tabela: tabelaCombinada,
         };
 
         console.log("Dados consolidados:", consolidated);

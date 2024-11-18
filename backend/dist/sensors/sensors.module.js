@@ -19,7 +19,7 @@ let SensorsModule = class SensorsModule {
 SensorsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([sensors_entity_1.k72623_lo, sensors_entity_1.nit2xli]),
+            typeorm_1.TypeOrmModule.forFeature([sensors_entity_1.k72623_lo, sensors_entity_1.nit2xli, sensors_entity_1.tabela_combinada]),
         ],
         controllers: [current_data_controller_1.CurrentDataController, statistics_controller_1.StatisticsController],
         providers: [current_data_service_1.CurrentDataService, statistics_service_1.StatisticsService]

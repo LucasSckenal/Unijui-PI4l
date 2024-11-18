@@ -20,25 +20,47 @@ let StatisticsController = class StatisticsController {
         this.sensor = sensor;
     }
     async getStatisticsByHour(device, time) {
-        const [deviceName, prefixTable] = device.split('_');
+        const [deviceName, prefixTable] = device.split("_");
         if (prefixTable === "k") {
             return await this.sensor.getTemperatureHourlyStatistics_K72623Lo(deviceName, time);
         }
         else if (prefixTable === "n") {
             return await this.sensor.getTemperatureHourlyStatistics_nit2xli(deviceName, time);
         }
+        return null;
+    }
+    async getAllData(deviceName, date) {
+        const [name, prefixTable] = deviceName.split("_");
+        if (prefixTable === "k") {
+            return await this.sensor.getAllData_K72623Lo(name, date);
+        }
+        else if (prefixTable === "n") {
+            return await this.sensor.getAllData_nit2xli(name, date);
+        }
+        else if (prefixTable === "t") {
+            return await this.sensor.getAllData_tabelaCombinada(name, date);
+        }
+        return [];
     }
 };
 __decorate([
-    (0, common_1.Get)('hourly-statistics/:deviceName/:dateTime'),
-    __param(0, (0, common_1.Param)('deviceName')),
-    __param(1, (0, common_1.Param)('dateTime')),
+    (0, common_1.Get)("hourly-statistics/:deviceName/:dateTime"),
+    __param(0, (0, common_1.Param)("deviceName")),
+    __param(1, (0, common_1.Param)("dateTime")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], StatisticsController.prototype, "getStatisticsByHour", null);
+__decorate([
+    (0, common_1.Get)("all-data/:deviceName/:date"),
+    __param(0, (0, common_1.Param)("deviceName")),
+    __param(1, (0, common_1.Param)("date")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], StatisticsController.prototype, "getAllData", null);
 StatisticsController = __decorate([
-    (0, common_1.Controller)('sensors'),
+    (0, common_1.Controller)("sensors"),
     __metadata("design:paramtypes", [statistics_service_1.StatisticsService])
 ], StatisticsController);
 exports.StatisticsController = StatisticsController;
