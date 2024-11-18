@@ -1,0 +1,113 @@
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+    
+    .innerForm {
+      width: 38.75rem;
+      box-shadow: 0px 4px 24px rgba(168, 168, 168, 0.25);
+      padding: 20px;
+      gap: 12px;
+      color: var(--TextGeneral);
+      margin-top: 10%;
+      border-radius: var(--BorderRadius);
+
+      h1{
+        margin-bottom: 10px;
+      }
+
+      .avatar {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        
+
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer; 
+
+            &:hover {
+              border: 3px solid var(--TextGeneral);
+              
+            }
+        }
+    
+        input[type="file"] {
+            display: none; 
+        }
+    }
+    
+      
+      .btnAuth {
+          width: 36.25rem;
+          padding: 10px;
+          background-color: var(--Blue);
+          color: var(--TextGeneralAlt);
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          animation-name: clicking;
+          animation-duration: 2s;
+      }
+        
+      .btnAuth:hover {
+          animation-name: clicking;
+          animation-duration: 2s;
+          background-color: var(--FormsBtnHover);
+      }
+  
+      .registerInput {
+        position: relative; 
+        margin-bottom: 1.87rem;
+  
+        input {
+          width: 36.25rem;
+          padding: 10px;
+          border-radius: 4px;
+          background: none;
+          border: none;
+          border-bottom: 1px solid var(--Grey);
+          color: var(--TextGeneral);
+          margin-top: 10px; 
+          transition: border-color 0.3s ease-in-out;
+  
+          &:focus {
+            outline: none;
+            border-bottom: 2px solid var(--TextGeneral); 
+          }
+  
+          &:focus + label,
+          &:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 0;
+            font-size: 12px;
+          }
+        }
+  
+        label {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          font-size: 16px;
+          color: var(--TextGeneral);
+          pointer-events: none;
+          transition: all 0.3s ease-in-out;
+        }
+      }
+    }
+  }
+  
+  
+  
+  @keyframes clicking {
+    from { background-color: var(--Blue); }
+    to { background-color: var(--FormsBtnHover); }
+  }
+  

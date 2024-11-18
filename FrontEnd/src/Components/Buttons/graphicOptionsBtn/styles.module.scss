@@ -1,0 +1,58 @@
+.graphsInputs {
+ display: flex;
+ align-items: center;
+ cursor: pointer;
+ flex-direction: column;
+
+ .innerButton {
+  display: flex;
+  flex-direction: column;
+  padding-top: 15px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  p {
+   margin-right: 10px;
+   max-width: 180px;
+   width: 120px;
+   user-select: none;
+   height: 40px;
+  }
+
+  .toggleUncheckedOptions,
+  .toggleCheckedOptions {
+   max-width: 50px;
+   width: 59%;
+   min-width: 25px;
+   height: 1.75rem;
+   border-radius: 15px;
+   position: relative;
+   background-color: var(--InputCheckBox);
+   transition: background-color 0.3s ease;
+   border: 1px solid var(--TextGeneral);
+   box-sizing: border-box;
+  }
+
+  .toggleCheckedOptions {
+   background-color: var(--Green);
+  }
+
+  .toggleBallOptions {
+   width: 20px;
+   height: 20px;
+   border-radius: 50%;
+   background-color: var(--TextGeneral);
+   position: absolute;
+   top: 50%;
+   left: 2.5px;
+   transform: translateY(-50%);
+   transition: left 0.3s ease;
+  }
+
+  .toggleCheckedOptions .toggleBallOptions {
+   left: 53%;
+  }
+ }
+}

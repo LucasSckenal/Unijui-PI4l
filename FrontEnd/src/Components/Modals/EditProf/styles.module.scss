@@ -1,0 +1,155 @@
+.modalOverlay {
+ position: fixed;
+ top: 0;
+ left: 0;
+ background-color: rgba(168, 168, 168, 0.25);
+ height: 100vh;
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+}
+
+.innerModal {
+ display: flex;
+ width: 30%;
+ max-width: 500px;
+ height: auto;
+ flex-direction: column;
+ gap: 40px;
+ background-color: var(--Bg);
+ border-radius: 8px;
+ padding: 20px;
+ box-sizing: border-box;
+
+ .inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+
+  .avatarWrapper {
+   img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--Grey);
+    border-radius: 50%;
+    object-fit: cover
+   }
+
+   input[type="file"] {
+    display: none;
+   }
+  }
+
+  input {
+   width: 100%;
+   padding: 10px;
+   border-radius: 4px;
+   background: none;
+   border: none;
+   border-bottom: 1px solid var(--Grey);
+   color: var(--TextGeneral);
+   transition: border-color 0.3s ease-in-out;
+
+   &:focus {
+    outline: none;
+    border-bottom: 2px solid var(--TextGeneral);
+   }
+  }
+ }
+
+ .buttonContainer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+   border: 1px solid var(--TextGeneral);
+   border-radius: 8px;
+   padding: 10px 20px;
+   font-size: 16px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   width: 45%;
+   text-align: center;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   line-height: 1.5;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 40px;
+  }
+
+  .save {
+   color: var(--Green);
+   border-color: var(--Green);
+
+   &:hover {
+    background-color: var(--Green);
+    color: var(--White);
+   }
+  }
+
+  .cancel {
+   color: var(--Red);
+   border-color: var(--Red);
+
+   &:hover {
+    background-color: var(--Red);
+    color: var(--White);
+   }
+  }
+ }
+}
+
+@media (max-width: 1056px) {
+ .innerModal {
+  width: 60%;
+  padding: 15px;
+ }
+
+ .inputs {
+  gap: 20px;
+ }
+
+ .buttonContainer {
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+   width: 100%;
+  }
+ }
+}
+
+@media (max-width: 480px) {
+ .innerModal {
+  width: 90%;
+  padding: 15px;
+ }
+
+ .inputs {
+  gap: 15px;
+ }
+
+ .avatarWrapper img {
+  width: 60%;
+  max-height: 120px;
+ }
+
+ .buttonContainer {
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+   width: 100%;
+  }
+ }
+}

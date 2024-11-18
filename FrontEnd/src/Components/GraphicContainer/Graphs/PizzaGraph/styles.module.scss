@@ -1,0 +1,9 @@
+.pieChart {
+    display: block;
+    margin: 20px auto;
+    transform: rotate(-90deg); /* Rotaciona para que o gráfico comece do topo */
+  
+    circle {
+      transition: stroke-dashoffset 0.3s ease;
+    }
+  }
