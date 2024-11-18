@@ -28,7 +28,7 @@ import useWindowResize from "../../Hooks/useWindowResize.jsx";
 
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
-import { GiOppression, GiDustCloud } from "react-icons/gi";
+import { GiOppression } from "react-icons/gi";
 import { BsLampFill, BsTrash3, BsTrash3Fill } from "react-icons/bs";
 import { MdNoiseControlOff } from "react-icons/md";
 import { FaRegSun, FaSun } from "react-icons/fa6";
@@ -272,6 +272,7 @@ const TempGraph = [
   const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
   const lastPm2_5 = getLastValue(Pm25Graph, "Pm2_5");
   const lastAtmPres = getLastValue(AtmPresGraph, "Atmospheric Pressure");
+  const lastWindDir = getLastValue(WindDirectionGraph, "Direção do Vento");
 
   const getMaxYValue = () => {
     let maxY = 0;
@@ -518,7 +519,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               onClick={() => openModal("Direção do Vento", "Direção do Vento")}
               style={{ cursor: "pointer", width: "90%" }}
             >
-              <WindRose direction={10} size={300} />
+              <WindRose direction={lastWindDir} size={300} />
             </div>
           </DropdownBtn>
           <DropdownBtn
