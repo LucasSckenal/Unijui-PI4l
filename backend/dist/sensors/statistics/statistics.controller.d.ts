@@ -5,4 +5,5 @@ export declare class StatisticsController {
     constructor(sensor: StatisticsService);
     getStatisticsByHour(device: string, time: string): Promise<HourlyStatisticsDTO | null>;
     getAllData(deviceName: string, date: string): Promise<any[]>;
+    getLast24HoursData(): Promise<import("./dto/hourly-statistics.dto").Last24HoursDataDTO[]>;
 }

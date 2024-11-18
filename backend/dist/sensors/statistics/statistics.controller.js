@@ -42,6 +42,9 @@ let StatisticsController = class StatisticsController {
         }
         return [];
     }
+    async getLast24HoursData() {
+        return await this.sensor.getLast24HoursData_tabelaCombinada();
+    }
 };
 __decorate([
     (0, common_1.Get)("hourly-statistics/:deviceName/:dateTime"),
@@ -59,6 +62,12 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], StatisticsController.prototype, "getAllData", null);
+__decorate([
+    (0, common_1.Get)("tabela-combinada/last-24-hours"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], StatisticsController.prototype, "getLast24HoursData", null);
 StatisticsController = __decorate([
     (0, common_1.Controller)("sensors"),
     __metadata("design:paramtypes", [statistics_service_1.StatisticsService])

@@ -114,6 +114,78 @@ let StatisticsService = class StatisticsService {
         console.log("Raw data from DB:", result);
         return result;
     }
+    async getLast24HoursData_tabelaCombinada() {
+        const now = new Date();
+        const timestamp = new Date(now);
+        timestamp.setHours(timestamp.getHours() - 24);
+        const result = await this.tabelaCombinadaRepository.find({
+            where: {
+                time: (0, typeorm_2.MoreThan)(timestamp),
+            },
+            order: {
+                time: "ASC",
+            },
+        });
+        const groupedByDevice = result.reduce((acc, curr) => {
+            acc[curr.deviceName] = acc[curr.deviceName] || [];
+            acc[curr.deviceName].push(curr);
+            return acc;
+        }, {});
+        const response = Object.keys(groupedByDevice).map((deviceName) => {
+            const deviceData = groupedByDevice[deviceName];
+            const averagesPerHour = Array.from({ length: 24 }, (_, hour) => ({
+                hour,
+                averages: {
+                    emw_rain_lvl: null,
+                    emw_avg_wind_speed: null,
+                    emw_gust_wind_speed: null,
+                    emw_wind_direction: null,
+                    emw_temperature: null,
+                    emw_humidity: null,
+                    emw_luminosity: null,
+                    emw_uv: null,
+                    emw_solar_radiation: null,
+                    emw_atm_pres: null,
+                    noise: null,
+                    temperature: null,
+                    humidity: null,
+                    pm2_5: null,
+                },
+            }));
+            deviceData.forEach((entry) => {
+                const entryHour = new Date(entry.time).getHours();
+                const hourData = averagesPerHour.find((h) => h.hour === entryHour);
+                if (hourData) {
+                    Object.keys(hourData.averages).forEach((key) => {
+                        if (entry[key] !== null && entry[key] !== undefined) {
+                            if (!hourData.averages[key]) {
+                                hourData.averages[key] = { sum: 0, count: 0 };
+                            }
+                            hourData.averages[key].sum += entry[key];
+                            hourData.averages[key].count += 1;
+                        }
+                    });
+                }
+            });
+            averagesPerHour.forEach((hourData) => {
+                Object.keys(hourData.averages).forEach((key) => {
+                    const sensorData = hourData.averages[key];
+                    if (sensorData && sensorData.count > 0) {
+                        hourData.averages[key] = sensorData.sum / sensorData.count;
+                    }
+                    else {
+                        hourData.averages[key] = null;
+                    }
+                });
+            });
+            return {
+                deviceName,
+                ...deviceData[deviceData.length - 1],
+                averagePerHour: averagesPerHour,
+            };
+        });
+        return response;
+    }
     groupByHour(data) {
         const grouped = {};
         data.forEach((item) => {

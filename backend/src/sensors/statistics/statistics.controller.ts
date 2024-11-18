@@ -47,4 +47,9 @@ export class StatisticsController {
 
     return [];
   }
+
+  @Get("tabela-combinada/last-24-hours")
+  async getLast24HoursData() {
+    return await this.sensor.getLast24HoursData_tabelaCombinada();
+  }
 }

@@ -7,6 +7,7 @@ import {
 } from "@app/sensors/entities/sensors.entity";
 import { MoreThan, Repository, Between } from "typeorm";
 import { HourlyStatisticsDTO } from "@app/sensors/statistics/dto/hourly-statistics.dto";
+import { Last24HoursDataDTO } from "@app/sensors/statistics/dto/hourly-statistics.dto";
 
 @Injectable()
 export class StatisticsService {
@@ -151,6 +152,103 @@ export class StatisticsService {
 
     return result; // Retorna dados agrupados por hora
   }
+
+  // Função para buscar todos os dados das últimas 24 horas da tabela tabela_combinada
+  async getLast24HoursData_tabelaCombinada(): Promise<Last24HoursDataDTO[]> {
+    const now = new Date();
+    const timestamp = new Date(now);
+    timestamp.setHours(timestamp.getHours() - 24);
+  
+    const result = await this.tabelaCombinadaRepository.find({
+      where: {
+        time: MoreThan(timestamp),
+      },
+      order: {
+        time: "ASC",
+      },
+    });
+  
+    // Agrupa os dados por deviceName
+    const groupedByDevice = result.reduce((acc, curr) => {
+      acc[curr.deviceName] = acc[curr.deviceName] || [];
+      acc[curr.deviceName].push(curr);
+      return acc;
+    }, {} as { [deviceName: string]: Last24HoursDataDTO[] });
+  
+    const response = Object.keys(groupedByDevice).map((deviceName) => {
+      const deviceData = groupedByDevice[deviceName];
+    
+      // Inicializa estrutura para agrupar os dados por hora
+      const averagesPerHour = Array.from({ length: 24 }, (_, hour) => ({
+        hour, // Hora específica
+        averages: {
+          emw_rain_lvl: null,
+          emw_avg_wind_speed: null,
+          emw_gust_wind_speed: null,
+          emw_wind_direction: null,
+          emw_temperature: null,
+          emw_humidity: null,
+          emw_luminosity: null,
+          emw_uv: null,
+          emw_solar_radiation: null,
+          emw_atm_pres: null,
+          noise: null,
+          temperature: null,
+          humidity: null,
+          pm2_5: null,
+        },
+      }));
+    
+      // Itera pelos dados do dispositivo e preenche as médias por hora
+      deviceData.forEach((entry) => {
+        const entryHour = new Date(entry.time).getHours();
+    
+        // Encontra o objeto correspondente à hora no averagesPerHour
+        const hourData = averagesPerHour.find((h) => h.hour === entryHour);
+    
+        if (hourData) {
+          // Itera pelas chaves de sensores para acumular valores
+          Object.keys(hourData.averages).forEach((key) => {
+            if (entry[key] !== null && entry[key] !== undefined) {
+              if (!hourData.averages[key]) {
+                hourData.averages[key] = { sum: 0, count: 0 };
+              }
+    
+              // Soma o valor e incrementa o contador
+              hourData.averages[key].sum += entry[key];
+              hourData.averages[key].count += 1;
+            }
+          });
+        }
+      });
+    
+      // Calcula as médias finais
+      averagesPerHour.forEach((hourData) => {
+        Object.keys(hourData.averages).forEach((key) => {
+          const sensorData = hourData.averages[key];
+          if (sensorData && sensorData.count > 0) {
+            hourData.averages[key] = sensorData.sum / sensorData.count;
+          } else {
+            hourData.averages[key] = null; // Caso não haja dados, mantém null
+          }
+        });
+      });
+    
+      // Retorna o objeto final para cada dispositivo
+      return {
+        deviceName,
+        ...deviceData[deviceData.length - 1], // Último dado para dados gerais
+        averagePerHour: averagesPerHour, // Todas as médias por hora
+      };
+    });
+    
+  
+    return response;
+  }
+  
+  
+
+
 
   // Função para agrupar os dados por hora
   groupByHour(data: any[]): any[] {

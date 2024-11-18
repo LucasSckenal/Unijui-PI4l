@@ -1,5 +1,6 @@
 import { k72623_lo, nit2xli, tabela_combinada } from "@app/sensors/entities/sensors.entity";
 import { Repository } from "typeorm";
+import { Last24HoursDataDTO } from "@app/sensors/statistics/dto/hourly-statistics.dto";
 export declare class StatisticsService {
     private readonly k72623LoRepository;
     private readonly nit2xliRepository;
@@ -11,5 +12,6 @@ export declare class StatisticsService {
     getAllData_K72623Lo(deviceName: string, date: string): Promise<any[]>;
     getAllData_nit2xli(deviceName: string, date: string): Promise<any[]>;
     getAllData_tabelaCombinada(deviceName: string, date: string): Promise<any[]>;
+    getLast24HoursData_tabelaCombinada(): Promise<Last24HoursDataDTO[]>;
     groupByHour(data: any[]): any[];
 }
