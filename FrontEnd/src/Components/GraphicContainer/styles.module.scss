@@ -16,6 +16,10 @@
       gap: 12px;
       text-align: center;
 
+      @media (max-width: 1024px) {
+        width: 9;
+      }
+
     }
   }
 
@@ -47,8 +51,11 @@
     }
 
     .gustWind {
-      width: 15.2%;
+      width: 15%;
       min-height: 270px;
+      @media (max-width:1440px) {
+        width: 19.5%;
+      }
     }
   }
 
@@ -58,44 +65,7 @@
     gap: 20px;
   }
 
-  @media (max-width: 1024px) {
-
-    .graphsTop,
-    .graphsBot,
-    .dropDownBtnsBot {
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .tempContainer {
-      display: flex;
-      flex-direction: row !important;
-
-      div {
-        margin-right: 10px;
-      }
-    }
-
-    .tempContainer .TempGraph img {
-      width: 60px;
-      height: 60px;
-    }
-
-    .tempContainer .TempGraph .temp span {
-      font-size: 50px;
-    }
-
-    .graphsBot {
-      .gustWind {
-        width: 90%;
-      }
-    }
-
-    .dropDownBtns p {
-      font-size: 18px;
-    }
-  }
+  
 
   @media (max-width: 768px) {
 
@@ -119,6 +89,7 @@
 
     .dropDownBtns {
       min-height: 200px;
+      flex-direction: column !important;
     }
 
     .dropDownBtns p {
