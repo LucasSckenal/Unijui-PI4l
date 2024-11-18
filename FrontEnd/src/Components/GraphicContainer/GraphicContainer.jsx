@@ -460,7 +460,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               }
               style={{ cursor: "pointer" }}
             >
-              <RadialBarCharts value={WindSpeedGraph[0]} />
+              <RadialBarCharts value={sensorsData[0]?.emw_avg_wind_speed} />
             </div>
           </Frame>
         )}
