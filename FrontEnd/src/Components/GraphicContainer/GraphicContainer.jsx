@@ -9,12 +9,13 @@ import HorizontalBarGraph from "./Graphs/HorizontalBarGraph/HorizontalBarGraph.j
 import LineGraph from "./Graphs/LineGraph/LineGraph.jsx";
 import VerticalBarGraph from "./Graphs/VerticalBarGraph/VerticalBarGraph.jsx";
 import Barometer from "./Graphs/BarometerGraph/BarometerGraph.jsx";
-import Heatmap from "./Graphs/HeatMapGraph/HeatMapGraph.jsx";
 
 import tempDark from "../../assets/thermometer-temperature.svg";
 import tempLight from "../../assets/thermometer-temperature-white.png";
 import humidDark from "../../assets/rainIcon.png";
 import humidLight from "../../assets/rainIconDark.png";
+import dustDark from "../../assets/dust_dark.png"
+import dustLight from "../../assets/dust_white.png"
 
 import Frame from "../Utilities/Frame/frame.jsx";
 import RadialBarCharts from "./Graphs/SpeedometerGraph/SpeedometerGraph.jsx";
@@ -27,7 +28,7 @@ import useWindowResize from "../../Hooks/useWindowResize.jsx";
 
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
-import { GiOppression } from "react-icons/gi";
+import { GiOppression, GiDustCloud } from "react-icons/gi";
 import { BsLampFill, BsTrash3, BsTrash3Fill } from "react-icons/bs";
 import { MdNoiseControlOff } from "react-icons/md";
 import { FaRegSun, FaSun } from "react-icons/fa6";
@@ -112,6 +113,32 @@ const TempGraph = [
       xLabels: labels,
     },
   ];
+
+  const Pm25Graph = [
+    {
+      id: "Pm2_5",
+      name: "Pm2_5",
+      data: [
+        [
+          sensorsData[1]?.pm2_5.toFixed(0)
+        ],
+      ],
+      gradientStartColor: "rgba(94, 60, 32, 1)",
+      gradientEndColor: "rgba(38, 21, 6, 1)",
+      rgba: ["rgba(38, 21, 6, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const AtmPresGraph = [
+    {
+      name: "Atmospheric Pressure",
+      data: [[sensorsData[0]?.emw_atm_pres.toFixed(0)]],
+      color: ["#de7c21"],
+      rgba: ["rgba(222, 124, 33, 0.8)"],
+      xLabels: labels, 
+    },
+  ];  
 
   const rainData = [
     {
@@ -226,21 +253,6 @@ const TempGraph = [
     },
   ], [labels6h]); // Se "labels" for uma dependência que muda com o tempo
 
-  const dataPM25 = [
-    [5, 15, 25, 35, 45, 25],
-    [10, 20, 30, 40, 50, 35],
-    [15, 25, 35, 45, 55, 45],
-    [20, 30, 40, 50, 60, 55],
-    
-  ];
-  const datesPM25 = [
-    ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05", "2024-01-21"],
-    ["2024-01-06", "2024-01-07", "2024-01-08", "2024-01-09", "2024-01-10", "2024-01-22"],
-    ["2024-01-11", "2024-01-12", "2024-01-13", "2024-01-14", "2024-01-15", "2024-01-23"],
-    ["2024-01-16", "2024-01-17", "2024-01-18", "2024-01-19", "2024-01-20", "2024-01-24"],
-    
-  ];
-
   const openModal = (category, valueType) => {
     setModalCategory(category);
     setSelectedType(valueType);
@@ -258,6 +270,8 @@ const TempGraph = [
 
   const lastExternalTemp = getLastValue(TempGraph, "Temperatura");
   const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
+  const lastPm2_5 = getLastValue(Pm25Graph, "Pm2_5");
+  const lastAtmPres = getLastValue(AtmPresGraph, "Atmospheric Pressure");
 
   const getMaxYValue = () => {
     let maxY = 0;
@@ -332,6 +346,18 @@ const TempGraph = [
     graphType: "bar",
     graphData: WindGustGraph[0],
     degreeSymbol: "km/h",
+  },
+  "Pm2_5": {
+    title: "Pm2_5",
+    graphType: "bar",
+    graphData: Pm25Graph[0],
+    degreeSymbol: "g/m",
+  },
+  "Pressao Atmosferica": {
+    title: "Pressão Atmosférica",
+    graphType: "line",
+    graphData: AtmPresGraph[0],
+    degreeSymbol: "hPa",
   },
 };
 
@@ -506,7 +532,12 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               props: { color: "#fff", size: "1.2em" },
             }}/>} 
             width={"26.8vw"}>
-            <Heatmap data={dataPM25} dates={datesPM25} width={250} height={250}/>
+              <div
+              onClick={() => openModal("Pm2_5", "Pm2_5")}
+              style={{ cursor: "pointer", width: "90%", display: "flex", justifyContent: "center", marginTop: "20%", marginBottom: "20%"}}
+            >
+              <SmallContainer lastValue={lastPm2_5} light={dustLight} dark={dustDark} complement="µm"/>
+              </div>
           </DropdownBtn>
           <DropdownBtn
             title="Pressão Atmosférica"
@@ -520,7 +551,12 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           }}/>} 
             width={"26.8vw"}
           >
-            <Barometer pressure={50} minPressure={0} maxPressure={100} />
+            <div
+              onClick={() => openModal("Pressao Atmosferica", "Pressao Atmosferica")}
+              style={{ cursor: "pointer", width: "90%" }}
+            >
+            <Barometer pressure={lastAtmPres} minPressure={800} maxPressure={1200} />
+            </div>
           </DropdownBtn>
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
