@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import Header from "../../Components/Header/header.jsx";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./styles.module.scss";
@@ -9,11 +9,13 @@ import GraphicContainer from "../../Components/GraphicContainer/GraphicContainer
 import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 import { toast } from "react-toastify";
 import { generateHourlyLabels } from "../../utils/generateHourlxLabels.jsx";
+import { SensorsContext } from "../../Contexts/SensorsContext.jsx";
 
 function Home() {
+  const { sensorsData } = useContext(SensorsContext);
   const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
-  const [selectedSensor, setSelectedSensor] = useState(1);
+  const [selectedSensor, setSelectedSensor] = useState("");
   const [selectedInterval, setSelectedInterval] = useState({
     value: "24h",
     label: "24 horas minutos",
@@ -29,6 +31,7 @@ function Home() {
     line2: false,
     line3: false,
   });
+  
   const defaultIntervalOptions = [
     { value: "0", label: "Selecione um intervalo ▼" },
     { value: "30m", label: "30 minutos", duration: 0.5 },
@@ -104,15 +107,6 @@ function Home() {
       ],
     },
   ];
-
-  const filteredGraphs = GraphsBtns.filter(graphBtn => {
-    if (selectedSensor === 1) { // k72623_lo
-      return graphBtn.id !== 3 && graphBtn.id !== 4 && graphBtn.id !== 5;
-    } else if (selectedSensor === 2) { // nit2xli
-      return graphBtn.id !== 1 && graphBtn.id !== 2;
-    }
-    return true; // Para outros sensores, mostre todos
-  });
 
   const lineDatas = [
     {
@@ -236,13 +230,13 @@ function Home() {
     name: localStorage.getItem("nome"),
   };
 
-  useEffect(() => {
-    const mockSensors = [
-      { id: 1, name: "Sensor A" },
-      { id: 2, name: "Sensor B" },
-    ];
-    setSensors(mockSensors);
-  }, []);
+   useEffect(() => {
+    if (sensorsData && sensorsData.length > 0) {
+      const sensorNames = sensorsData.map(sensor => sensor.deviceName);
+      setSensors(sensorNames);
+      setSelectedSensor(sensorNames[0]); 
+    }
+  }, [sensorsData]);
 
   useEffect(() => {
     const updateDate = () => {
@@ -268,36 +262,23 @@ function Home() {
     setSelectedDate(date);
   };
 
-  const handleChange = (event) => {
-    const { value, name } = event.target;
+  const handleIntervalChange = (event) => {
+  const selectedInterval = intervalOptions.find(option => option.value === event.target.value);
+  if (!selectedInterval) {
+    toast.warn("Selecione um intervalo válido");
+    return;
+  }
+  setSelectedInterval(selectedInterval);
+};
 
-    if (value === "0") {
-      toast.warn("Selecione um intervalo ou um sensor válido");
-      return;
-    }
+   const handleSensorChange = (event) => {
+    const selectedDeviceName = event.target.value;
+    console.log('Selected sensor:', selectedDeviceName); // Log para verificar qual sensor foi selecionado
 
-    if (name === "interval") {
-      const selectedInterval = intervalOptions.find(
-        (option) => option.value === value
-      );
-
-      if (!selectedInterval) {
-        toast.warn("Selecione um intervalo válido");
-        return;
-      }
-
-      setSelectedInterval(selectedInterval);
-    }
-
-    if (name === "sensor") {
-      const selectedSensor = sensors.find(
-        (sensor) => sensor.id === parseInt(value)
-      );
-      if (!selectedSensor) {
-        toast.warn("Selecione um sensor válido");
-      } else {
-        setSelectedSensor(selectedSensor.id);
-      }
+    if (!sensors.includes(selectedDeviceName)) {
+      toast.warn("Selecione um sensor válido para o dispositivo");
+    } else {
+      setSelectedSensor(selectedDeviceName);  // Atualiza o sensor selecionado
     }
   };
 
@@ -367,6 +348,15 @@ function Home() {
     }
   }, [activeBtn]);
 
+  const filteredGraphs = GraphsBtns.filter((graphBtn) => {
+  if (selectedSensor === "Micropartículas Rótula do Taffarel") {
+    return graphBtn.id !== 3 && graphBtn.id !== 4 && graphBtn.id !== 5;
+  } else if (selectedSensor === "Estação Cruzeiro") {
+    return graphBtn.id !== 1 && graphBtn.id !== 2;
+  }
+  return true; 
+});
+
   return (
     <div className={styles.pageContainer}>
       <Header />
@@ -397,19 +387,19 @@ function Home() {
                 id="sensorSelect"
                 name="sensor"
                 value={selectedSensor}
-                onChange={handleChange}
+                onChange={handleSensorChange}
                 className={styles.selectSensor}
               >
                 <option value="0" className={styles.options}>
                   Selecione um sensor ▼
                 </option>
-                {sensors.map((sensor) => (
+                {sensorsData.map((sensor) => (
                   <option
-                    key={sensor.id}
-                    value={sensor.id}
+                    key={sensor.deviceName}
+                    value={sensor.deviceName}
                     className={styles.options}
                   >
-                    {sensor.name}
+                    {sensor.deviceName}
                   </option>
                 ))}
               </select>
@@ -439,7 +429,7 @@ function Home() {
             <select
               name="interval"
               value={selectedInterval.value}
-              onChange={handleChange}
+              onChange={handleIntervalChange}
             >
               {intervalOptions.map((option) => (
                 <option key={option.value} value={option.value}>

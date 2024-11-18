@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext} from "react";
 import { useMediaQuery } from "react-responsive";
 import styles from "./styles.module.scss";
 
@@ -31,8 +31,7 @@ import { GiOppression } from "react-icons/gi";
 import { BsLampFill, BsTrash3, BsTrash3Fill } from "react-icons/bs";
 import { MdNoiseControlOff } from "react-icons/md";
 import { FaRegSun, FaSun } from "react-icons/fa6";
-
-
+import { SensorsContext } from "../../Contexts/SensorsContext.jsx";
 
 const GraphicContainer = ({
   visibleLines,
@@ -50,6 +49,9 @@ const GraphicContainer = ({
     LuminosityGraph: 0,
     NoiseGraph: 0,
   });
+
+  const { sensorsData } = useContext(SensorsContext);
+  console.log( sensorsData[1]?.temperature.toFixed(0) || sensorsData[1]?.emw_temperature.toFixed(0) || sensorsData[0]?.emw_temperature.toFixed(0));
 
   const isHidden = useWindowResize(926);
 
@@ -85,20 +87,15 @@ const GraphicContainer = ({
 
   const dataGustWindBar = generateDataGustWindBar();
 
-  const TempGraph = [
-    {
-      name: "Temperatura",
-      data: [
-        [
-          22, 21, 20, 20, 19, 19, 20, 22, 25, 28, 30, 32, 34, 35, 35, 34, 32,
-          30, 28, 26, 24, 23, 23, 22,
-        ],
-      ],
-      color: ["#de7c21"],
-      rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: labels,
-    },
-  ];
+const TempGraph = [
+  {
+    name: "Temperatura",
+    data: [[sensorsData[1]?.temperature.toFixed(0) || sensorsData[1]?.emw_temperature.toFixed(0) || sensorsData[0]?.emw_temperature.toFixed(0)]], 
+    color: ["#de7c21"],
+    rgba: ["rgba(222, 124, 33, 0.8)"],
+    xLabels: labels, 
+  },
+];
 
   const HumidGraph = [
     {
@@ -106,8 +103,7 @@ const GraphicContainer = ({
       name: "Úmidade",
       data: [
         [
-          10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40,
-          35, 30, 25, 20, 15, 10, 5,
+          sensorsData[1]?.humidity.toFixed(0) || sensorsData[0]?.emw_humidity.toFixed(0)
         ],
       ],
       gradientStartColor: "rgba(58, 33, 222, 1)",
@@ -150,8 +146,7 @@ const GraphicContainer = ({
       name: "Direção do Vento",
       data: [
         [
-          10, 30, 50, 70, 90, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
-          310, 330, 350, 10, 30, 50, 70, 90, 110,
+          sensorsData[0]?.emw_wind_direction
         ],
       ],
       color: ["#5eff00"],
@@ -165,8 +160,7 @@ const GraphicContainer = ({
       name: "Velocidade do Vento",
       data: [
         [
-          7, 10, 14, 13, 11, 9, 8, 10, 12, 14, 16, 18, 19, 20, 19, 18, 16, 14,
-          13, 12, 11, 9, 8, 7,
+           sensorsData[0]?.emw_avg_wind_speed.toFixed(0) || 0
         ],
       ],
       color: ["#3399ff"],
@@ -466,7 +460,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               }
               style={{ cursor: "pointer" }}
             >
-              <RadialBarCharts value={100} />
+              <RadialBarCharts value={WindSpeedGraph[0]} />
             </div>
           </Frame>
         )}
@@ -498,7 +492,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               onClick={() => openModal("Direção do Vento", "Direção do Vento")}
               style={{ cursor: "pointer", width: "90%" }}
             >
-              <WindRose direction={0} size={300} />
+              <WindRose direction={10} size={300} />
             </div>
           </DropdownBtn>
           <DropdownBtn
@@ -526,7 +520,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           }}/>} 
             width={"26.8vw"}
           >
-            <Barometer pressure={6} minPressure={0} maxPressure={100} />
+            <Barometer pressure={50} minPressure={0} maxPressure={100} />
           </DropdownBtn>
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
