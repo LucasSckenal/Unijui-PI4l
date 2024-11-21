@@ -131,6 +131,7 @@ let StatisticsService = class StatisticsService {
             acc[curr.deviceName].push(curr);
             return acc;
         }, {});
+        const deviceOrder = ["Estação Cruzeiro", "Micropartículas Rótula do Taffarel"];
         const response = Object.keys(groupedByDevice).map((deviceName) => {
             const deviceData = groupedByDevice[deviceName];
             const averagesPerHour = Array.from({ length: 24 }, (_, hour) => ({
@@ -184,6 +185,7 @@ let StatisticsService = class StatisticsService {
                 averagePerHour: averagesPerHour,
             };
         });
+        response.sort((a, b) => deviceOrder.indexOf(a.deviceName) - deviceOrder.indexOf(b.deviceName));
         return response;
     }
     groupByHour(data) {

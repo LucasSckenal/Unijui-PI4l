@@ -175,6 +175,8 @@ export class StatisticsService {
       return acc;
     }, {} as { [deviceName: string]: Last24HoursDataDTO[] });
   
+    const deviceOrder = ["Estação Cruzeiro", "Micropartículas Rótula do Taffarel"];
+
     const response = Object.keys(groupedByDevice).map((deviceName) => {
       const deviceData = groupedByDevice[deviceName];
     
@@ -242,6 +244,9 @@ export class StatisticsService {
       };
     });
     
+    response.sort(
+      (a, b) => deviceOrder.indexOf(a.deviceName) - deviceOrder.indexOf(b.deviceName)
+    );
   
     return response;
   }
