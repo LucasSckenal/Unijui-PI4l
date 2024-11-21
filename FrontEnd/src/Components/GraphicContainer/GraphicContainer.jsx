@@ -41,10 +41,13 @@ const GraphicContainer = ({
   activeBtn,
   labels,
   labels6h,
+  selectedSensor,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [modalCategory, setModalCategory] = useState("");
+  const [temperature, setTemperature] = useState(null);
+  const [humidity, setHumidity] = useState(null);
   const [maxDataValue, setMaxDataValue] = useState({
     UVGraph: 0,
     LuminosityGraph: 0,
@@ -52,7 +55,31 @@ const GraphicContainer = ({
   });
 
   const { sensorsData } = useContext(SensorsContext);
-  console.log( sensorsData[1]?.temperature.toFixed(0) || sensorsData[1]?.emw_temperature.toFixed(0) || sensorsData[0]?.emw_temperature.toFixed(0));
+  
+
+  const HandleTH = () => {
+    if (selectedSensor === "Estação Cruzeiro") {
+      // Verifica o primeiro sensor, se não tiver valor tenta o segundo
+      const temp = sensorsData[1]?.emw_temperature || sensorsData[0]?.emw_temperature || 0;
+      const hum = sensorsData[1]?.emw_humidity || sensorsData[0]?.emw_humidity || 0;
+
+      setTemperature(temp.toFixed(0));
+      setHumidity(hum.toFixed(0));
+    } else {
+      // Verifica o primeiro sensor, se não tiver valor tenta o segundo
+      const temp = sensorsData[1]?.temperature || sensorsData[0]?.temperature || 0;
+      const hum = sensorsData[1]?.humidity || sensorsData[0]?.humidity || 0;
+
+      setTemperature(temp.toFixed(0));
+      setHumidity(hum.toFixed(0));
+    }
+  };
+
+  useEffect(() => {
+    HandleTH();
+  }, [selectedSensor, sensorsData]); // Atualiza a cada alteração em selectedSensor ou sensorsData
+
+  console.log(temperature);
 
   const isHidden = useWindowResize(926);
 
@@ -91,7 +118,7 @@ const GraphicContainer = ({
 const TempGraph = [
   {
     name: "Temperatura",
-    data: [[sensorsData[1]?.temperature.toFixed(0) || sensorsData[1]?.emw_temperature.toFixed(0) || sensorsData[0]?.emw_temperature.toFixed(0)]], 
+    data: [[temperature]], 
     color: ["#de7c21"],
     rgba: ["rgba(222, 124, 33, 0.8)"],
     xLabels: labels, 
@@ -102,11 +129,7 @@ const TempGraph = [
     {
       id: "humidity",
       name: "Úmidade",
-      data: [
-        [
-          sensorsData[1]?.humidity.toFixed(0) || sensorsData[0]?.emw_humidity.toFixed(0)
-        ],
-      ],
+      data: [[humidity]],
       gradientStartColor: "rgba(58, 33, 222, 1)",
       gradientEndColor: "rgba(66, 24, 163, 1)",
       rgba: ["rgba(74, 33, 222, 0.8)"],

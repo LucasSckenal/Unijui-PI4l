@@ -226,6 +226,20 @@ function Home() {
     return () => clearInterval(intervalId);
   }, [selectedDate]);
 
+  const getBrazilDateISO = (date = new Date()) => {
+    const brDate = new Date(date.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    const year = brDate.getFullYear();
+    const month = String(brDate.getMonth() + 1).padStart(2, "0"); // Ajusta mês para 2 dígitos
+    const day = String(brDate.getDate()).padStart(2, "0"); // Ajusta dia para 2 dígitos
+    return `${year}-${month}-${day}`; // Formato ISO
+  };
+
+  const getMinDate = () => {
+    const brDate = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    brDate.setMonth(brDate.getMonth() - 1); // Subtrai 1 mês
+    return brDate;
+  };
+
   const mockUser = {
     name: localStorage.getItem("nome"),
   };
@@ -370,6 +384,8 @@ function Home() {
                 style={{ display: "none" }}
                 onChange={handleDateChange}
                 defaultValue={selectedDate}
+                max={getBrazilDateISO()}
+                min={getBrazilDateISO(getMinDate())} 
               />
               <div onClick={handleIconClick}>
                 <FaRegCalendarAlt size={50} />
@@ -458,6 +474,7 @@ function Home() {
               activeBtn={activeBtn}
               labels={labels[0]}
               labels6h={labels[1]}
+              selectedSensor={selectedSensor}
             />
           </div>
         </section>
