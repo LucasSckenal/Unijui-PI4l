@@ -79,7 +79,7 @@ const GraphicContainer = ({
     HandleTH();
   }, [selectedSensor, sensorsData]); // Atualiza a cada alteração em selectedSensor ou sensorsData
 
-  console.log(temperature);
+  //console.log(temperature);
 
   const isHidden = useWindowResize(926);
 

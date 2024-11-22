@@ -6,12 +6,14 @@ export declare class StatisticsService {
     private readonly nit2xliRepository;
     private readonly tabelaCombinadaRepository;
     constructor(k72623LoRepository: Repository<k72623_lo>, nit2xliRepository: Repository<nit2xli>, tabelaCombinadaRepository: Repository<tabela_combinada>);
-    findByDate(date: string): Promise<nit2xli[]>;
-    getTemperatureHourlyStatistics_K72623Lo(deviceName: string, time: string): Promise<any | null>;
-    getTemperatureHourlyStatistics_nit2xli(deviceName: string, time: string): Promise<any | null>;
-    getAllData_K72623Lo(deviceName: string, date: string): Promise<any[]>;
-    getAllData_nit2xli(deviceName: string, date: string): Promise<any[]>;
-    getAllData_tabelaCombinada(deviceName: string, date: string): Promise<any[]>;
-    getLast24HoursData_tabelaCombinada(): Promise<Last24HoursDataDTO[]>;
-    groupByHour(data: any[]): any[];
+    findByDateCombined(date: string): Promise<tabela_combinada[]>;
+    getLast24HoursData_tabelaCombinada(selectedDate?: string): Promise<Last24HoursDataDTO[]>;
+    private initializeSensorData;
+    calculateAverages(data: any[]): {
+        [key: string]: number | undefined;
+    };
+    groupByHourWithFallback(data: any[], startTimestamp: Date): any[];
+    fillWithLastKnownValues(data: any[]): {
+        [key: string]: number | undefined;
+    };
 }

@@ -23,108 +23,25 @@ let StatisticsService = class StatisticsService {
         this.nit2xliRepository = nit2xliRepository;
         this.tabelaCombinadaRepository = tabelaCombinadaRepository;
     }
-    async findByDate(date) {
-        return await this.nit2xliRepository
+    async findByDateCombined(date) {
+        return await this.tabelaCombinadaRepository
             .createQueryBuilder("data")
-            .where("DATE(data.timestamp) = :date", { date })
+            .where("DATE(data) = :date", { date })
             .getMany();
     }
-    async getTemperatureHourlyStatistics_K72623Lo(deviceName, time) {
-        const timestamp = new Date(time);
-        timestamp.setHours(timestamp.getHours() - 24);
-        const result = await this.k72623LoRepository.find({
-            select: ["temperature", "time"],
-            where: {
-                deviceName,
-                time: (0, typeorm_2.MoreThan)(timestamp),
-            },
-            order: { time: "ASC" },
-        });
-        if (result.length === 0)
-            return null;
-        const groupedByHour = this.groupByHour(result);
-        return { deviceName, dataPerHour: groupedByHour };
-    }
-    async getTemperatureHourlyStatistics_nit2xli(deviceName, time) {
-        const timestamp = new Date(time);
-        timestamp.setHours(timestamp.getHours() - 24);
-        const result = await this.nit2xliRepository.find({
-            select: ["emw_temperature", "time"],
-            where: {
-                deviceName,
-                time: (0, typeorm_2.MoreThan)(timestamp),
-            },
-            order: { time: "ASC" },
-        });
-        if (result.length === 0)
-            return null;
-        const groupedByHour = this.groupByHour(result.map((item) => ({
-            temperature: item.emw_temperature,
-            time: item.time,
-        })));
-        return { deviceName, dataPerHour: groupedByHour };
-    }
-    async getAllData_K72623Lo(deviceName, date) {
-        const startOfDay = new Date(date);
-        startOfDay.setUTCHours(0, 0, 0, 0);
-        const endOfDay = new Date(date);
-        endOfDay.setUTCHours(23, 59, 59, 999);
-        const result = await this.k72623LoRepository.find({
-            where: {
-                deviceName,
-                time: (0, typeorm_2.Between)(startOfDay, endOfDay),
-            },
-            order: {
-                time: "ASC",
-            },
-        });
-        return this.groupByHour(result);
-    }
-    async getAllData_nit2xli(deviceName, date) {
-        const startOfDay = new Date(date);
-        startOfDay.setUTCHours(0, 0, 0, 0);
-        const endOfDay = new Date(date);
-        endOfDay.setUTCHours(23, 59, 59, 999);
-        const result = await this.nit2xliRepository.find({
-            where: {
-                deviceName,
-                time: (0, typeorm_2.Between)(startOfDay, endOfDay),
-            },
-            order: {
-                time: "ASC",
-            },
-        });
-        return this.groupByHour(result);
-    }
-    async getAllData_tabelaCombinada(deviceName, date) {
-        const startOfDay = new Date(date);
-        startOfDay.setUTCHours(0, 0, 0, 0);
-        const endOfDay = new Date(date);
-        endOfDay.setUTCHours(23, 59, 59, 999);
-        const result = await this.tabelaCombinadaRepository.find({
-            where: {
-                time: (0, typeorm_2.Between)(startOfDay, endOfDay),
-            },
-            order: {
-                time: "ASC",
-            },
-        });
-        console.log("Data de início:", startOfDay);
-        console.log("Data de fim:", endOfDay);
-        console.log("Raw data from DB:", result);
-        return result;
-    }
-    async getLast24HoursData_tabelaCombinada() {
-        const now = new Date();
+    async getLast24HoursData_tabelaCombinada(selectedDate) {
+        let now = new Date();
+        if (selectedDate) {
+            const userDate = new Date(selectedDate);
+            if (!isNaN(userDate.getTime())) {
+                now = userDate;
+            }
+        }
         const timestamp = new Date(now);
         timestamp.setHours(timestamp.getHours() - 24);
         const result = await this.tabelaCombinadaRepository.find({
-            where: {
-                time: (0, typeorm_2.MoreThan)(timestamp),
-            },
-            order: {
-                time: "ASC",
-            },
+            where: { time: (0, typeorm_2.Between)(timestamp, now) },
+            order: { time: "ASC" },
         });
         const groupedByDevice = result.reduce((acc, curr) => {
             acc[curr.deviceName] = acc[curr.deviceName] || [];
@@ -136,47 +53,33 @@ let StatisticsService = class StatisticsService {
             const deviceData = groupedByDevice[deviceName];
             const averagesPerHour = Array.from({ length: 24 }, (_, hour) => ({
                 hour,
-                averages: {
-                    emw_rain_lvl: null,
-                    emw_avg_wind_speed: null,
-                    emw_gust_wind_speed: null,
-                    emw_wind_direction: null,
-                    emw_temperature: null,
-                    emw_humidity: null,
-                    emw_luminosity: null,
-                    emw_uv: null,
-                    emw_solar_radiation: null,
-                    emw_atm_pres: null,
-                    noise: null,
-                    temperature: null,
-                    humidity: null,
-                    pm2_5: null,
-                },
+                averages: this.initializeSensorData(),
             }));
+            let lastValidEntry = null;
             deviceData.forEach((entry) => {
                 const entryHour = new Date(entry.time).getHours();
                 const hourData = averagesPerHour.find((h) => h.hour === entryHour);
                 if (hourData) {
+                    lastValidEntry = entry;
                     Object.keys(hourData.averages).forEach((key) => {
                         if (entry[key] !== null && entry[key] !== undefined) {
-                            if (!hourData.averages[key]) {
-                                hourData.averages[key] = { sum: 0, count: 0 };
-                            }
-                            hourData.averages[key].sum += entry[key];
-                            hourData.averages[key].count += 1;
+                            hourData.averages[key] += entry[key];
                         }
                     });
                 }
             });
+            averagesPerHour.forEach((hourData, hour) => {
+                if (!deviceData.some((entry) => new Date(entry.time).getHours() === hour)) {
+                    if (lastValidEntry) {
+                        Object.keys(hourData.averages).forEach((key) => {
+                            hourData.averages[key] = lastValidEntry[key] || 0;
+                        });
+                    }
+                }
+            });
             averagesPerHour.forEach((hourData) => {
                 Object.keys(hourData.averages).forEach((key) => {
-                    const sensorData = hourData.averages[key];
-                    if (sensorData && sensorData.count > 0) {
-                        hourData.averages[key] = sensorData.sum / sensorData.count;
-                    }
-                    else {
-                        hourData.averages[key] = null;
-                    }
+                    hourData.averages[key] = hourData.averages[key] || 0;
                 });
             });
             return {
@@ -188,22 +91,57 @@ let StatisticsService = class StatisticsService {
         response.sort((a, b) => deviceOrder.indexOf(a.deviceName) - deviceOrder.indexOf(b.deviceName));
         return response;
     }
-    groupByHour(data) {
-        const grouped = {};
+    initializeSensorData() {
+        return {
+            emw_rain_lvl: 0,
+            emw_avg_wind_speed: 0,
+            emw_gust_wind_speed: 0,
+            emw_wind_direction: 0,
+            emw_temperature: 0,
+            emw_humidity: 0,
+            emw_luminosity: 0,
+            emw_uv: 0,
+            emw_solar_radiation: 0,
+            emw_atm_pres: 0,
+            noise: 0,
+            temperature: 0,
+            humidity: 0,
+            pm2_5: 0,
+        };
+    }
+    calculateAverages(data) {
+        const keys = Object.keys(this.initializeSensorData());
+        const totals = keys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
+        const counts = keys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
         data.forEach((item) => {
-            const dateTime = new Date(item.time);
-            if (!isNaN(dateTime.getTime())) {
-                const hour = dateTime.getUTCHours();
-                if (!grouped[hour]) {
-                    grouped[hour] = [];
+            keys.forEach((key) => {
+                if (item[key] !== null && item[key] !== undefined) {
+                    totals[key] += item[key];
+                    counts[key]++;
                 }
-                grouped[hour].push(item);
+            });
+        });
+        return keys.reduce((acc, key) => ({ ...acc, [key]: counts[key] > 0 ? totals[key] / counts[key] : 0 }), {});
+    }
+    groupByHourWithFallback(data, startTimestamp) {
+        const grouped = {};
+        let lastValidEntry = null;
+        data.forEach((item) => {
+            const diffInHours = Math.floor((new Date(item.time).getTime() - startTimestamp.getTime()) / (1000 * 60 * 60));
+            if (diffInHours >= 0 && diffInHours < 24) {
+                grouped[diffInHours] = grouped[diffInHours] || [];
+                grouped[diffInHours].push(item);
+                lastValidEntry = item;
             }
         });
         return Array.from({ length: 24 }, (_, hour) => ({
             hour,
-            data: grouped[hour] || [],
+            data: grouped[hour] || (lastValidEntry ? [lastValidEntry] : []),
         }));
+    }
+    fillWithLastKnownValues(data) {
+        const lastKnown = data[data.length - 1];
+        return this.initializeSensorData();
     }
 };
 StatisticsService = __decorate([

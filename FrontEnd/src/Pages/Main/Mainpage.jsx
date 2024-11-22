@@ -12,8 +12,8 @@ import { generateHourlyLabels } from "../../utils/generateHourlxLabels.jsx";
 import { SensorsContext } from "../../Contexts/SensorsContext.jsx";
 
 function Home() {
-  const { sensorsData } = useContext(SensorsContext);
-  const [selectedDate, setSelectedDate] = useState("");
+  const { sensorsData, setDataSelectedDate } = useContext(SensorsContext);
+  const [ selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
   const [selectedInterval, setSelectedInterval] = useState({
@@ -248,7 +248,9 @@ function Home() {
     if (sensorsData && sensorsData.length > 0) {
       const sensorNames = sensorsData.map(sensor => sensor.deviceName);
       setSensors(sensorNames);
-      setSelectedSensor(sensorNames[0]); 
+      if (!selectedSensor){
+        setSelectedSensor(sensorNames[0]); //Para evitar trocar também para o sensor 1 quando uma data é selecionada
+      }
     }
   }, [sensorsData]);
 
@@ -273,6 +275,7 @@ function Home() {
 
   const handleDateChange = (event) => {
     const date = event.target.value;
+    setDataSelectedDate(date);
     setSelectedDate(date);
   };
 
@@ -287,7 +290,6 @@ function Home() {
 
    const handleSensorChange = (event) => {
     const selectedDeviceName = event.target.value;
-    console.log('Selected sensor:', selectedDeviceName); // Log para verificar qual sensor foi selecionado
 
     if (!sensors.includes(selectedDeviceName)) {
       toast.warn("Selecione um sensor válido para o dispositivo");
@@ -302,8 +304,6 @@ function Home() {
       if (selectedInterval.value === defaultIntervalOptions[5].value) {
         const newLabels6h = generateHourlyLabels(defaultIntervalOptions[4]);
         setLabels([newLabels, newLabels6h]); // Agora passa ambos os conjuntos de labels em um array
-        console.log(newLabels);
-        console.log(newLabels6h);
       } else {
         const newLabels6h = newLabels;
         setLabels([newLabels, newLabels6h]); // Para outros intervalos, ainda passa o conjunto único

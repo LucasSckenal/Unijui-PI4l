@@ -44,7 +44,7 @@ exports.k72623_lo = k72623_lo;
 let nit2xli = class nit2xli {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({ type: 'varchar', length: 100 }),
+    (0, typeorm_1.PrimaryColumn)({ name: "deviceName", type: 'varchar', length: 100 }),
     __metadata("design:type", String)
 ], nit2xli.prototype, "deviceName", void 0);
 __decorate([

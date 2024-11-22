@@ -29,7 +29,7 @@ export class nit2xli {
   //@PrimaryGeneratedColumn()
   //id: number; // Adicionando um ID como chave primária
 
-  @PrimaryColumn({ type: 'varchar', length: 100 })
+  @PrimaryColumn({ name: "deviceName", type: 'varchar', length: 100 })
   deviceName: string;
 
 

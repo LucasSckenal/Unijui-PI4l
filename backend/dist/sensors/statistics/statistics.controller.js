@@ -19,53 +19,15 @@ let StatisticsController = class StatisticsController {
     constructor(sensor) {
         this.sensor = sensor;
     }
-    async getStatisticsByHour(device, time) {
-        const [deviceName, prefixTable] = device.split("_");
-        if (prefixTable === "k") {
-            return await this.sensor.getTemperatureHourlyStatistics_K72623Lo(deviceName, time);
-        }
-        else if (prefixTable === "n") {
-            return await this.sensor.getTemperatureHourlyStatistics_nit2xli(deviceName, time);
-        }
-        return null;
-    }
-    async getAllData(deviceName, date) {
-        const [name, prefixTable] = deviceName.split("_");
-        if (prefixTable === "k") {
-            return await this.sensor.getAllData_K72623Lo(name, date);
-        }
-        else if (prefixTable === "n") {
-            return await this.sensor.getAllData_nit2xli(name, date);
-        }
-        else if (prefixTable === "t") {
-            return await this.sensor.getAllData_tabelaCombinada(name, date);
-        }
-        return [];
-    }
-    async getLast24HoursData() {
-        return await this.sensor.getLast24HoursData_tabelaCombinada();
+    async getLast24HoursData(selectedDate) {
+        return await this.sensor.getLast24HoursData_tabelaCombinada(selectedDate);
     }
 };
 __decorate([
-    (0, common_1.Get)("hourly-statistics/:deviceName/:dateTime"),
-    __param(0, (0, common_1.Param)("deviceName")),
-    __param(1, (0, common_1.Param)("dateTime")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], StatisticsController.prototype, "getStatisticsByHour", null);
-__decorate([
-    (0, common_1.Get)("all-data/:deviceName/:date"),
-    __param(0, (0, common_1.Param)("deviceName")),
-    __param(1, (0, common_1.Param)("date")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], StatisticsController.prototype, "getAllData", null);
-__decorate([
     (0, common_1.Get)("tabela-combinada/last-24-hours"),
+    __param(0, (0, common_1.Query)("selectedDate")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], StatisticsController.prototype, "getLast24HoursData", null);
 StatisticsController = __decorate([
