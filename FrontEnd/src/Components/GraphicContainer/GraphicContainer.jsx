@@ -25,10 +25,11 @@ import SmallContainer from "../Utilities/SmallContainer/SmallContainer.jsx";
 import ThemeSwap from "../ThemeSwap/themeSwap.jsx";
 
 import useWindowResize from "../../Hooks/useWindowResize.jsx";
+import Skeleton from "@mui/material/Skeleton";
 
 import { PiWindDuotone } from "react-icons/pi";
 import { IoRainyOutline } from "react-icons/io5";
-import { GiOppression } from "react-icons/gi";
+import { GiOppression, GiSunRadiations } from "react-icons/gi";
 import { BsLampFill, BsTrash3, BsTrash3Fill } from "react-icons/bs";
 import { MdNoiseControlOff } from "react-icons/md";
 import { FaRegSun, FaSun } from "react-icons/fa6";
@@ -46,32 +47,53 @@ const GraphicContainer = ({
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [modalCategory, setModalCategory] = useState("");
-  const [temperature, setTemperature] = useState(null);
-  const [humidity, setHumidity] = useState(null);
+  const [isloading, setIsLoading] = useState(true);
   const [maxDataValue, setMaxDataValue] = useState({
     UVGraph: 0,
     LuminosityGraph: 0,
     NoiseGraph: 0,
   });
 
+  const [temperature, setTemperature] = useState(null);
+  const [humidity, setHumidity] = useState(null);
+  const [noise, setNoise] = useState(null);
+  const [luminosity, setLuminosity] = useState(null);
+  const [uv, setUV] = useState(null);
+
   const { sensorsData } = useContext(SensorsContext);
-  
+  //console.log(sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres));
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, []);
 
   const HandleTH = () => {
     if (selectedSensor === "Estação Cruzeiro") {
       // Verifica o primeiro sensor, se não tiver valor tenta o segundo
-      const temp = sensorsData[1]?.emw_temperature || sensorsData[0]?.emw_temperature || 0;
-      const hum = sensorsData[1]?.emw_humidity || sensorsData[0]?.emw_humidity || 0;
-
-      setTemperature(temp.toFixed(0));
-      setHumidity(hum.toFixed(0));
+      const temp = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_temperature.toFixed(0)) || 0;
+      const hum = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_humidity.toFixed(0)) || 0;
+      const noise = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)) || 0;
+      const luminosity = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0));
+      const UV = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0));
+      setNoise(noise);
+      setLuminosity(luminosity);
+      setUV(UV);
+      setTemperature(temp);
+      setHumidity(hum);
     } else {
       // Verifica o primeiro sensor, se não tiver valor tenta o segundo
-      const temp = sensorsData[1]?.temperature || sensorsData[0]?.temperature || 0;
-      const hum = sensorsData[1]?.humidity || sensorsData[0]?.humidity || 0;
-
-      setTemperature(temp.toFixed(0));
-      setHumidity(hum.toFixed(0));
+      const temp = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.temperature.toFixed(0))  || 0;
+      const hum = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.humidity.toFixed(0)) || 0;
+      const noise = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)) || 0;
+      const luminosity = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0));
+      const UV = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0));
+      setNoise(noise);
+      setLuminosity(luminosity);
+      setUV(UV);
+      setTemperature(temp);
+      setHumidity(hum);
     }
   };
 
@@ -79,13 +101,141 @@ const GraphicContainer = ({
     HandleTH();
   }, [selectedSensor, sensorsData]); // Atualiza a cada alteração em selectedSensor ou sensorsData
 
-  //console.log(temperature);
-
   const isHidden = useWindowResize(926);
 
-  const generateDataGustWindBar = () => {
+ 
+
+const TempGraph = [
+  {
+    name: "Temperatura",
+    data: [temperature], 
+    color: ["#de7c21"],
+    rgba: ["rgba(222, 124, 33, 0.8)"],
+    xLabels: labels, 
+  },
+];
+
+  const HumidGraph = [
+    {
+      id: "humidity",
+      name: "Úmidade",
+      data: [humidity],
+      gradientStartColor: "rgba(58, 33, 222, 1)",
+      gradientEndColor: "rgba(66, 24, 163, 1)",
+      rgba: ["rgba(74, 33, 222, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const Pm25Graph = [
+    {
+      id: "Pm2_5",
+      name: "Pm2_5",
+      data: [sensorsData[1]?.averagePerHour.map((item) => item?.averages?.pm2_5.toFixed(0))],
+      gradientStartColor: "rgba(94, 60, 32, 1)",
+      gradientEndColor: "rgba(38, 21, 6, 1)",
+      rgba: ["rgba(38, 21, 6, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const AtmPresGraph = [
+    {
+      name: "Atmospheric Pressure",
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres.toFixed(0))],
+      color: ["#de7c21"],
+      rgba: ["rgba(222, 124, 33, 0.8)"],
+      xLabels: labels, 
+    },
+  ];  
+
+  const rainData = [
+    {
+      id: "rain",
+      name: "Chuva",
+      data: sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl),
+      gradientStartColor: "rgba(0, 123, 255, 1)",
+      gradientEndColor: "rgba(0, 180, 255, 1)",
+      xLabels: labels,
+    },
+  ];
+
+  const solarRadiationData = [
+    {
+      id: "solar",
+      name: "Radiação Solar",
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_solar_radiation)],
+      gradientStartColor: "rgba(219, 142, 9, 1)",
+      gradientEndColor: "rgba(255, 238, 0, 1)",
+      xLabels: labels,
+    },
+  ];
+
+  const WindDirectionGraph = [
+    {
+      name: "Direção do Vento",
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_wind_direction)],
+      color: ["#5eff00"],
+      rgba: ["rgba(115, 255, 0, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindSpeedGraph = [
+    {
+      name: "Velocidade do Vento",
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_avg_wind_speed)],
+      color: ["#3399ff"],
+      rgba: ["rgba(51, 153, 255, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const WindGustGraph = [
+    {
+      id: "windGust",
+      name: "Rajada de Vento",
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.gust_wind_speed)],
+      gradientStartColor: "rgba(255, 99, 71, 1)",
+      gradientEndColor: "rgba(255, 69, 0, 1)",
+      rgba: ["rgba(255, 99, 71, 0.8)"],
+      xLabels: labels,
+    },
+  ];
+
+  const UVGraph = useMemo(() => [
+    {
+      name: "UV",
+      data: [[sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv)]],
+      color: ["#d500ed"],
+      rgba: ["rgba(194, 15, 214, 0.8)"],
+      xLabels: labels6h,
+    },
+  ], [labels6h]); 
+
+  const LuminosityGraph = useMemo(() => [
+    {
+      name: "Luminosidade",
+      data: luminosity ? [luminosity.flat()] : [[]],
+      color: ["#d500ed"],
+      rgba: ["rgba(194, 15, 214, 0.8)"],
+      xLabels: labels6h,
+    },
+  ], [luminosity, labels6h]);
+
+  const NoiseGraph = useMemo(() => [
+    {
+      name: "Noise",
+      data: [noise],
+      color: ["#d500ed"],
+      rgba: ["rgba(194, 15, 214, 0.8)"],
+      xLabels: labels6h,
+    },
+  ], [labels6h]); // Se "labels" for uma dependência que muda com o tempo
+
+   const generateDataGustWindBar = () => {
   const dataGustWindBar = [];
-  const values = [116, 100, 50, 20, 80];
+  const values = WindGustGraph[0];
 
   const labels = [];
   const currentHour = new Date();
@@ -115,167 +265,6 @@ const GraphicContainer = ({
 
   const dataGustWindBar = generateDataGustWindBar();
 
-const TempGraph = [
-  {
-    name: "Temperatura",
-    data: [[temperature]], 
-    color: ["#de7c21"],
-    rgba: ["rgba(222, 124, 33, 0.8)"],
-    xLabels: labels, 
-  },
-];
-
-  const HumidGraph = [
-    {
-      id: "humidity",
-      name: "Úmidade",
-      data: [[humidity]],
-      gradientStartColor: "rgba(58, 33, 222, 1)",
-      gradientEndColor: "rgba(66, 24, 163, 1)",
-      rgba: ["rgba(74, 33, 222, 0.8)"],
-      xLabels: labels,
-    },
-  ];
-
-  const Pm25Graph = [
-    {
-      id: "Pm2_5",
-      name: "Pm2_5",
-      data: [
-        [
-          sensorsData[1]?.pm2_5.toFixed(0)
-        ],
-      ],
-      gradientStartColor: "rgba(94, 60, 32, 1)",
-      gradientEndColor: "rgba(38, 21, 6, 1)",
-      rgba: ["rgba(38, 21, 6, 0.8)"],
-      xLabels: labels,
-    },
-  ];
-
-  const AtmPresGraph = [
-    {
-      name: "Atmospheric Pressure",
-      data: [[sensorsData[0]?.emw_atm_pres.toFixed(0)]],
-      color: ["#de7c21"],
-      rgba: ["rgba(222, 124, 33, 0.8)"],
-      xLabels: labels, 
-    },
-  ];  
-
-  const rainData = [
-    {
-      id: "rain",
-      name: "Chuva",
-      data: [
-        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
-        30, 25, 20, 15, 10, 5,
-      ],
-      gradientStartColor: "rgba(0, 123, 255, 1)",
-      gradientEndColor: "rgba(0, 180, 255, 1)",
-      xLabels: labels,
-    },
-  ];
-
-  const solarRadiationData = [
-    {
-      id: "solar",
-      name: "Radiação Solar",
-      data: [
-        10, 15, 25, 35, 45, 50, 60, 70, 80, 90, 85, 75, 65, 55, 50, 45, 40, 35,
-        30, 25, 20, 15, 10, 5,
-      ],
-      gradientStartColor: "rgba(219, 142, 9, 1)",
-      gradientEndColor: "rgba(255, 238, 0, 1)",
-      xLabels: labels,
-    },
-  ];
-
-  const WindDirectionGraph = [
-    {
-      name: "Direção do Vento",
-      data: [
-        [
-          sensorsData[0]?.emw_wind_direction
-        ],
-      ],
-      color: ["#5eff00"],
-      rgba: ["rgba(115, 255, 0, 0.8)"],
-      xLabels: labels,
-    },
-  ];
-
-  const WindSpeedGraph = [
-    {
-      name: "Velocidade do Vento",
-      data: [
-        [
-           sensorsData[0]?.emw_avg_wind_speed.toFixed(0) || 0
-        ],
-      ],
-      color: ["#3399ff"],
-      rgba: ["rgba(51, 153, 255, 0.8)"],
-      xLabels: labels,
-    },
-  ];
-
-  const WindGustGraph = [
-    {
-      id: "windGust",
-      name: "Rajada de Vento",
-      data: [
-        [
-          5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 55, 50, 45, 40, 35, 30,
-          25, 20, 15, 10, 5, 10,
-        ],
-      ],
-      gradientStartColor: "rgba(255, 99, 71, 1)",
-      gradientEndColor: "rgba(255, 69, 0, 1)",
-      rgba: ["rgba(255, 99, 71, 0.8)"],
-      xLabels: labels,
-    },
-  ];
-
-  const UVGraph = useMemo(() => [
-    {
-      name: "UV",
-      data: [
-        1, 2, 3, 4, 5, 4, 3, 4, 6, 8, 10, 12, 11, 10, 9, 8, 6, 5, 4, 3, 2, 1, 0, 0,
-      ],
-      color: ["#d500ed"],
-      rgba: ["rgba(194, 15, 214, 0.8)"],
-      xLabels: labels6h,
-    },
-  ], [labels6h]); 
-
-  const LuminosityGraph = useMemo(() => [
-    {
-      name: "Luminosidade",
-      data: [
-        [
-          100, 150, 200, 250, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120,
-          100, 80, 60, 40, 20, 30, 50, 70, 90, 110,
-        ],
-      ],
-      color: ["#d500ed"],
-      rgba: ["rgba(194, 15, 214, 0.8)"],
-      xLabels: labels6h,
-    },
-  ], [labels6h]);
-
-  const NoiseGraph = useMemo(() => [
-    {
-      name: "Noise",
-      data: [
-        10, 15, 40, 80, 30, 20, 26, 20, 90, 100, 180, 140, 120, 100,
-        80, 50, 20, 40, 20, 40, 10, 5, 40, 60,
-      ],
-      color: ["#d500ed"],
-      rgba: ["rgba(194, 15, 214, 0.8)"],
-      xLabels: labels6h,
-    },
-  ], [labels6h]); // Se "labels" for uma dependência que muda com o tempo
-
   const openModal = (category, valueType) => {
     setModalCategory(category);
     setSelectedType(valueType);
@@ -288,8 +277,10 @@ const TempGraph = [
 
   const getLastValue = (graph, name) => {
     const data = graph.find((item) => item.name === name);
-    return data?.data[0]?.[data.data[0].length - 1] || null;
-  };
+    const lastValue = data?.data[0]?.[data.data[0].length - 1] || null;
+    return lastValue;
+};
+
 
   const lastExternalTemp = getLastValue(TempGraph, "Temperatura");
   const lastExternalHumid = getLastValue(HumidGraph, "Úmidade");
@@ -297,49 +288,31 @@ const TempGraph = [
   const lastAtmPres = getLastValue(AtmPresGraph, "Atmospheric Pressure");
   const lastWindDir = getLastValue(WindDirectionGraph, "Direção do Vento");
 
-  const getMaxYValue = () => {
-    let maxY = 0;
-
-    Object.keys(visibleLines).forEach((key, index) => {
-      if (visibleLines[key]) {
-        const lineData = lineDatas.find((item) => item.name === line);
-        if (lineData && lineData.data[index]) {
-          const currentMax = Math.max(...lineData.data[index]);
-          maxY = Math.max(maxY, currentMax);
-        }
-      }
-    });
-
-    return maxY;
-  };
-
-  const yMax = getMaxYValue() || 100;
-
-  useEffect(() => {
-    if (UVGraph && UVGraph[0] && UVGraph[0].data) {
-      const calculatedMaxValue = Math.max(...UVGraph[0].data);
-      setMaxDataValue((prevMax) => ({
+   useEffect(() => {
+     if (uv) {
+      const calculatedMaxValue = Math.max(...uv);
+       setMaxDataValue((prevMax) => ({
         ...prevMax,
-        UVGraph: calculatedMaxValue,
-      }));
+         UVGraph: calculatedMaxValue,
+       }));
+     }
+
+     if (luminosity) {
+       const calculatedMaxValue = Math.max(...luminosity);
+       setMaxDataValue((prevMax) => ({
+         ...prevMax,
+         LuminosityGraph: calculatedMaxValue,
+       }));
     }
 
-    if (LuminosityGraph && LuminosityGraph[0] && LuminosityGraph[0].data) {
-      const calculatedMaxValue = Math.max(...LuminosityGraph[0].data[0]);
-      setMaxDataValue((prevMax) => ({
-        ...prevMax,
-        LuminosityGraph: calculatedMaxValue,
+    if (noise) {
+       const calculatedMaxValue = Math.max(...noise);
+       setMaxDataValue((prevMax) => ({
+         ...prevMax,
+         NoiseGraph: calculatedMaxValue,
       }));
     }
-
-    if (NoiseGraph && NoiseGraph[0] && NoiseGraph[0].data) {
-      const calculatedMaxValue = Math.max(...NoiseGraph[0].data);
-      setMaxDataValue((prevMax) => ({
-        ...prevMax,
-        NoiseGraph: calculatedMaxValue,
-      }));
-    }
-  }, [UVGraph, LuminosityGraph, NoiseGraph]);
+   }, [UVGraph, LuminosityGraph, NoiseGraph]);
 
   const modalData = {
   temperatura: {
@@ -385,8 +358,27 @@ const TempGraph = [
   },
 };
 
+const getMaxYValue = () => {
+  let maxY = 0;
+
+  Object.keys(visibleLines).forEach((key, index) => {
+    if (visibleLines[key]) {
+      const lineData = lineDatas.find((item) => item.name === line);
+      if (lineData && lineData.data[index]) {
+        const currentMax = Math.max(...lineData.data[index]);
+        maxY = Math.max(maxY, currentMax);
+      }
+    }
+  });
+
+  return maxY;
+};
+
+const yMax = getMaxYValue() || 100;
+
 const currentModal = modalData[modalCategory];
 const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
+
 
   return (
     <section className={styles.graphs}>
@@ -402,8 +394,10 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
     )}
 
       <div className={styles.graphsTop}>
-        <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
-          <LineGraph
+         {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : ( <Frame isTitle={true} title="Principal" width="78.2%" height="350px">
+         <LineGraph
             lines={Object.keys(visibleLines)
               .map((key, index) => {
                 if (!visibleLines[key]) return null;
@@ -434,14 +428,16 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             }
             yMax={yMax}
             tooltipStyle="style2"
-          />
-        </Frame>
+          /> 
+        </Frame>)}
         <div className={styles.tempContainer}>
           <div
             onClick={() => openModal("temperatura", "Temperatura")}
             style={{ cursor: "pointer" }}
           >
-            <Frame
+            {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<Frame
               isTitle={true}
               title={"Temperatura"}
               width={isSmallScreen ? "100%" : "105%"}
@@ -453,13 +449,15 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
                 dark={tempDark}
                 complement={"ºC"}
               />
-            </Frame>
+            </Frame>)}
           </div>
           <div
             onClick={() => openModal("umidade", "Úmidade")}
             style={{ cursor: "pointer" }}
           >
-            <Frame
+            {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<Frame
               isTitle={true}
               title={"Umidade"}
               width={isSmallScreen ? "100%" : "105%"}
@@ -471,33 +469,39 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
                 dark={humidDark}
                 complement={"%"}
               />
-            </Frame>
+            </Frame>)}
           </div>
         </div>
       </div>
       <div className={styles.graphsBot}>
-        <Frame
+        {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<Frame
           isTitle={true}
-          title={"Radiação Solar"}
+          title={"Nível de Chuva"}
           width={isSmallScreen ? "53.5%" : "54%"}
           height="320px"
         >
           <VerticalBarGraph
-            bars={solarRadiationData[0].data}
-            xLabels={solarRadiationData[0].xLabels}
-            yMax={100}
-            width="100%"
-            height={300}
-            barWidth={20}
-            barSpacing={10}
-            gradientStartColor={solarRadiationData[0].gradientStartColor}
-            gradientEndColor={solarRadiationData[0].gradientEndColor}
-            gradientId={solarRadiationData[0].id}
-            tooltipStyle="style2"
-          />
-        </Frame>
-
-        {!isHidden && (
+              bars={rainData[0].data}
+              xLabels={rainData[0].xLabels}
+              yMax={100}
+              width="100%"
+              height={300}
+              barWidth={20}
+              barSpacing={10}
+              gradientStartColor={rainData[0].gradientStartColor}
+              gradientEndColor={rainData[0].gradientEndColor}
+              gradientId={rainData[0].id}
+              tooltipStyle="style2"
+            />
+          
+        </Frame>)}
+          
+        {!isHidden && 
+          isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (
           <Frame
             isTitle={true}
             title={"Velocidade do Vento"}
@@ -519,14 +523,18 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           style={{ cursor: "pointer" }}
           className={styles.gustWind}
         >
-          <Frame isTitle={true} title={"Rajada de Vento"} width={"100%"} height={"100%"}>
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : ( <Frame isTitle={true} title={"Rajada de Vento"} width={"100%"} height={"100%"}>
             <HorizontalBarGraph dataBar={dataGustWindBar} maxValue={120} />
-          </Frame>
+          </Frame>)}
         </div>
       </div>
       <div className={styles.dropDownBtnsBot}>
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-          <DropdownBtn
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
             title="Direção do Vento"
             icon={() => <ThemeSwap lightImage={{
               component: PiWindDuotone,
@@ -544,8 +552,10 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             >
               <WindRose direction={lastWindDir} size={300} />
             </div>
-          </DropdownBtn>
-          <DropdownBtn
+          </DropdownBtn>)}
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
             title="PM2_5"
             icon={() => <ThemeSwap lightImage={{
               component: BsTrash3,
@@ -562,8 +572,10 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             >
               <SmallContainer lastValue={lastPm2_5} light={dustLight} dark={dustDark} complement="µm"/>
               </div>
-          </DropdownBtn>
-          <DropdownBtn
+          </DropdownBtn>)}
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
             title="Pressão Atmosférica"
             icon={() => <ThemeSwap lightImage={{
             component: GiOppression,
@@ -581,10 +593,12 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             >
             <Barometer pressure={lastAtmPres} minPressure={800} maxPressure={1200} />
             </div>
-          </DropdownBtn>
+          </DropdownBtn>)}
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-        <DropdownBtn title="UV" icon={() => <ThemeSwap lightImage={{
+        {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn title="UV" icon={() => <ThemeSwap lightImage={{
             component: FaRegSun,
             props: { color: "#000", size: "1.3em" },
           }}
@@ -595,7 +609,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             <LineGraph
               lines={[
                 {
-                  data: UVGraph[0].data,
+                  data: uv,
                   strokeColor: UVGraph[0].color,
                   fillColor: UVGraph[0].rgba,
                 },
@@ -605,8 +619,10 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               showDegreeSymbol={false}
               tooltipStyle="style2"
             />
-          </DropdownBtn>
-          <DropdownBtn
+          </DropdownBtn>)}
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
           title="Luminosidade"
           icon={() => <ThemeSwap lightImage={{
             component: BsLampFill,
@@ -630,8 +646,10 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               showDegreeSymbol={false}
               tooltipStyle="style2"
             />
-          </DropdownBtn>
-          <DropdownBtn
+          </DropdownBtn>)}
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
           title="Ruido"
           icon={() => <ThemeSwap lightImage={{
             component: MdNoiseControlOff,
@@ -645,7 +663,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           <LineGraph
               lines={[
                 {
-                  data: NoiseGraph[0].data,
+                  data: noise,
                   strokeColor: NoiseGraph[0].color,
                   fillColor: NoiseGraph[0].rgba,
                 },
@@ -655,7 +673,8 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               showDegreeSymbol={false}
               tooltipStyle="style2"
             />
-          </DropdownBtn>
+          
+          </DropdownBtn>)}
         </div>
         <div
           style={{
@@ -664,26 +683,35 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
             margin: "0 auto",
           }}
         >
-          <DropdownBtn
-            title="Nível de Chuva"
-            icon={IoRainyOutline}
+          {isloading ? (
+          <Skeleton variant="rounded" width="100%" height={350} />
+        ) : (<DropdownBtn
+            title="Radiação Solar"
+            icon={() => <ThemeSwap lightImage={{
+            component: GiSunRadiations,
+            props: { color: "#000", size: "1.3em" },
+          }}
+          darkImage={{
+            component: GiSunRadiations,
+            props: { color: "#fff", size: "1.3em" },
+          }}/>}
             width={"95%"}
           >
             {" "}
             <VerticalBarGraph
-              bars={rainData[0].data}
-              xLabels={rainData[0].xLabels}
-              yMax={100}
-              width="100%"
-              height={300}
-              barWidth={20}
-              barSpacing={10}
-              gradientStartColor={rainData[0].gradientStartColor}
-              gradientEndColor={rainData[0].gradientEndColor}
-              gradientId={rainData[0].id}
-              tooltipStyle="style2"
-            />
-          </DropdownBtn>
+            bars={solarRadiationData[0].data}
+            xLabels={solarRadiationData[0].xLabels}
+            yMax={100}
+            width="100%"
+            height={300}
+            barWidth={20}
+            barSpacing={10}
+            gradientStartColor={solarRadiationData[0].gradientStartColor}
+            gradientEndColor={solarRadiationData[0].gradientEndColor}
+            gradientId={solarRadiationData[0].id}
+            tooltipStyle="style2"
+          />
+          </DropdownBtn>)}
         </div>
       </div>
     </section>

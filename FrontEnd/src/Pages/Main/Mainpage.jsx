@@ -112,18 +112,9 @@ function Home() {
     {
       name: "Nit2xli",
       data: [
-        [
-          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
-          10, 11, 25, 32, 12, 11, 2,
-        ],
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-        [
-          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
-          8, 10, 12, 6, 8, 10, 15,
-        ],
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_temperature.toFixed(0)), //23
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0)), //2994
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_solar_radiation.toFixed(0)), //0
       ],
       color: ["#0e95e3", "#0ecc37", "#0ecc40"],
       rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
@@ -131,14 +122,8 @@ function Home() {
     {
       name: "K72623_lo",
       data: [
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-        [
-          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
-          10, 11, 25, 32, 12, 11, 2,
-        ],
+        sensorsData[1]?.averagePerHour.map((item) => item?.averages?.temperature.toFixed(0)), //21
+        sensorsData[1]?.averagePerHour.map((item) => item?.averages?.humidity.toFixed(0)), //81
       ],
       color: ["#d40d77", "#6c08cf"],
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
@@ -146,44 +131,18 @@ function Home() {
     {
       name: "Vento",
       data: [
-        [
-          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
-          10, 11, 25, 32, 12, 11, 2,
-        ],
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-        [
-          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
-          8, 10, 12, 6, 8, 10, 15,
-        ],
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_avg_wind_speed.toFixed(0)), //0
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_wind_direction.toFixed(0)), //60
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_gust_wind_speed.toFixed(0)), //0
       ],
       color: ["#0e95e3", "#0ecc37", "#0ecc40"],
       rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
     },
     {
-      name: "Temperatura",
-      data: [
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-      ],
-      color: ["#d41515"],
-      rgba: ["rgba(163, 23, 23, 0.4)"],
-    },
-    {
       name: "Diversos K",
       data: [
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-        [
-          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
-          10, 11, 25, 32, 12, 11, 2,
-        ],
+        sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)), //63
+        sensorsData[1]?.averagePerHour.map((item) => item?.averages?.pm2_5.toFixed(0)), //5
       ],
       color: ["#d40d77", "#6c08cf"],
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
@@ -191,18 +150,9 @@ function Home() {
     {
       name: "Diversos N",
       data: [
-        [
-          0, 30, 10, 14, 2, 90, 10, 80, 29, 15.4, 13, 1, 2, 3, 4, 5, 6, 8, 0,
-          10, 11, 25, 32, 12, 11, 2,
-        ],
-        [
-          40, 30, 20, 25, 24, 26, 20, 14, 18, 19, 12, 20, 13, 24, 28, 19, 22,
-          23, 30, 35, 36, 38, 40, 27,
-        ],
-        [
-          80, 40, 30, 25, 28, 32, 40, 25, 22, 27, 30, 25, 22, 15, 10, 4, 2,
-          8, 10, 12, 6, 8, 10, 15,
-        ],
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres.toFixed(0)), //976
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0)), //3
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0)), //23991
       ],
       color: ["#0e95e3", "#0ecc37", "#0ecc40"],
       rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],

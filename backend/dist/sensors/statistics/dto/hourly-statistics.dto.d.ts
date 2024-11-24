@@ -1,10 +1,3 @@
-export declare class HourlyStatisticsDTO {
-    readonly deviceName: string;
-    readonly averagePerHour: {
-        hour: number;
-        average: number;
-    }[];
-}
 export declare class Last24HoursDataDTO {
     readonly deviceName: string;
     readonly time: Date;

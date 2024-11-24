@@ -1,42 +1,38 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
-import "./BarometerGraph.scss"; // Arquivo SCSS para estilização
+import "./BarometerGraph.scss";
 
 const BarometerGraph = ({ pressure = 1013, minPressure = 950, maxPressure = 1050 }) => {
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 360, height: 260 });
-  const [animatedPressure, setAnimatedPressure] = useState(pressure);
+  const [animatedPressure, setAnimatedPressure] = useState(
+    Math.max(minPressure, Math.min(maxPressure, pressure))
+  );
 
   // Função para determinar a cor com base na pressão
   const getFillColor = (pressure) => {
-  const range = maxPressure - minPressure;
-  const normalizedPressure = (pressure - minPressure) / range; // Normalizar a pressão entre 0 e 1
+    const range = maxPressure - minPressure;
+    const normalizedPressure = Math.max(0, Math.min(1, (pressure - minPressure) / range));
 
-  if (normalizedPressure <= 0.33) {
-    // Cor verde
-    return `rgb(0, 255, 0)`; // Totalmente verde
-  } else if (normalizedPressure <= 0.66) {
-    // Cor amarela
-    return `rgb(255, 255, 0)`; // Totalmente amarelo
-  } else {
-    // Cor vermelha
-    return `rgb(255, 0, 0)`; // Totalmente vermelho
-  }
-};
-
-
-
+    if (normalizedPressure <= 0.33) return `rgb(0, 255, 0)`; // Verde
+    if (normalizedPressure <= 0.66) return `rgb(255, 255, 0)`; // Amarelo
+    return `rgb(255, 0, 0)`; // Vermelho
+  };
 
   // Animar a atualização do ponteiro
   useEffect(() => {
     let animationFrame;
     const start = performance.now();
-    const initialValue = animatedPressure;
-    const duration = 1000;
+    const initialValue = Math.max(
+      minPressure,
+      Math.min(maxPressure, animatedPressure) // Limitar valor inicial
+    );
+    const targetValue = Math.max(minPressure, Math.min(maxPressure, pressure));
+    const duration = 1000; // Duração da animação
 
     const animate = (time) => {
       const progress = Math.min((time - start) / duration, 1);
-      const newValue = initialValue + progress * (pressure - initialValue);
+      const newValue = initialValue + progress * (targetValue - initialValue);
       setAnimatedPressure(newValue);
 
       if (progress < 1) {
@@ -46,7 +42,7 @@ const BarometerGraph = ({ pressure = 1013, minPressure = 950, maxPressure = 1050
 
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, [pressure]);
+  }, [pressure, minPressure, maxPressure]);
 
   // Atualizar dimensões do canvas
   useEffect(() => {
@@ -107,7 +103,12 @@ const BarometerGraph = ({ pressure = 1013, minPressure = 950, maxPressure = 1050
 
   return (
     <div className="barometer-container">
-      <canvas ref={canvasRef} width={dimensions.width} height={dimensions.height} />
+      <canvas
+        ref={canvasRef}
+        width={dimensions.width}
+        height={dimensions.height}
+        aria-label={`Pressão atmosférica: ${Math.round(animatedPressure)} hPa`}
+      />
       <div
         className="barometer-value"
         style={{
@@ -116,7 +117,7 @@ const BarometerGraph = ({ pressure = 1013, minPressure = 950, maxPressure = 1050
           transform: "translateX(-50%)",
         }}
       >
-        {Math.round(animatedPressure)} hPa
+        {Math.round(pressure)} hPa
       </div>
       <div
         className="barometer-min"

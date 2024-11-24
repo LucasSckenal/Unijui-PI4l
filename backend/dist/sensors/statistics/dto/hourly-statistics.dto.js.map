@@ -1,1 +1,1 @@
-{"version":3,"file":"hourly-statistics.dto.js","sourceRoot":"","sources":["../../../../src/sensors/statistics/dto/hourly-statistics.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,mBAAmB;CAG7B;AAHH,kDAGG;AAED,MAAa,kBAAkB;CAoC9B;AApCD,gDAoCC;AAGD,MAAa,wBAAwB;CAqBpC;AArBD,4DAqBC"}
+{"version":3,"file":"hourly-statistics.dto.js","sourceRoot":"","sources":["../../../../src/sensors/statistics/dto/hourly-statistics.dto.ts"],"names":[],"mappings":";;;AACA,MAAa,kBAAkB;CAoC5B;AApCH,gDAoCG;AAGD,MAAa,wBAAwB;CAqBpC;AArBD,4DAqBC"}
