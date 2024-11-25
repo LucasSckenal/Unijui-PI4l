@@ -10,9 +10,6 @@ const Rotas = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/Register" element={<Register />} />
       <Route path="/" element={<PrivateRoutes> <Mainpage/> </PrivateRoutes>} />
-
-      <Route path="/debug" element={<Mainpage />} />
-
     </Routes>
   );
 };

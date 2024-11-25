@@ -52,6 +52,7 @@ const GraphicContainer = ({
     UVGraph: 0,
     LuminosityGraph: 0,
     NoiseGraph: 0,
+    rainData: 0,
   });
 
   const [temperature, setTemperature] = useState(null);
@@ -59,10 +60,10 @@ const GraphicContainer = ({
   const [noise, setNoise] = useState(null);
   const [luminosity, setLuminosity] = useState(null);
   const [uv, setUV] = useState(null);
+  const [rainLvl, setRainLvl] = useState(null)
 
   const { sensorsData } = useContext(SensorsContext);
-  //console.log(sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres));
-
+                                              
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -77,6 +78,8 @@ const GraphicContainer = ({
       const noise = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)) || 0;
       const luminosity = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0));
       const UV = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0));
+      const rainLvl = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0));
+      setRainLvl(rainLvl);
       setNoise(noise);
       setLuminosity(luminosity);
       setUV(UV);
@@ -89,6 +92,8 @@ const GraphicContainer = ({
       const noise = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)) || 0;
       const luminosity = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0));
       const UV = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0));
+      const rainLvl = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0));
+      setRainLvl(rainLvl);
       setNoise(noise);
       setLuminosity(luminosity);
       setUV(UV);
@@ -105,27 +110,28 @@ const GraphicContainer = ({
 
  
 
-const TempGraph = [
-  {
-    name: "Temperatura",
-    data: [temperature], 
-    color: ["#de7c21"],
-    rgba: ["rgba(222, 124, 33, 0.8)"],
-    xLabels: labels, 
-  },
-];
-
+  const TempGraph = [
+    {
+      name: "Temperatura",
+      data: [temperature], 
+      color: selectedSensor === "Estação Cruzeiro" ? ["#de7c21"] : ["#d40d77"], // Cor condicional
+      rgba: selectedSensor === "Estação Cruzeiro" ? ["rgba(222, 124, 33, 0.8)"] : ["rgba(212, 13, 119, 0.8)"], // RGBA condicional
+      xLabels: labels, 
+    },
+  ];
+  
   const HumidGraph = [
     {
       id: "humidity",
       name: "Úmidade",
       data: [humidity],
-      gradientStartColor: "rgba(58, 33, 222, 1)",
-      gradientEndColor: "rgba(66, 24, 163, 1)",
-      rgba: ["rgba(74, 33, 222, 0.8)"],
+      gradientStartColor: selectedSensor === "Estação Cruzeiro" ? "rgba(40, 71, 209, 1)" : "rgba(106, 17, 194, 1)", // Gradiente inicial condicional
+      gradientEndColor: selectedSensor === "Estação Cruzeiro" ? "rgba(26, 33, 173, 1)" : "rgba(66, 16, 122, 1)", // Gradiente final condicional
+      rgba: ["rgba(74, 33, 222, 0.8)"], // RGBA fixo para o gráfico de umidade
       xLabels: labels,
     },
   ];
+  
 
   const Pm25Graph = [
     {
@@ -143,8 +149,8 @@ const TempGraph = [
     {
       name: "Atmospheric Pressure",
       data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres.toFixed(0))],
-      color: ["#de7c21"],
-      rgba: ["rgba(222, 124, 33, 0.8)"],
+      color: ["#4c2a75"],
+      rgba: ["rgba(76, 42, 117, 0.8)"],
       xLabels: labels, 
     },
   ];  
@@ -153,7 +159,7 @@ const TempGraph = [
     {
       id: "rain",
       name: "Chuva",
-      data: sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl),
+      data: sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0)),
       gradientStartColor: "rgba(0, 123, 255, 1)",
       gradientEndColor: "rgba(0, 180, 255, 1)",
       xLabels: labels,
@@ -174,7 +180,7 @@ const TempGraph = [
   const WindDirectionGraph = [
     {
       name: "Direção do Vento",
-      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_wind_direction)],
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_wind_direction.toFixed(0))],
       color: ["#5eff00"],
       rgba: ["rgba(115, 255, 0, 0.8)"],
       xLabels: labels,
@@ -184,7 +190,7 @@ const TempGraph = [
   const WindSpeedGraph = [
     {
       name: "Velocidade do Vento",
-      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_avg_wind_speed)],
+      data: [sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_avg_wind_speed.toFixed(0))],
       color: ["#3399ff"],
       rgba: ["rgba(51, 153, 255, 0.8)"],
       xLabels: labels,
@@ -207,8 +213,8 @@ const TempGraph = [
     {
       name: "UV",
       data: [[sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv)]],
-      color: ["#d500ed"],
-      rgba: ["rgba(194, 15, 214, 0.8)"],
+      color: ["#6c19bf"],
+      rgba: ["rgba(121, 33, 209, 0.8)"],
       xLabels: labels6h,
     },
   ], [labels6h]); 
@@ -217,8 +223,8 @@ const TempGraph = [
     {
       name: "Luminosidade",
       data: luminosity ? [luminosity.flat()] : [[]],
-      color: ["#d500ed"],
-      rgba: ["rgba(194, 15, 214, 0.8)"],
+      color: ["#b9de26"],
+      rgba: ["rgba(211, 255, 51, 0.8)"],
       xLabels: labels6h,
     },
   ], [luminosity, labels6h]);
@@ -287,6 +293,7 @@ const TempGraph = [
   const lastPm2_5 = getLastValue(Pm25Graph, "Pm2_5");
   const lastAtmPres = getLastValue(AtmPresGraph, "Atmospheric Pressure");
   const lastWindDir = getLastValue(WindDirectionGraph, "Direção do Vento");
+  const lastWindSpd = getLastValue(WindSpeedGraph, "Velocidade do Vento")
 
    useEffect(() => {
      if (uv) {
@@ -312,7 +319,15 @@ const TempGraph = [
          NoiseGraph: calculatedMaxValue,
       }));
     }
-   }, [UVGraph, LuminosityGraph, NoiseGraph]);
+
+    if (rainLvl) {
+      const calculatedMaxValue = Math.max(...rainLvl);
+      setMaxDataValue((prevMax) => ({
+        ...prevMax,
+        rainData: calculatedMaxValue,
+     }));
+   }
+   }, [UVGraph, LuminosityGraph, NoiseGraph, rainData]);
 
   const modalData = {
   temperatura: {
@@ -485,7 +500,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           <VerticalBarGraph
               bars={rainData[0].data}
               xLabels={rainData[0].xLabels}
-              yMax={100}
+              yMax={maxDataValue.rainData}
               width="100%"
               height={300}
               barWidth={20}
@@ -514,7 +529,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
               }
               style={{ cursor: "pointer" }}
             >
-              <RadialBarCharts value={sensorsData[0]?.emw_avg_wind_speed} />
+              <RadialBarCharts value={lastWindSpd} />
             </div>
           </Frame>
         )}

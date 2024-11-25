@@ -84,8 +84,9 @@ function Home() {
       id: 3,
       options: [
         { id: "1", label: "Temperatura" },
-        { id: "2", label: "Nível da chuva" },
-        { id: "3", label: "Radiação solar"},
+        { id: "2", label: "Umidade"},
+        { id: "3", label: "Ultra Violeta" },
+        { id: "4", label: "Radiação solar"},
       ],
     },
     {
@@ -102,7 +103,7 @@ function Home() {
       id: 5,
       options: [
         { id: "1", label: "Pressão atmosférica" },
-        { id: "2", label: "Ultra Violeta" },
+        { id: "2", label: "Nível da chuva" },
         { id: "3", label: "Luminosidade"},
       ],
     },
@@ -110,17 +111,18 @@ function Home() {
 
   const lineDatas = [
     {
-      name: "Nit2xli",
+      name: "Nit2xli",  //Estação
       data: [
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_temperature.toFixed(0)), //23
-        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0)), //2994
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_humidity.toFixed(0)), //
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0)), //3
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_solar_radiation.toFixed(0)), //0
       ],
-      color: ["#0e95e3", "#0ecc37", "#0ecc40"],
-      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
+      color: ["#de7c21", "#1a21ad", "#6c19bf", "#c49423"],
+      rgba: ["rgba(222, 124, 33, 0.8)", "rgba(26, 33, 173, 0.8)", "rgba(121, 33, 209, 0.8)", "rgba(222, 170, 49, 0.8)"],
     },
     {
-      name: "K72623_lo",
+      name: "K72623_lo",  //Taffarel
       data: [
         sensorsData[1]?.averagePerHour.map((item) => item?.averages?.temperature.toFixed(0)), //21
         sensorsData[1]?.averagePerHour.map((item) => item?.averages?.humidity.toFixed(0)), //81
@@ -129,7 +131,7 @@ function Home() {
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
     },
     {
-      name: "Vento",
+      name: "Vento",  //Estação
       data: [
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_avg_wind_speed.toFixed(0)), //0
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_wind_direction.toFixed(0)), //60
@@ -139,7 +141,7 @@ function Home() {
       rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
     },
     {
-      name: "Diversos K",
+      name: "Diversos K", //Taffarel
       data: [
         sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)), //63
         sensorsData[1]?.averagePerHour.map((item) => item?.averages?.pm2_5.toFixed(0)), //5
@@ -148,14 +150,14 @@ function Home() {
       rgba: ["rgba(212, 13, 119, 0.8)", "rgba(91, 10, 171, 0.8)"],
     },
     {
-      name: "Diversos N",
+      name: "Diversos N", //Estação
       data: [
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_atm_pres.toFixed(0)), //976
-        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_uv.toFixed(0)), //3
+        sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_rain_lvl.toFixed(0)), //2994
         sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_luminosity.toFixed(0)), //23991
       ],
-      color: ["#0e95e3", "#0ecc37", "#0ecc40"],
-      rgba: ["rgba(14, 149, 227, 0.8)", "rgba(8, 191, 81, 0.8)", "rgba(8, 255, 80, 0.8)"],
+      color: ["#4c2a75", "#2fa8eb", "#b9de26"],
+      rgba: ["rgba(76, 42, 117, 0.8)", "rgba(60, 183, 250, 0.8)", "rgba(211, 255, 51, 0.8)"],
     },
   ];
 

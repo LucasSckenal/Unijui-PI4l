@@ -6,6 +6,7 @@ import Rotas from "./Routes/routes";
 import "./global.scss";
 import { ToastContainer } from "react-toastify";
 import { SensorsProvider } from './Contexts/SensorsContext';
+import { AuthProvider } from "./Contexts/UserContext";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -33,9 +34,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <SensorsProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
       </SensorsProvider>
     </ThemeProvider>
   </StrictMode>
