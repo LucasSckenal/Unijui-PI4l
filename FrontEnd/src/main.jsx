@@ -34,9 +34,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <SensorsProvider>
+        <AuthProvider>
           <BrowserRouter>
             <App />
           </BrowserRouter>
+        </AuthProvider>
       </SensorsProvider>
     </ThemeProvider>
   </StrictMode>

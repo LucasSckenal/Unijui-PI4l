@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styles from "./styles.module.scss";
 import { FaArrowRight } from "react-icons/fa";
 import RedirectionFrame from "../../Utilities/RedirectionFrame/redirectionFrame";
 import { toast } from "react-toastify";
 import user from "../../../assets/UserDefault.png";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../Contexts/UserContext";
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ function RegisterForm() {
   const [avatar, setAvatar] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
   const navigate = useNavigate();
+  const { register } = useContext(AuthContext);
 
   function handleFile(e) {
     if (e.target.files[0]) {
@@ -30,7 +32,7 @@ function RegisterForm() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -47,15 +49,28 @@ function RegisterForm() {
       );
       return;
     }
-    const avatarToSave = avatar === null ? user : avatar;
 
-    localStorage.setItem("imagem", avatarToSave);
-    localStorage.setItem("nome", name);
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      if (imageAvatar) formData.append("avatar", imageAvatar);
 
-    toast.success("Registro realizado com sucesso!");
-    navigate("/login");
+      console.log("Name:", name);
+      console.log("Email:", email);
+      console.log("Password:", password);
+      
+      await register(formData);
+
+      toast.success("Registro realizado com sucesso!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Erro no registro:", error);
+      toast.error(
+        error?.response?.data?.message || "Erro ao registrar o usuário."
+      );
+    }
   };
 
   return (

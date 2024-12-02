@@ -8,21 +8,22 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica se há um token salvo e carrega o usuário
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      axios
-        .get("http://localhost:3000/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
+    const checkUser = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:3000/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           setUser(response.data);
-        })
-        .catch(() => {
+        } catch (error) {
+          console.error("Erro ao carregar o usuário:", error);
           localStorage.removeItem("authToken");
-        });
-    }
-    setLoading(false);
+        }
+      }
+      setLoading(false);
+    };
+    checkUser();
   }, []);
 
   const register = async (data) => {
@@ -34,10 +35,10 @@ export const AuthProvider = ({ children }) => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      return response.data;
+      return response.data; // Retorna o usuário criado
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error("Erro ao registrar usuário:", error.response?.data || error);
+      throw error.response?.data || error;
     }
   };
 
@@ -48,12 +49,14 @@ export const AuthProvider = ({ children }) => {
         credentials
       );
       const { token, user } = response.data;
+
+      // Salva o token e define o usuário logado
       localStorage.setItem("authToken", token);
       setUser(user);
       return user;
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error("Erro ao fazer login:", error.response?.data || error);
+      throw error.response?.data || error;
     }
   };
 
@@ -64,12 +67,12 @@ export const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data);
+      return response.data; // Retorna os dados atualizados
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error("Erro ao atualizar perfil:", error.response?.data || error);
+      throw error.response?.data || error;
     }
   };
-  
 
   const logout = () => {
     localStorage.removeItem("authToken");
@@ -77,7 +80,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, updateUser, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        register,
+        login,
+        updateUser,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

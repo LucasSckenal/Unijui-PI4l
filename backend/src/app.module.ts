@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SensorsModule } from './sensors/sensors.module';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -16,7 +17,8 @@ import { SensorsModule } from './sensors/sensors.module';
       logging: false,
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
     }),
-    SensorsModule
+    SensorsModule,
+    UsersModule
   ],
   controllers: [],
   providers: [],

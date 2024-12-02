@@ -22,7 +22,7 @@ const HorizontalBarGraph = ({ dataBar, maxValue }) => {
     <div className={styles.barchart}>
       {barData.map((item, index) => {
         const percentage = Math.min((item.value / maxValue) * 100, 100); 
-
+        
         return (
           <div key={index} className={styles.barContainer}>
             <span className={styles.barLabel}>{item.label}</span>
@@ -34,7 +34,7 @@ const HorizontalBarGraph = ({ dataBar, maxValue }) => {
                   background: `${item.backgroundColor}`,
                 }}
               >
-                <span className={styles.tooltip}>{item.value}</span>
+                <span className={styles.tooltip}>{item.value ? item.value : 0}</span>
               </div>
             </div>
           </div>

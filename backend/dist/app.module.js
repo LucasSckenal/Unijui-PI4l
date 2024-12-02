@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const sensors_module_1 = require("./sensors/sensors.module");
+const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -28,7 +29,8 @@ AppModule = __decorate([
                 logging: false,
                 entities: [__dirname + '/**/*.entity{.js,.ts}'],
             }),
-            sensors_module_1.SensorsModule
+            sensors_module_1.SensorsModule,
+            users_module_1.UsersModule
         ],
         controllers: [],
         providers: [],

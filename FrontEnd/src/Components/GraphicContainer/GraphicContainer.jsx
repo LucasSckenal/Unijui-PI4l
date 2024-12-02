@@ -346,6 +346,7 @@ const GraphicContainer = ({
     title: "Direção do Vento",
     graphType: "line",
     graphData: WindDirectionGraph[0],
+    degreeSymbol: "º",
   },
   "Velocidade do Vento": {
     title: "Velocidade do Vento",
@@ -513,10 +514,7 @@ const isSmallScreen = useMediaQuery({ maxWidth: 1440 });
           
         </Frame>)}
           
-        {!isHidden && 
-          isloading ? (
-          <Skeleton variant="rounded" width="100%" height={350} />
-        ) : (
+        {!isHidden && (
           <Frame
             isTitle={true}
             title={"Velocidade do Vento"}
