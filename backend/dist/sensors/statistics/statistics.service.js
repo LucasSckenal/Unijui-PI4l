@@ -80,30 +80,30 @@ let StatisticsService = class StatisticsService {
             });
             return acc;
         }, {});
+        const fixedOrder = [
+            "Estação Cruzeiro",
+            "Micropartículas Rótula do Taffarel",
+        ];
         return Object.keys(groupedByDevice)
             .map((deviceName) => {
             const averagePerHour = groupedByDevice[deviceName];
             return {
                 deviceName,
                 time: calendarDate,
-                emw_rain_lvl: 0,
-                emw_avg_wind_speed: 0,
-                emw_gust_wind_speed: 0,
-                emw_wind_direction: 0,
-                emw_temperature: 0,
-                emw_humidity: 0,
-                emw_luminosity: 0,
-                emw_uv: 0,
-                emw_solar_radiation: 0,
-                emw_atm_pres: 0,
-                noise: 0,
-                temperature: 0,
-                humidity: 0,
-                pm2_5: 0,
                 averagePerHour,
             };
         })
-            .sort((a, b) => b.time.getTime() - a.time.getTime());
+            .sort((a, b) => {
+            const indexA = fixedOrder.indexOf(a.deviceName);
+            const indexB = fixedOrder.indexOf(b.deviceName);
+            if (indexA !== -1 && indexB === -1)
+                return -1;
+            if (indexA === -1 && indexB !== -1)
+                return 1;
+            if (indexA !== -1 && indexB !== -1)
+                return indexA - indexB;
+            return b.time.getTime() - a.time.getTime();
+        });
     }
 };
 StatisticsService = __decorate([

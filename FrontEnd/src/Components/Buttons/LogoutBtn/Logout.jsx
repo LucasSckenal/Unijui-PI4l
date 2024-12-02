@@ -7,7 +7,7 @@ import { toast } from "react-toastify"; // Importa o toast
 // eslint-disable-next-line react/prop-types
 const LogoutBtn = ({ hasText = false, text = "Logout" }) => {
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("authToken");
     toast.success("Logout realizado com sucesso!"); // Adiciona a notificação
     window.location.reload();
   };

@@ -12,20 +12,19 @@ export class UsersController {
     @UploadedFile() avatar: Express.Multer.File,
     @Body() body: any,
   ) {
-    console.log('Body:', body); // Exibe nome, email e password
-    console.log('Avatar:', avatar); // Exibe detalhes do arquivo
-    const { name, email, password } = body;
+    const { name, email, password} = body;
 
     return this.usersService.register(name, email, password);
   }
 
   @Post('login')
-  async login(@Body() body: { email: string; password: string }) {
-    const user = await this.usersService.validateUser(body.email, body.password);
+  async login(@Body() { email, password }: { email: string; password: string }) {
+    const user = await this.usersService.validateUser(email, password);
     if (!user) {
       return { message: 'Invalid credentials' };
     }
-    return { message: 'Login successful', user };
+    const token = await this.usersService.generateToken(user);
+    return { message: 'Login successful', user, authToken: token };
   }
 
   @Put(':id/profile')

@@ -21,17 +21,16 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     async register(avatar, body) {
-        console.log('Body:', body);
-        console.log('Avatar:', avatar);
         const { name, email, password } = body;
         return this.usersService.register(name, email, password);
     }
-    async login(body) {
-        const user = await this.usersService.validateUser(body.email, body.password);
+    async login({ email, password }) {
+        const user = await this.usersService.validateUser(email, password);
         if (!user) {
             return { message: 'Invalid credentials' };
         }
-        return { message: 'Login successful', user };
+        const token = await this.usersService.generateToken(user);
+        return { message: 'Login successful', user, authToken: token };
     }
     async updateProfile(id, body) {
         return this.usersService.updateProfile(id, body.name, body.avatar);

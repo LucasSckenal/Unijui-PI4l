@@ -72,7 +72,6 @@ const GraphicContainer = ({
 
   const HandleTH = () => {
     if (selectedSensor === "Estação Cruzeiro") {
-      // Verifica o primeiro sensor, se não tiver valor tenta o segundo
       const temp = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_temperature.toFixed(0)) || 0;
       const hum = sensorsData[0]?.averagePerHour.map((item) => item?.averages?.emw_humidity.toFixed(0)) || 0;
       const noise = sensorsData[1]?.averagePerHour.map((item) => item?.averages?.noise.toFixed(0)) || 0;
@@ -104,7 +103,7 @@ const GraphicContainer = ({
 
   useEffect(() => {
     HandleTH();
-  }, [selectedSensor, sensorsData]); // Atualiza a cada alteração em selectedSensor ou sensorsData
+  }, [selectedSensor, sensorsData]); 
 
   const isHidden = useWindowResize(926);
 

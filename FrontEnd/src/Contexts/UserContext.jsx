@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -7,17 +8,28 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Configuração base para Axios
+  const api = axios.create({
+    baseURL: "http://localhost:3000",
+  });
+
+  api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
   useEffect(() => {
     const checkUser = async () => {
       const token = localStorage.getItem("authToken");
       if (token) {
         try {
-          const response = await axios.get("http://localhost:3000/users/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await api.get("/users/me");
           setUser(response.data);
         } catch (error) {
-          console.error("Erro ao carregar o usuário:", error);
+          console.error("Erro ao carregar o usuário:", error.response?.data || error);
           localStorage.removeItem("authToken");
         }
       }
@@ -28,13 +40,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/users/register",
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await api.post("/users/register", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return response.data; // Retorna o usuário criado
     } catch (error) {
       console.error("Erro ao registrar usuário:", error.response?.data || error);
@@ -44,14 +52,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/users/login",
-        credentials
-      );
-      const { token, user } = response.data;
+      const response = await api.post("/users/login", credentials);
+      const { user, authToken } = response.data;
 
-      // Salva o token e define o usuário logado
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("authToken", authToken);
       setUser(user);
       return user;
     } catch (error) {
@@ -60,14 +64,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = async (data) => {
+  const updateUser = async (data, userId) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const response = await axios.put("http://localhost:3000/users/me", data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.put(`/users/${userId}/profile`, data);
       setUser(response.data);
-      return response.data; // Retorna os dados atualizados
+      return response.data;
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error.response?.data || error);
       throw error.response?.data || error;

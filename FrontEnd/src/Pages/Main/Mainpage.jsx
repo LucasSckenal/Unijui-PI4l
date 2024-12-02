@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useState, useEffect, useContext } from "react";
 import Header from "../../Components/Header/header.jsx";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -10,10 +11,12 @@ import Divider from "../../Components/Utilities/Divider/Divider.jsx";
 import { toast } from "react-toastify";
 import { generateHourlyLabels } from "../../utils/generateHourlxLabels.jsx";
 import { SensorsContext } from "../../Contexts/SensorsContext.jsx";
+import { AuthContext } from "../../Contexts/UserContext.jsx";
 
 function Home() {
   const { sensorsData, setDataSelectedDate } = useContext(SensorsContext);
-  const [ selectedDate, setSelectedDate] = useState("");
+  const { user } = useContext(AuthContext);
+  const [selectedDate, setSelectedDate] = useState("");
   const [sensors, setSensors] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
   const [selectedInterval, setSelectedInterval] = useState({
@@ -59,7 +62,6 @@ function Home() {
     updateIntervalOptions();
     window.addEventListener("resize", updateIntervalOptions);
     return () => window.removeEventListener("resize", updateIntervalOptions);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const GraphsBtns = [
@@ -172,7 +174,7 @@ function Home() {
         setCurrentDate(new Date());
       }
     };
-
+    console.log(user.name)
     updateDate();
     const intervalId = setInterval(updateDate, 1000);
     return () => clearInterval(intervalId);
@@ -192,9 +194,7 @@ function Home() {
     return brDate;
   };
 
-  const mockUser = {
-    name: localStorage.getItem("nome"),
-  };
+  
 
    useEffect(() => {
     if (sensorsData && sensorsData.length > 0) {
@@ -414,7 +414,7 @@ function Home() {
         <section className={styles.Home}>
           <div className={styles.greetings}>
             <h1>
-              Bem-vindo de volta, <span>{mockUser.name}</span>
+              Bem-vindo de volta, <span>{user.name}</span>
             </h1>
             <p>
               Dê uma olhada nos gráficos atualizados constantemente, abaixo.

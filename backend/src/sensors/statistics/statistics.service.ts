@@ -11,7 +11,9 @@ export class StatisticsService {
     private readonly tabelaCombinadaRepository: Repository<tabela_combinada>
   ) {}
 
-  async getLast24HoursData_tabelaCombinada(selectedDate?: string): Promise<Last24HoursDataDTO[]> {
+  async getLast24HoursData_tabelaCombinada(
+    selectedDate?: string
+  ): Promise<Last24HoursDataDTO[]> {
     let calendarDate = new Date();
 
     if (selectedDate) {
@@ -77,6 +79,12 @@ export class StatisticsService {
       return acc;
     }, {} as { [deviceName: string]: { hour: number; averages: any }[] });
 
+    // Lista de prioridade fixa
+    const fixedOrder = [
+      "Estação Cruzeiro",
+      "Micropartículas Rótula do Taffarel",
+    ];
+
     // Retorno no formato DTO
     return Object.keys(groupedByDevice)
       .map((deviceName) => {
@@ -84,23 +92,20 @@ export class StatisticsService {
         return {
           deviceName,
           time: calendarDate,
-          emw_rain_lvl: 0, // Valores padrão ou de referência
-          emw_avg_wind_speed: 0,
-          emw_gust_wind_speed: 0,
-          emw_wind_direction: 0,
-          emw_temperature: 0,
-          emw_humidity: 0,
-          emw_luminosity: 0,
-          emw_uv: 0,
-          emw_solar_radiation: 0,
-          emw_atm_pres: 0,
-          noise: 0,
-          temperature: 0,
-          humidity: 0,
-          pm2_5: 0,
           averagePerHour, // Média calculada para cada hora
         } as Last24HoursDataDTO;
       })
-      .sort((a, b) => b.time.getTime() - a.time.getTime()); // Ordenação do mais recente ao mais antigo
+      .sort((a, b) => {
+        // Ordenação fixa para as duas estações
+        const indexA = fixedOrder.indexOf(a.deviceName);
+        const indexB = fixedOrder.indexOf(b.deviceName);
+
+        if (indexA !== -1 && indexB === -1) return -1; // `a` está na lista fixa, `b` não
+        if (indexA === -1 && indexB !== -1) return 1; // `b` está na lista fixa, `a` não
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB; // Ambos estão na lista fixa
+
+        // Para os outros dispositivos, ordenar por `time`
+        return b.time.getTime() - a.time.getTime();
+      });
   }
 }

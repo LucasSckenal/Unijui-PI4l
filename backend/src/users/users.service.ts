@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { users } from './users.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(users)
     private readonly userRepository: Repository<users>,
+    private readonly jwtService: JwtService,
   ) {}
 
+
   // Registrar um novo usuário
-  async register(name: string, email: string, password: string): Promise<users> {
-    console.log(name);
-    console.log(email);
-    console.log(password);
-    const newUser = this.userRepository.create({ name, email, password });
+  async register(name: string, email: string, password: string, avatar?: string): Promise<users> {
+    const newUser = this.userRepository.create({ name, email, password, avatar });
     return this.userRepository.save(newUser);
   }
 
@@ -42,5 +42,10 @@ export class UsersService {
       return user;
     }
     return null;
+  }
+
+  async generateToken(user: users): Promise<string> {
+    const payload = { id: user.id, email: user.email };
+    return this.jwtService.sign(payload);
   }
 }

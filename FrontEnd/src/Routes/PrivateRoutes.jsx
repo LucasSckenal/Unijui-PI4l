@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import { Navigate } from "react-router-dom";
 
 const PrivateRoutes = ({ children }) => {
-  // quando o usuário logar precisar ser atribuido no loggedInUser
-  const storageUser = localStorage.getItem("loggedInUser");
-  if (!storageUser) {
-    return <Navigate to="/login" />;
+  const authToken = localStorage.getItem("authToken"); // Checa o token de autenticação
+
+  if (!authToken) {
+    return <Navigate to="/login" />; // Redireciona para o login se não houver token
   }
 
   return children;
