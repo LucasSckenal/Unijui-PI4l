@@ -2,13 +2,15 @@ import styles from "./styles.module.scss";
 import lightImage from "../../../assets/LogoutBtnDark.png";
 import darkImage from "../../../assets/LogoutBtn.png";
 import ThemeSwap from "../../ThemeSwap/themeSwap";
-import { toast } from "react-toastify"; // Importa o toast
+import { AuthContext } from "../../../Contexts/UserContext";
+import { useContext } from "react";
 
 // eslint-disable-next-line react/prop-types
 const LogoutBtn = ({ hasText = false, text = "Logout" }) => {
+  const { logout } = useContext(AuthContext);
+
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    toast.success("Logout realizado com sucesso!"); // Adiciona a notificação
+    logout();
     window.location.reload();
   };
 
