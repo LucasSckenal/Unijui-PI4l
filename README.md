@@ -10,9 +10,10 @@
 
 ## 📑 Table of Contents
 
-| [📝 Descrição](#-descrição-do-projeto) | [🚀 Tecnologias](#-tecnologias-utilizadas) | [📂 Estrutura](#-estrutura-do-projeto) | [🛠️ Pré-requisitos](#️-pré-requisitos) | [🏃‍♂️ Como Rodar](#️-como-rodar-o-projeto) |
-|----------------------------------------|--------------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
-| [✨ Funcionalidades](#-funcionalidades)    | [👥 Autores](#-autores)                | [🤝 Contribuindo](#-contribuindo)      | [📜 Licença](#-licença)                | [📬 Contato](#-contato)                    |
+| [📝 Descrição](#-descrição-do-projeto) | [✨ Funcionalidades](#-funcionalidades) | [📊 Aplicação](#-aplicação) | [🚀 Tecnologias](#-tecnologias-utilizadas) |
+|----------------------------------------|--------------------------------------------|----------------------------------------|----------------------------------------|
+| [📂 Estrutura](#-estrutura-do-projeto) | [🛠️ Pré-requisitos](#️-pré-requisitos) | [🏃‍♂️ Como Rodar](#️-como-rodar-o-projeto) | [👥 Autores](#-autores) |
+| [🤝 Contribuindo](#-contribuindo) | [📜 Licença](#-licença) | [📬 Contato](#-contato) |
 
 ---
 
@@ -29,6 +30,25 @@ O projeto utiliza:
 - **Backend**: Nest.js
 - **Banco de Dados**: PostgreSQL
 - **Python**: Para sincronização automática das tabelas no banco.
+
+---
+
+## ✨ Funcionalidades
+
+1. **Dashboard Interativo**: Exibição de gráficos dinâmicos e responsivos.
+2. **Histórico de Dados**: Visualização de até 1 mês de dados passados.
+3. **Intervalos Personalizáveis**: Configuração de intervalos de tempo entre 1 hora e 24 horas.
+4. **Sincronização de Dados**: Script em Python para manter os dados consistentes no banco de dados;
+5. **Auth**: Sistema de login e register;
+6. **Dark mode e Light mode**: Escolha de temas entre claro e escuro.
+
+---
+
+## 📊 Aplicação
+
+<p align="center">
+  <img src="https://s4.ezgif.com/tmp/ezgif-4-ba66da43a4.gif" alt="Aplicação rodando">
+</p>
 
 ---
 
@@ -122,15 +142,6 @@ $ npm start
 ```
 
 O frontend estará disponível em `http://localhost:5173` e o backend em `http://localhost:3000` (ou portas configuradas).
-
----
-
-## ✨ Funcionalidades
-
-1. **Dashboard Interativo**: Exibição de gráficos dinâmicos e responsivos.
-2. **Histórico de Dados**: Visualização de até 1 mês de dados passados.
-3. **Intervalos Personalizáveis**: Configuração de intervalos de tempo entre 1 hora e 24 horas.
-4. **Sincronização de Dados**: Script em Python para manter os dados consistentes no banco de dados.
 
 ---
 
