@@ -3,8 +3,16 @@
 <!-- Banner ou imagem destacada do projeto (opcional) -->
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/1285007720176549969/1318392496580984883/Logo_4L.png?ex=67622831&is=6760d6b1&hm=f5121eab99d82480a76bdae3b6c6454583a3d92e60df5ee3b89cbbfd9f744d4d&" alt="Banner">
+  <img src="https://cdn.discordapp.com/attachments/1285007720176549969/1318395380173508638/Logo_4L_dashboard.png?ex=67622ae1&is=6760d961&hm=8de23803d3f9752861aec518f05addd482203a5f5fa7608b81edc164d63215e2&" alt="Banner">
 </p>
+
+---
+
+## 📑 Table of Contents
+
+| [📝 Descrição](#-descrição-do-projeto) | [🚀 Tecnologias](#-tecnologias-utilizadas) | [📂 Estrutura](#-estrutura-do-projeto) | [🛠️ Pré-requisitos](#️-pré-requisitos) | [🏃‍♂️ Como Rodar](#️-como-rodar-o-projeto) |
+|----------------------------------------|--------------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
+| [✨ Funcionalidades](#-funcionalidades)    | [👥 Autores](#-autores)                | [🤝 Contribuindo](#-contribuindo)      | [📜 Licença](#-licença)                | [📬 Contato](#-contato)                    |
 
 ---
 
@@ -136,9 +144,9 @@ O projeto foi desenvolvido por:
 - **Lucas Hack**
   - **E-mail**: [lucas.beber@sou.unijui.edu.br](mailto:lucas.beber@sou.unijui.edu.br)
   - **LinkedIn**: [Lucas Hack](https://www.linkedin.com/in/lucas-hack-costa-beber-248672289/)
-- **Luan Henrique**
+- **Luan Vitor**
   - **E-mail**: [luanvitorcd@gmail.com](mailto:luanvitorcd@gmail.com)
-  - **LinkedIn**: [Luan Henrique](https://www.linkedin.com/in/luan-vitor-casali-dallabrida-20a60a342/)
+  - **LinkedIn**: [Luan Vitor](https://www.linkedin.com/in/luan-vitor-casali-dallabrida-20a60a342/)
 - **Henrique Luan**
   - **E-mail**: [Henrique.fritz@sou.unijui.edu.br](mailto:Henrique.fritz@sou.unijui.edu.br)
 
