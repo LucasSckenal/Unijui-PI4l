@@ -47,7 +47,7 @@ O projeto utiliza:
 ## 📊 Aplicação
 
 <p align="center">
-  <img src="https://imgur.com/a/5i8p57U" alt="Aplicação rodando">
+  <img src="https://i.imgur.com/qrAnJBQ.gif" alt="Aplicação rodando">
 </p>
 
 ---
